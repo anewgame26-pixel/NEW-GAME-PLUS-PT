@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  scrollbar-color: #323b4a #0a0c11;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: #0a0c11;
+}
+*::-webkit-scrollbar-thumb {
+  background: #242b37;
+  border-radius: 6px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #3e7bfa;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0c11;
+  color: #f3f5f7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Elemento de assinatura: cantos cortados no canto inferior-direito,
+   inspirado nos painéis de interface das consolas (PS/Xbox). Usado
+   nos cards de destaque e no painel de estatísticas de jogo. */
+.panel-cut {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%
+  );
+}
+
+.panel-cut-sm {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%
+  );
+}
+
+/* Focus visível para acessibilidade de teclado */
+:focus-visible {
+  outline: 2px solid #3e7bfa;
+  outline-offset: 2px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Scroll horizontal sem barra visível (carrosséis) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
