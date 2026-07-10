@@ -4,19 +4,21 @@ import Link from "next/link";
 import { Game } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 import { PlatformIcons } from "@/components/game/PlatformIcons";
+import { cn } from "@/lib/utils";
 
 interface GameCardProps {
   game: Game;
   eyebrow?: string;
   eyebrowTone?: "red" | "blue" | "gold";
   footer?: ReactNode;
+  className?: string;
 }
 
-export function GameCard({ game, eyebrow, eyebrowTone = "red", footer }: GameCardProps) {
+export function GameCard({ game, eyebrow, eyebrowTone = "red", footer, className }: GameCardProps) {
   return (
     <Link
       href={`/jogos/${game.slug}`}
-      className="group block w-40 shrink-0 sm:w-44"
+      className={cn("group block w-40 shrink-0 sm:w-44", className)}
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-border bg-bg-surface transition-colors duration-200 group-hover:border-primary/60">
         <Image

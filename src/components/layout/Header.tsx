@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { label: "Guias", href: "/guias" },
   { label: "Jogos", href: "/jogos" },
   { label: "Rankings", href: "/rankings" },
-  { label: "Comparar", href: "/comparar" },
 ];
 
 export function Header() {
