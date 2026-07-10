@@ -103,6 +103,11 @@ export interface HardestTrophy {
   tip: string;
 }
 
+export interface RatingBreakdownItem {
+  label: string;
+  value: number;
+}
+
 export interface GameDetail {
   gameId: string;
   minPlaythroughs: number;
@@ -116,6 +121,12 @@ export interface GameDetail {
   videoId?: string;
   guideHref: string;
   roadmapHref: string;
+  /** Classificação geral de 0 a 10 */
+  overallScore: number;
+  ratingBreakdown: RatingBreakdownItem[];
+  /** Passos resumidos do roadmap completo, para preview na página do jogo */
+  roadmapSummary: string[];
+  screenshotUrls: string[];
 }
 
 export interface RankingCategory {

@@ -54,6 +54,22 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/kagerou-path-of-ash",
     roadmapHref: "/roadmaps/kagerou-path-of-ash",
+    overallScore: 8.6,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 9.2 },
+      { label: "História", value: 7.8 },
+      { label: "Direção de Arte", value: 9.0 },
+      { label: "Valor", value: 8.4 },
+    ],
+    roadmapSummary: [
+      "Completa a história em modo normal, sem te preocupares com troféus.",
+      "No 2º save, foca-te nos missables dos Capítulos 2 e 4.",
+      "Entra em New Game+ para o final alternativo e 'Eco Perfeito'.",
+      "Limpa troféus de coleção nos territórios já visitados.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Kagerou+Screenshot+${i}`
+    ),
   },
 
   g2: {
@@ -103,6 +119,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/hollow-signal",
     roadmapHref: "/roadmaps/hollow-signal",
+    overallScore: 8.2,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 7.0 },
+      { label: "História", value: 9.3 },
+      { label: "Direção de Arte", value: 8.5 },
+      { label: "Valor", value: 8.0 },
+    ],
+    roadmapSummary: [
+      "1ª run: segue a abordagem 'curiosa', recolhe as gravações principais.",
+      "2ª run: abordagem 'cautelosa' para o final em falta.",
+      "Usa o guia para as gravações secretas do Capítulo 1 e 3.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Hollow+Signal+Screenshot+${i}`
+    ),
   },
 
   g3: {
@@ -137,6 +168,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/route-9-redux",
     roadmapHref: "/roadmaps/route-9-redux",
+    overallScore: 7.4,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 8.0 },
+      { label: "História", value: 5.5 },
+      { label: "Direção de Arte", value: 6.8 },
+      { label: "Valor", value: 8.8 },
+    ],
+    roadmapSummary: [
+      "Sobe o equipamento base nas primeiras rondas.",
+      "Desbloqueia todos os veículos em modo normal.",
+      "Combina grupo fixo de 4 para o troféu online 'Comboio Completo'.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Route+9+Redux+Screenshot+${i}`
+    ),
   },
 
   g4: {
@@ -177,6 +223,22 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/iron-verdict",
     roadmapHref: "/roadmaps/iron-verdict",
+    overallScore: 8.9,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 8.6 },
+      { label: "História", value: 9.5 },
+      { label: "Direção de Arte", value: 8.7 },
+      { label: "Valor", value: 8.0 },
+    ],
+    roadmapSummary: [
+      "1ª run: rota Iron Court até ao ponto de não retorno do Ato 2.",
+      "2ª run: rota Errantes, guarda save antes do Ato 2.",
+      "3ª run: rota Arquivista para o final restante.",
+      "Usa saves manuais para poupar tempo entre rotas.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Iron+Verdict+Screenshot+${i}`
+    ),
   },
 
   g5: {
@@ -213,6 +275,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/static-choir",
     roadmapHref: "/roadmaps/static-choir",
+    overallScore: 8.0,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 6.5 },
+      { label: "História", value: 9.0 },
+      { label: "Direção de Arte", value: 8.8 },
+      { label: "Valor", value: 7.2 },
+    ],
+    roadmapSummary: [
+      "Uma única run com o guia aberto do início ao fim.",
+      "Apanha a Carta na Cave antes de subires as escadas.",
+      "Grava a Gravação do Sótão antes de ligares a luz do corredor.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Static+Choir+Screenshot+${i}`
+    ),
   },
 
   g6: {
@@ -251,6 +328,22 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/wraithbound",
     roadmapHref: "/roadmaps/wraithbound",
+    overallScore: 9.1,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 9.6 },
+      { label: "História", value: 8.0 },
+      { label: "Direção de Arte", value: 9.4 },
+      { label: "Valor", value: 8.5 },
+    ],
+    roadmapSummary: [
+      "1ª run: guarda a Arma Espectral da Zona 3 antes do boss.",
+      "Sobe uma build otimizada antes de tentares o PvP.",
+      "Grind de ranking PvP para 'Rank Espectral'.",
+      "New Game+ x3 para 'Ciclo Completo' e troféus restantes.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Wraithbound+Screenshot+${i}`
+    ),
   },
 
   g7: {
@@ -281,6 +374,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/sables-requiem",
     roadmapHref: "/roadmaps/sables-requiem",
+    overallScore: 8.3,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 6.0 },
+      { label: "História", value: 9.5 },
+      { label: "Direção de Arte", value: 9.0 },
+      { label: "Valor", value: 8.5 },
+    ],
+    roadmapSummary: [
+      "Explora a propriedade toda antes de avançares para o final.",
+      "Fala com todos os NPCs disponíveis em cada área.",
+      "Sem necessidade de guia — tudo é orgânico.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Sables+Requiem+Screenshot+${i}`
+    ),
   },
 
   g8: {
@@ -315,6 +423,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/chrono-foundry",
     roadmapHref: "/roadmaps/chrono-foundry",
+    overallScore: 7.9,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 8.4 },
+      { label: "História", value: 6.0 },
+      { label: "Direção de Arte", value: 7.5 },
+      { label: "Valor", value: 8.6 },
+    ],
+    roadmapSummary: [
+      "Completa os Mundos 1-4 normalmente.",
+      "Pratica a mecânica de rebobinar antes dos últimos 3 níveis.",
+      "Runs dedicadas a tempo de ouro por nível no fim.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Chrono+Foundry+Screenshot+${i}`
+    ),
   },
 
   g9: {
@@ -349,6 +472,21 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/last-convoy",
     roadmapHref: "/roadmaps/last-convoy",
+    overallScore: 7.8,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 8.0 },
+      { label: "História", value: 6.8 },
+      { label: "Direção de Arte", value: 7.6 },
+      { label: "Valor", value: 8.9 },
+    ],
+    roadmapSummary: [
+      "Estabelece a base principal e sobe upgrades de armazenamento.",
+      "Desbloqueia todos os veículos e território.",
+      "Combina grupo de 4 para a missão de defesa online.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Last+Convoy+Screenshot+${i}`
+    ),
   },
 
   g10: {
@@ -389,6 +527,22 @@ export const gameDetails: Record<string, GameDetail> = {
     ],
     guideHref: "/guias/nightfall-ledger",
     roadmapHref: "/roadmaps/nightfall-ledger",
+    overallScore: 8.7,
+    ratingBreakdown: [
+      { label: "Gameplay", value: 8.5 },
+      { label: "História", value: 9.2 },
+      { label: "Direção de Arte", value: 9.0 },
+      { label: "Valor", value: 8.0 },
+    ],
+    roadmapSummary: [
+      "1ª run: aceita contratos livremente para o final 'canónico'.",
+      "Guarda saves antes de cada contrato-chave (Capítulos 2-4).",
+      "2ª run: recusa todos os contratos para 'Sem Alma Vendida'.",
+      "Usa o guia para o Grimório Completo — as páginas cruzam capítulos.",
+    ],
+    screenshotUrls: [1, 2, 3, 4].map(
+      (i) => `https://placehold.co/960x540/1a1e28/f3f5f7.png?font=roboto&text=Nightfall+Ledger+Screenshot+${i}`
+    ),
   },
 };
 
