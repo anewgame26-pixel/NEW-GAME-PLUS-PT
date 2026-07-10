@@ -33,6 +33,7 @@ const config: Config = {
           DEFAULT: "#F3F5F7",
           muted: "#96A0AD",
           dim: "#5C6673",
+          soft: "#93AFC9",
         },
       },
       fontFamily: {
