@@ -15,16 +15,12 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
       <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 py-12 lg:grid-cols-[1fr_auto] lg:gap-10 lg:px-8 lg:py-16">
         <div className="flex flex-col justify-center">
-          <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">
-            Descobre se uma
-            <br />
-            <span className="text-primary">platina</span> merece
-            <br />
-            realmente o teu tempo.
+          <h1 className="text-balance font-display text-5xl font-bold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4rem]">
+            <span className="text-primary">Antes</span> da Platina
           </h1>
           <p className="mt-6 max-w-lg text-balance text-base text-ink-muted sm:text-lg">
-            Reviews honestas, roadmaps completos e tudo o que precisas de saber
-            antes de começares a tua próxima platina.
+            Descobre tudo o que precisas de saber antes de começares a tua
+            próxima platina.
           </p>
 
           <div className="mt-8 max-w-lg rounded-sm shadow-glow">
