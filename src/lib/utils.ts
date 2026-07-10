@@ -10,6 +10,14 @@ export function formatPlatinumTime(min: number, max: number) {
   return `${min}-${max}h`;
 }
 
+export function formatDate(iso: string) {
+  return new Intl.DateTimeFormat("pt-PT", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(iso));
+}
+
 export function formatTrophyCount(breakdown: {
   bronze: number;
   prata: number;

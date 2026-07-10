@@ -28,6 +28,8 @@ export interface Game {
   platforms: Platform[];
   genres: Genre[];
   releaseYear: number;
+  /** Data completa de lançamento (ISO). Opcional para não obrigar todos os mocks a tê-la. */
+  releaseDate?: string;
   developer: string;
   /** Dificuldade geral para platinar, de 1 (fácil) a 10 (extrema) */
   difficulty: number;
@@ -71,6 +73,49 @@ export interface LatestBeforePlatinumEpisode {
   publishDate: string;
   /** Frase curta de veredito, tipo "legenda" do episódio */
   verdict: string;
+}
+
+export type TimelineStageKey = "inicio" | "meio" | "final" | "cleanup";
+
+export interface TimelineStage {
+  stage: TimelineStageKey;
+  label: string;
+  description: string;
+}
+
+export interface ReviewContent {
+  intro: string;
+  whatToExpect: string;
+  pros: string[];
+  cons: string[];
+  verdict: string;
+}
+
+export interface MissableItem {
+  title: string;
+  chapter: string;
+  description: string;
+}
+
+export interface HardestTrophy {
+  name: string;
+  description: string;
+  tip: string;
+}
+
+export interface GameDetail {
+  gameId: string;
+  minPlaythroughs: number;
+  difficultyExplanation: string;
+  review: ReviewContent;
+  timeline: TimelineStage[];
+  missables: MissableItem[];
+  hardestTrophies: HardestTrophy[];
+  prepTips: string[];
+  /** ID de vídeo do YouTube (mock/placeholder por agora) */
+  videoId?: string;
+  guideHref: string;
+  roadmapHref: string;
 }
 
 export interface RankingCategory {
