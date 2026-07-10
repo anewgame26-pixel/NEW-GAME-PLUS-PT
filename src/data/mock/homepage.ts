@@ -161,3 +161,34 @@ export const communityPosts: CommunityPost[] = [
 
 export const discordOnlineCount = 342;
 export const discordMemberSample = ["PD", "MG", "JS", "AN"];
+
+export interface ArchiveEpisode {
+  id: string;
+  gameId: string;
+  publishDate: string;
+  status: "publicado" | "agendado";
+  /** Tipo (para agendados) ou veredito curto (para publicados) */
+  label: string;
+}
+
+export function getEpisodeArchive(): ArchiveEpisode[] {
+  const published: ArchiveEpisode[] = latestBeforePlatinum.map((ep) => ({
+    id: ep.id,
+    gameId: ep.gameId,
+    publishDate: ep.publishDate,
+    status: "publicado",
+    label: ep.verdict,
+  }));
+
+  const scheduled: ArchiveEpisode[] = upcomingVideos.map((v) => ({
+    id: v.id,
+    gameId: v.gameId,
+    publishDate: v.publishDate,
+    status: "agendado",
+    label: v.type,
+  }));
+
+  return [...scheduled, ...published].sort(
+    (a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+  );
+}

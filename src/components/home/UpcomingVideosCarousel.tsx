@@ -28,7 +28,7 @@ export function UpcomingVideosCarousel({ videos }: UpcomingVideosCarouselProps) 
             Próximos Vídeos
           </h2>
           <div className="flex items-center gap-2">
-            <Link href="/videos" className="text-xs font-medium text-primary hover:text-primary-light">
+            <Link href="/antes-da-platina" className="text-xs font-medium text-primary hover:text-primary-light">
               Ver todos
             </Link>
             <div className="ml-2 hidden items-center gap-1 sm:flex">
