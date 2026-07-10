@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: "Antes da Platina", href: "/antes-da-platina" },
   { label: "Jogos", href: "/jogos" },
   { label: "Rankings", href: "/rankings" },
+  { label: "O Covil", href: "/covil" },
 ];
 
 export function Header() {
