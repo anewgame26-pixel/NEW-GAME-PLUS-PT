@@ -21,9 +21,10 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
           <span className="mt-4 font-display text-sm font-bold uppercase tracking-[0.3em] text-ink-soft sm:text-base">
             Antes da Platina
           </span>
-          <p className="mt-6 max-w-lg text-balance text-base text-ink-muted sm:text-lg">
-            Descobre tudo o que precisas de saber antes de começares a tua
-            próxima platina.
+          <p className="mt-6 max-w-xl text-balance text-base text-ink-muted sm:text-lg">
+            Análises completas escritas apenas depois de conquistar a
+            Platina. Descobre tudo o que precisas de saber antes de
+            começares a tua próxima aventura.
           </p>
 
           <div className="mt-8 max-w-lg rounded-sm shadow-glow">
