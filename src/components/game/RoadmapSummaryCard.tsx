@@ -5,9 +5,10 @@ import { Card } from "@/components/ui/Card";
 interface RoadmapSummaryCardProps {
   steps: string[];
   roadmapHref: string;
+  hideLink?: boolean;
 }
 
-export function RoadmapSummaryCard({ steps, roadmapHref }: RoadmapSummaryCardProps) {
+export function RoadmapSummaryCard({ steps, roadmapHref, hideLink = false }: RoadmapSummaryCardProps) {
   return (
     <section className="border-t border-border py-10">
       <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
@@ -30,13 +31,15 @@ export function RoadmapSummaryCard({ steps, roadmapHref }: RoadmapSummaryCardPro
             ))}
           </ol>
 
-          <Link
-            href={roadmapHref}
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-light"
-          >
-            Ver roadmap completo
-            <ArrowRight width={15} height={15} />
-          </Link>
+          {!hideLink && (
+            <Link
+              href={roadmapHref}
+              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-light"
+            >
+              Ver roadmap completo
+              <ArrowRight width={15} height={15} />
+            </Link>
+          )}
         </Card>
       </div>
     </section>

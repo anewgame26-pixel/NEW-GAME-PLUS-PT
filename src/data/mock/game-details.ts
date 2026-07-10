@@ -53,7 +53,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Grava sempre antes de decisões de diálogo importantes.",
     ],
     guideHref: "/guias/kagerou-path-of-ash",
-    roadmapHref: "/roadmaps/kagerou-path-of-ash",
+    roadmapHref: "/guias/kagerou-path-of-ash#roadmap",
     overallScore: 8.6,
     ratingBreakdown: [
       { label: "Gameplay", value: 9.2 },
@@ -118,7 +118,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Reserva a segunda run só para o final em falta — é mais curta que a primeira.",
     ],
     guideHref: "/guias/hollow-signal",
-    roadmapHref: "/roadmaps/hollow-signal",
+    roadmapHref: "/guias/hollow-signal#roadmap",
     overallScore: 8.2,
     ratingBreakdown: [
       { label: "Gameplay", value: 7.0 },
@@ -167,7 +167,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Guarda recursos para o veículo final antes de gastares tudo em melhorias menores.",
     ],
     guideHref: "/guias/route-9-redux",
-    roadmapHref: "/roadmaps/route-9-redux",
+    roadmapHref: "/guias/route-9-redux#roadmap",
     overallScore: 7.4,
     ratingBreakdown: [
       { label: "Gameplay", value: 8.0 },
@@ -222,7 +222,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Usa o roadmap para saber a ordem mais eficiente de fazer as 3 runs.",
     ],
     guideHref: "/guias/iron-verdict",
-    roadmapHref: "/roadmaps/iron-verdict",
+    roadmapHref: "/guias/iron-verdict#roadmap",
     overallScore: 8.9,
     ratingBreakdown: [
       { label: "Gameplay", value: 8.6 },
@@ -274,7 +274,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Joga com fones — muitas pistas são só sonoras.",
     ],
     guideHref: "/guias/static-choir",
-    roadmapHref: "/roadmaps/static-choir",
+    roadmapHref: "/guias/static-choir#roadmap",
     overallScore: 8.0,
     ratingBreakdown: [
       { label: "Gameplay", value: 6.5 },
@@ -327,7 +327,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Junta-te ao Discord da NG+ antes de começares o grind de PvP.",
     ],
     guideHref: "/guias/wraithbound",
-    roadmapHref: "/roadmaps/wraithbound",
+    roadmapHref: "/guias/wraithbound#roadmap",
     overallScore: 9.1,
     ratingBreakdown: [
       { label: "Gameplay", value: 9.6 },
@@ -373,7 +373,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Explora todos os cantos da propriedade antes do final — não podes voltar depois.",
     ],
     guideHref: "/guias/sables-requiem",
-    roadmapHref: "/roadmaps/sables-requiem",
+    roadmapHref: "/guias/sables-requiem#roadmap",
     overallScore: 8.3,
     ratingBreakdown: [
       { label: "Gameplay", value: 6.0 },
@@ -422,7 +422,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Reserva tempo extra para os últimos 3 níveis — a dificuldade sobe bastante.",
     ],
     guideHref: "/guias/chrono-foundry",
-    roadmapHref: "/roadmaps/chrono-foundry",
+    roadmapHref: "/guias/chrono-foundry#roadmap",
     overallScore: 7.9,
     ratingBreakdown: [
       { label: "Gameplay", value: 8.4 },
@@ -471,7 +471,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Faz as side-quests de logística cedo, desbloqueiam upgrades essenciais para o final.",
     ],
     guideHref: "/guias/last-convoy",
-    roadmapHref: "/roadmaps/last-convoy",
+    roadmapHref: "/guias/last-convoy#roadmap",
     overallScore: 7.8,
     ratingBreakdown: [
       { label: "Gameplay", value: 8.0 },
@@ -526,7 +526,7 @@ export const gameDetails: Record<string, GameDetail> = {
       "Não recuses todos os contratos só por curiosidade — alguns fecham conteúdo permanentemente.",
     ],
     guideHref: "/guias/nightfall-ledger",
-    roadmapHref: "/roadmaps/nightfall-ledger",
+    roadmapHref: "/guias/nightfall-ledger#roadmap",
     overallScore: 8.7,
     ratingBreakdown: [
       { label: "Gameplay", value: 8.5 },

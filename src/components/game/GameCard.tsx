@@ -12,12 +12,13 @@ interface GameCardProps {
   eyebrowTone?: "red" | "blue" | "gold";
   footer?: ReactNode;
   className?: string;
+  href?: string;
 }
 
-export function GameCard({ game, eyebrow, eyebrowTone = "red", footer, className }: GameCardProps) {
+export function GameCard({ game, eyebrow, eyebrowTone = "red", footer, className, href }: GameCardProps) {
   return (
     <Link
-      href={`/jogos/${game.slug}`}
+      href={href ?? `/jogos/${game.slug}`}
       className={cn("group block w-40 shrink-0 sm:w-44", className)}
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-border bg-bg-surface transition-colors duration-200 group-hover:border-primary/60">
