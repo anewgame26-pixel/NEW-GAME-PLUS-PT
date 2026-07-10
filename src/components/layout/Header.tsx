@@ -25,8 +25,8 @@ export function Header() {
           <Image
             src="/logo-ngplus.png"
             alt="NewGame+"
-            width={34}
-            height={34}
+            width={42}
+            height={42}
             className="shrink-0"
           />
           <span className="hidden flex-col leading-none sm:flex">
