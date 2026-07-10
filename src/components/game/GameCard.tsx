@@ -18,7 +18,7 @@ interface GameCardProps {
 export function GameCard({ game, eyebrow, eyebrowTone = "red", footer, className, href }: GameCardProps) {
   return (
     <Link
-      href={href ?? `/jogos/${game.slug}`}
+      href={href ?? `/guias/${game.slug}`}
       className={cn("group block w-40 shrink-0 sm:w-44", className)}
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-sm border border-border bg-bg-surface transition-colors duration-200 group-hover:border-primary/60">

@@ -23,7 +23,7 @@ export function RankingList({ games, valueLabel }: RankingListProps) {
         return (
           <Link
             key={game.id}
-            href={`/jogos/${game.slug}`}
+            href={`/guias/${game.slug}`}
             className="group flex items-center gap-4 p-4 transition-colors hover:bg-bg-surface2"
           >
             <span

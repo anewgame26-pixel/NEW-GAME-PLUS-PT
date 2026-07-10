@@ -7,11 +7,10 @@ import { formatDate, genreLabel } from "@/lib/utils";
 
 interface GameHeroProps {
   game: Game;
-  guideHref: string;
   roadmapHref: string;
 }
 
-export function GameHero({ game, guideHref, roadmapHref }: GameHeroProps) {
+export function GameHero({ game, roadmapHref }: GameHeroProps) {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
@@ -49,7 +48,6 @@ export function GameHero({ game, guideHref, roadmapHref }: GameHeroProps) {
           </div>
 
           <GameCTAButtons
-            guideHref={guideHref}
             roadmapHref={roadmapHref}
             className="mt-6"
           />

@@ -36,7 +36,7 @@ export function LatestBeforePlatinum({ episodes }: LatestBeforePlatinumProps) {
           return (
             <Link
               key={ep.id}
-              href={`/jogos/${game.slug}`}
+              href={`/guias/${game.slug}`}
               className="group flex gap-3 py-3.5 first:pt-0 last:pb-0"
             >
               <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border">

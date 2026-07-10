@@ -15,6 +15,9 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
       <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 py-12 lg:grid-cols-[1fr_auto] lg:gap-10 lg:px-8 lg:py-16">
         <div className="flex flex-col justify-center">
+          <span className="mb-3 font-display text-sm font-bold uppercase tracking-[0.25em] text-ink-dim">
+            New Game<span className="text-primary">+</span>
+          </span>
           <h1 className="text-balance font-display text-5xl font-bold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4rem]">
             <span className="text-primary">Antes</span> da Platina
           </h1>
@@ -32,7 +35,7 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
             {suggestions.map((game) => (
               <Link
                 key={game.id}
-                href={`/jogos/${game.slug}`}
+                href={`/guias/${game.slug}`}
                 className="rounded-full border border-border bg-bg-surface px-3 py-1 text-xs text-ink-muted transition-colors hover:border-primary hover:text-ink"
               >
                 {game.title}

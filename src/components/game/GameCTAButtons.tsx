@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { BookOpen, Map as MapIcon, Play } from "lucide-react";
+import { Map as MapIcon, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface GameCTAButtonsProps {
-  guideHref: string;
   roadmapHref: string;
   videoHref?: string;
   size?: "sm" | "lg";
@@ -11,7 +10,6 @@ interface GameCTAButtonsProps {
 }
 
 export function GameCTAButtons({
-  guideHref,
   roadmapHref,
   videoHref = "#video",
   size = "sm",
@@ -27,22 +25,15 @@ export function GameCTAButtons({
   return (
     <div className={cn("flex flex-wrap items-center gap-2.5", className)}>
       <Link
-        href={guideHref}
-        className={cn(base, "border-primary bg-primary text-white shadow-glow hover:bg-primary-light")}
-      >
-        <BookOpen width={isLg ? 16 : 14} height={isLg ? 16 : 14} />
-        Ver Guia
-      </Link>
-      <Link
         href={roadmapHref}
-        className={cn(base, "border-border-light bg-bg-surface2 text-ink hover:border-accent hover:text-accent")}
+        className={cn(base, "border-primary bg-primary text-white shadow-glow hover:bg-primary-light")}
       >
         <MapIcon width={isLg ? 16 : 14} height={isLg ? 16 : 14} />
         Roadmap
       </Link>
       <Link
         href={videoHref}
-        className={cn(base, "border-border bg-transparent text-ink-muted hover:border-border-light hover:text-ink")}
+        className={cn(base, "border-border-light bg-bg-surface2 text-ink hover:border-accent hover:text-accent")}
       >
         <Play width={isLg ? 16 : 14} height={isLg ? 16 : 14} />
         Vídeo

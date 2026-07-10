@@ -37,13 +37,13 @@ export function ContinuePlayingList({ items }: ContinuePlayingListProps) {
 
           return (
             <div key={item.gameId} className="flex gap-3 py-3.5 first:pt-0 last:pb-0">
-              <Link href={`/jogos/${game.slug}`} className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border">
+              <Link href={`/guias/${game.slug}`} className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border">
                 <Image src={game.coverUrl} alt={`Capa de ${game.title}`} fill sizes="48px" className="object-cover" />
               </Link>
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <Link href={`/jogos/${game.slug}`} className="min-w-0">
+                  <Link href={`/guias/${game.slug}`} className="min-w-0">
                     <p className="truncate font-display text-sm font-semibold text-ink hover:text-primary-light">
                       {game.title}
                     </p>
@@ -60,7 +60,7 @@ export function ContinuePlayingList({ items }: ContinuePlayingListProps) {
                   {QUICK_LINKS.map((link) => (
                     <Link
                       key={link.label}
-                      href={`/jogos/${game.slug}`}
+                      href={`/guias/${game.slug}`}
                       className="flex items-center gap-1 text-[11px] text-ink-dim hover:text-primary-light"
                     >
                       <link.icon width={11} height={11} />
