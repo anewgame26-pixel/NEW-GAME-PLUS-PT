@@ -4,14 +4,16 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FAQAccordion } from "@/components/about/FAQAccordion";
-import { faqItems } from "@/data/mock/faq";
+import { getFaqItems } from "@/lib/data/faq";
 
 export const metadata: Metadata = {
   title: "Perguntas Frequentes | NewGame+",
   description: "Respostas às perguntas mais comuns sobre a NewGame+.",
 };
 
-export default function FAQPage() {
+export default async function FAQPage() {
+  const faqItems = await getFaqItems();
+
   return (
     <>
       <Header />

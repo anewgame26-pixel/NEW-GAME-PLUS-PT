@@ -7,7 +7,7 @@ import { StatsBar } from "@/components/home/StatsBar";
 import { TeamGrid } from "@/components/about/TeamGrid";
 import { Button } from "@/components/ui/Button";
 import { platformStats } from "@/data/mock/homepage";
-import { teamMembers } from "@/data/mock/team";
+import { getTeamMembers } from "@/lib/data/team";
 
 export const metadata: Metadata = {
   title: "O Covil | NewGame+",
@@ -15,7 +15,9 @@ export const metadata: Metadata = {
     "Quem somos, porque existe a NewGame+ e quem está por detrás de cada review, roadmap e platina sofrida.",
 };
 
-export default function CovilPage() {
+export default async function CovilPage() {
+  const teamMembers = await getTeamMembers();
+
   return (
     <>
       <Header />
