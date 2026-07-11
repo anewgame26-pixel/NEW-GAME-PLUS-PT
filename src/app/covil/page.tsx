@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Skull, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
@@ -26,11 +27,20 @@ export default async function CovilPage() {
         <section className="relative overflow-hidden border-b border-border">
           <div className="absolute inset-0 bg-radial-fade" aria-hidden />
           <div className="relative mx-auto max-w-[1440px] px-4 py-14 text-center lg:px-8">
-            <Skull width={40} height={40} className="mx-auto text-primary" />
-            <h1 className="mt-4 font-display text-4xl font-bold uppercase tracking-wide text-ink sm:text-5xl">
+            <h1 className="font-display text-4xl font-bold uppercase tracking-wide text-ink sm:text-5xl">
               O Covil
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-balance text-ink-muted">
+            <div className="mx-auto mt-8 max-w-4xl overflow-hidden rounded-sm border border-border">
+              <Image
+                src="/equipa-covil.jpg"
+                alt="A equipa da NewGame+ reunida no Covil"
+                width={1536}
+                height={1024}
+                className="h-auto w-full"
+                priority
+              />
+            </div>
+            <p className="mx-auto mt-8 max-w-xl text-balance text-ink-muted">
               Este é o sítio onde os Caçadores de Platina da NewGame+ se juntam para
               decidir, testar e sofrer antes de ti — para que a tua próxima platina
               valha mesmo a pena.
