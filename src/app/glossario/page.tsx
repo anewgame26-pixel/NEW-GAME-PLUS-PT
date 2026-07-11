@@ -4,14 +4,16 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { GlossaryList } from "@/components/about/GlossaryList";
-import { glossaryTerms } from "@/data/mock/glossary";
+import { getGlossaryTerms } from "@/lib/data/glossary";
 
 export const metadata: Metadata = {
   title: "Glossário de Troféus | NewGame+",
   description: "Termos comuns do mundo da caça aos troféus, explicados.",
 };
 
-export default function GlossarioPage() {
+export default async function GlossarioPage() {
+  const glossaryTerms = await getGlossaryTerms();
+
   return (
     <>
       <Header />
