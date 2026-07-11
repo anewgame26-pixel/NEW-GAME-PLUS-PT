@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { SearchX } from "lucide-react";
-import { games } from "@/data/mock/games";
+import { Game } from "@/types";
 import { GameCard } from "@/components/game/GameCard";
 import {
   DIFFICULTY_OPTIONS,
@@ -12,7 +12,11 @@ import {
   TIME_OPTIONS,
 } from "@/components/game/GameFiltersBar";
 
-export function JogosListingClient() {
+interface JogosListingClientProps {
+  games: Game[];
+}
+
+export function JogosListingClient({ games }: JogosListingClientProps) {
   const [filters, setFilters] = useState<GameFilters>(EMPTY_FILTERS);
 
   const filteredGames = useMemo(() => {
@@ -49,7 +53,7 @@ export function JogosListingClient() {
       }
       return true;
     });
-  }, [filters]);
+  }, [filters, games]);
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-10 lg:px-8">
