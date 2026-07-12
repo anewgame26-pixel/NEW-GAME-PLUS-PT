@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingList } from "@/components/game/RankingList";
-import { games } from "@/data/mock/games";
+import { getGames } from "@/lib/data/games";
 import { getRankingConfig, rankingConfigs } from "@/data/mock/rankings-config";
 
 interface RankingCategoryPageProps {
@@ -38,6 +38,7 @@ export default async function RankingCategoryPage({ params }: RankingCategoryPag
     notFound();
   }
 
+  const games = await getGames();
   const sortedGames = config.sort(games);
 
   return (

@@ -4,14 +4,16 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
-import { rankingCategories } from "@/data/mock/homepage";
+import { getRankingCategories } from "@/lib/data/rankings";
 
 export const metadata: Metadata = {
   title: "Rankings | NewGame+",
   description: "As melhores, piores, mais rápidas e mais difíceis platinas do catálogo NewGame+.",
 };
 
-export default function RankingsPage() {
+export default async function RankingsPage() {
+  const rankingCategories = await getRankingCategories();
+
   return (
     <>
       <Header />

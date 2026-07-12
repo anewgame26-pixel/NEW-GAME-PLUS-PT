@@ -4,8 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EpisodeRow } from "@/components/game/EpisodeRow";
-import { getEpisodeArchive } from "@/data/mock/homepage";
-import { getGameById } from "@/data/mock/games";
+import { getEpisodeArchive } from "@/lib/data/videos";
+import { getGames } from "@/lib/data/games";
 
 export const metadata: Metadata = {
   title: "Antes da Platina | NewGame+",
@@ -13,8 +13,9 @@ export const metadata: Metadata = {
     "Todos os episódios Antes da Platina — publicados e agendados — num só lugar.",
 };
 
-export default function AntesDaPlatinaPage() {
-  const episodes = getEpisodeArchive();
+export default async function AntesDaPlatinaPage() {
+  const episodes = await getEpisodeArchive();
+  const games = await getGames();
 
   return (
     <>
@@ -29,7 +30,7 @@ export default function AntesDaPlatinaPage() {
         <div className="mx-auto max-w-[1440px] px-4 py-10 lg:px-8">
           <div className="grid gap-4 sm:grid-cols-2">
             {episodes.map((ep) => {
-              const game = getGameById(ep.gameId);
+              const game = games.find((g) => g.id === ep.gameId);
               if (!game) return null;
               return (
                 <EpisodeRow
