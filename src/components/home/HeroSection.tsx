@@ -15,7 +15,7 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
       <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 py-12 lg:grid-cols-[1fr_auto] lg:gap-10 lg:px-8 lg:py-16">
         <div className="flex flex-col justify-center">
-          <h1 className="w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[440px]">
+          <h1 className="w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px]">
             <Image
               src="/logo-hero.png"
               alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."

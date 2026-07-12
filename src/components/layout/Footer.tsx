@@ -30,7 +30,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="flex items-center gap-2.5">
-              <Image src="/logo-ngplus.png" alt="NewGame+" width={32} height={32} />
+              <Image src="/logo-icon.png" alt="NewGame+" width={32} height={32} />
               <span className="font-display text-base font-bold text-ink">
                 NEWGAME<span className="text-primary">+</span>
               </span>
