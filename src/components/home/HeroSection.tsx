@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Game } from "@/types";
 import { SearchInput } from "@/components/ui/SearchInput";
@@ -14,12 +15,16 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
       <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 py-12 lg:grid-cols-[1fr_auto] lg:gap-10 lg:px-8 lg:py-16">
         <div className="flex flex-col justify-center">
-          <h1 className="text-balance font-display text-6xl font-bold uppercase leading-[0.95] tracking-tight text-ink sm:text-7xl lg:text-[4.5rem]">
-            New Game<span className="text-primary">+</span>
+          <h1 className="w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[440px]">
+            <Image
+              src="/logo-hero.png"
+              alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
+              width={1254}
+              height={1254}
+              priority
+              className="h-auto w-full"
+            />
           </h1>
-          <span className="mt-4 font-display text-sm font-bold uppercase tracking-[0.3em] text-ink-soft sm:text-base">
-            Antes da Platina
-          </span>
           <p className="mt-6 max-w-xl text-balance text-base text-ink-muted sm:text-lg">
             Análises completas escritas apenas depois de conquistar a
             Platina. Descobre tudo o que precisas de saber antes de
