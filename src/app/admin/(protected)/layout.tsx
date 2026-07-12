@@ -46,6 +46,7 @@ export default async function AdminProtectedLayout({
         <nav className="mx-auto flex max-w-[1440px] items-center gap-1 px-4 lg:px-8">
           <AdminNavLink href="/admin">Dashboard</AdminNavLink>
           <AdminNavLink href="/admin/glossario">Glossário</AdminNavLink>
+          <AdminNavLink href="/admin/faq">FAQ</AdminNavLink>
         </nav>
       </div>
       <main className="mx-auto max-w-[1440px] px-4 py-8 lg:px-8">{children}</main>
