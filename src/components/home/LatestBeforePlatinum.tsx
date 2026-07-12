@@ -1,19 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
-import { LatestBeforePlatinumEpisode } from "@/types";
-import { getGameById } from "@/data/mock/games";
+import { Game, LatestBeforePlatinumEpisode } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { PlatformIcons } from "@/components/game/PlatformIcons";
 
 interface LatestBeforePlatinumProps {
   episodes: LatestBeforePlatinumEpisode[];
+  games: Game[];
 }
 
 const formatter = new Intl.DateTimeFormat("pt-PT", { day: "2-digit", month: "short" });
 
-export function LatestBeforePlatinum({ episodes }: LatestBeforePlatinumProps) {
+export function LatestBeforePlatinum({ episodes, games }: LatestBeforePlatinumProps) {
   return (
     <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -30,7 +30,7 @@ export function LatestBeforePlatinum({ episodes }: LatestBeforePlatinumProps) {
 
       <div className="flex flex-col divide-y divide-border">
         {episodes.map((ep) => {
-          const game = getGameById(ep.gameId);
+          const game = games.find((g) => g.id === ep.gameId);
           if (!game) return null;
 
           return (

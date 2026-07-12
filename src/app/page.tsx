@@ -8,18 +8,22 @@ import { UpcomingVideosCarousel } from "@/components/home/UpcomingVideosCarousel
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { StatsBar } from "@/components/home/StatsBar";
-import { games, getGameById } from "@/data/mock/games";
-import {
-  latestBeforePlatinum,
-  platformStats,
-  playingNow,
-  rankingCategories,
-  upcomingVideos,
-} from "@/data/mock/homepage";
+import { getGames, getGameBySlug } from "@/lib/data/games";
+import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
+import { getRankingCategories } from "@/lib/data/rankings";
+import { playingNow, platformStats } from "@/data/mock/homepage";
 
-export default function HomePage() {
-  const featuredGame = getGameById("g10")!;
+export default async function HomePage() {
+  const games = await getGames();
+  const featuredGame = await getGameBySlug("nightfall-ledger");
   const suggestions = games.slice(0, 5);
+  const latestBeforePlatinum = await getLatestBeforePlatinum();
+  const upcomingVideos = await getUpcomingVideos();
+  const rankingCategories = await getRankingCategories();
+
+  if (!featuredGame) {
+    return null;
+  }
 
   return (
     <>
@@ -31,12 +35,12 @@ export default function HomePage() {
         <section className="py-10">
           <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
             <ContinuePlayingList items={playingNow} />
-            <LatestBeforePlatinum episodes={latestBeforePlatinum} />
+            <LatestBeforePlatinum episodes={latestBeforePlatinum} games={games} />
           </div>
         </section>
 
         <div className="border-t border-border">
-          <UpcomingVideosCarousel videos={upcomingVideos} />
+          <UpcomingVideosCarousel videos={upcomingVideos} games={games} />
         </div>
 
         <section className="border-t border-border py-10">

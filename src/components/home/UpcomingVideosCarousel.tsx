@@ -3,17 +3,17 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { UpcomingVideo } from "@/types";
-import { getGameById } from "@/data/mock/games";
+import { Game, UpcomingVideo } from "@/types";
 import { GameCard } from "@/components/game/GameCard";
 
 interface UpcomingVideosCarouselProps {
   videos: UpcomingVideo[];
+  games: Game[];
 }
 
 const formatter = new Intl.DateTimeFormat("pt-PT", { day: "2-digit", month: "short" });
 
-export function UpcomingVideosCarousel({ videos }: UpcomingVideosCarouselProps) {
+export function UpcomingVideosCarousel({ videos, games }: UpcomingVideosCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: 1 | -1) => {
@@ -52,7 +52,7 @@ export function UpcomingVideosCarousel({ videos }: UpcomingVideosCarouselProps) 
 
         <div ref={scrollRef} className="no-scrollbar flex gap-4 overflow-x-auto pb-1">
           {videos.map((video) => {
-            const game = getGameById(video.gameId);
+            const game = games.find((g) => g.id === video.gameId);
             if (!game) return null;
             return (
               <GameCard
