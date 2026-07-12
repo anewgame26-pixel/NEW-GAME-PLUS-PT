@@ -45,6 +45,7 @@ export default async function AdminProtectedLayout({
       <div className="border-b border-border bg-bg-raised">
         <nav className="mx-auto flex max-w-[1440px] items-center gap-1 px-4 lg:px-8">
           <AdminNavLink href="/admin">Dashboard</AdminNavLink>
+          <AdminNavLink href="/admin/jogos">Jogos</AdminNavLink>
           <AdminNavLink href="/admin/glossario">Glossário</AdminNavLink>
           <AdminNavLink href="/admin/faq">FAQ</AdminNavLink>
           <AdminNavLink href="/admin/equipa">Equipa</AdminNavLink>
