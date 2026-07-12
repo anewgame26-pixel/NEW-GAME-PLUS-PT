@@ -14,10 +14,14 @@ import {
 
 interface JogosListingClientProps {
   games: Game[];
+  initialFilters?: Partial<GameFilters>;
 }
 
-export function JogosListingClient({ games }: JogosListingClientProps) {
-  const [filters, setFilters] = useState<GameFilters>(EMPTY_FILTERS);
+export function JogosListingClient({ games, initialFilters }: JogosListingClientProps) {
+  const [filters, setFilters] = useState<GameFilters>({
+    ...EMPTY_FILTERS,
+    ...initialFilters,
+  });
 
   const filteredGames = useMemo(() => {
     const timeOption = TIME_OPTIONS.find((t) => t.id === filters.timeId);

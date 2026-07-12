@@ -1,30 +1,22 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import { Clock, ShieldCheck, Users, Sparkles, Swords, Skull, Wand2 } from "lucide-react";
 import { Chip } from "@/components/ui/Chip";
 
 const FILTERS = [
-  { id: "10h", label: "Até 10h", icon: Clock },
-  { id: "20h", label: "Até 20h", icon: Clock },
-  { id: "40h", label: "Até 40h", icon: Clock },
-  { id: "sem-missables", label: "Sem Perdíveis", icon: ShieldCheck },
-  { id: "coop", label: "Coop", icon: Users },
-  { id: "facil", label: "Fácil", icon: Sparkles },
-  { id: "medio", label: "Médio", icon: Swords },
-  { id: "dificil", label: "Difícil", icon: Skull },
-  { id: "soulslike", label: "Soulslike", icon: Skull },
-  { id: "rpg", label: "RPG", icon: Wand2 },
-  { id: "terror", label: "Terror", icon: Skull },
+  { id: "10h", label: "Até 10h", icon: Clock, href: "/jogos?time=10h" },
+  { id: "20h", label: "Até 20h", icon: Clock, href: "/jogos?time=20h" },
+  { id: "40h", label: "Até 40h", icon: Clock, href: "/jogos?time=40h" },
+  { id: "sem-missables", label: "Sem Perdíveis", icon: ShieldCheck, href: "/jogos?noMissables=1" },
+  { id: "coop", label: "Coop", icon: Users, href: "/jogos?genre=coop" },
+  { id: "facil", label: "Fácil", icon: Sparkles, href: "/jogos?difficulty=facil" },
+  { id: "medio", label: "Médio", icon: Swords, href: "/jogos?difficulty=medio" },
+  { id: "dificil", label: "Difícil", icon: Skull, href: "/jogos?difficulty=dificil" },
+  { id: "soulslike", label: "Soulslike", icon: Skull, href: "/jogos?genre=soulslike" },
+  { id: "rpg", label: "RPG", icon: Wand2, href: "/jogos?genre=rpg" },
+  { id: "terror", label: "Terror", icon: Skull, href: "/jogos?genre=terror" },
 ];
 
 export function QuickFilters() {
-  const [active, setActive] = useState<string[]>([]);
-
-  const toggle = (id: string) => {
-    setActive((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
-  };
-
   return (
     <section className="border-b border-border bg-bg-raised">
       <div className="mx-auto max-w-[1440px] px-4 py-4 lg:px-8">
@@ -33,14 +25,9 @@ export function QuickFilters() {
             Filtros rápidos
           </span>
           {FILTERS.map((f) => (
-            <Chip
-              key={f.id}
-              active={active.includes(f.id)}
-              onClick={() => toggle(f.id)}
-              icon={<f.icon width={13} height={13} />}
-            >
-              {f.label}
-            </Chip>
+            <Link key={f.id} href={f.href}>
+              <Chip icon={<f.icon width={13} height={13} />}>{f.label}</Chip>
+            </Link>
           ))}
         </div>
       </div>

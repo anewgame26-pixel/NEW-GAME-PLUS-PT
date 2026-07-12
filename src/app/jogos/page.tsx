@@ -5,6 +5,7 @@ import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { JogosListingClient } from "@/components/game/JogosListingClient";
 import { getGames } from "@/lib/data/games";
+import type { Genre } from "@/types";
 
 export const metadata: Metadata = {
   title: "Todos os Jogos | NewGame+",
@@ -12,8 +13,21 @@ export const metadata: Metadata = {
     "Pesquisa e filtra o catálogo completo da NewGame+ por género, plataforma, dificuldade e tempo para a platina.",
 };
 
-export default async function JogosPage() {
+interface JogosPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function JogosPage({ searchParams }: JogosPageProps) {
   const games = await getGames();
+  const params = await searchParams;
+
+  // Filtros vindos dos "Filtros rápidos" da homepage (ex: /jogos?time=10h)
+  const initialFilters = {
+    timeId: typeof params.time === "string" ? params.time : null,
+    difficultyId: typeof params.difficulty === "string" ? params.difficulty : null,
+    genres: typeof params.genre === "string" ? [params.genre as Genre] : [],
+    noMissables: params.noMissables === "1",
+  };
 
   return (
     <>
@@ -24,7 +38,7 @@ export default async function JogosPage() {
           title="Todos os Jogos"
           description="Pesquisa e filtra por género, plataforma, dificuldade e tempo para a platina."
         />
-        <JogosListingClient games={games} />
+        <JogosListingClient games={games} initialFilters={initialFilters} />
       </main>
       <Footer />
     </>
