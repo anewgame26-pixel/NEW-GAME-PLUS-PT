@@ -48,7 +48,7 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-          <div className="order-2 flex w-full flex-col gap-4 lg:order-1 lg:w-72">
+          <div className="flex w-full flex-col gap-4 lg:w-72">
             <Badge tone="gold" className="w-fit">
               <Star width={11} height={11} className="fill-current" />
               Jogo em Destaque
@@ -70,7 +70,7 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
               </div>
             </div>
           </div>
-          <div className="order-1 lg:order-2">
+          <div>
             <FeaturedGameStats game={featuredGame} />
           </div>
         </div>
