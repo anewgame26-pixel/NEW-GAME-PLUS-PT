@@ -64,3 +64,33 @@ export async function getGameBySlug(slug: string): Promise<Game | null> {
 
   return data ? mapRowToGame(data) : null;
 }
+
+/**
+ * Vai buscar vários jogos de uma vez a partir de uma lista de IDs — usado,
+ * por exemplo, para mostrar os "jogos semelhantes" na página de um jogo,
+ * numa única pergunta à base de dados em vez de uma por jogo.
+ */
+export async function getGamesByIds(ids: string[]): Promise<Game[]> {
+  if (ids.length === 0) return [];
+
+  const { data, error } = await supabase.from("games").select("*").in("id", ids);
+
+  if (error) {
+    console.error("Erro ao carregar jogos semelhantes do Supabase:", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToGame);
+}
+
+/** Todos os "slugs" existentes — usado para gerar as páginas estáticas de cada jogo. */
+export async function getAllGameSlugs(): Promise<string[]> {
+  const { data, error } = await supabase.from("games").select("slug");
+
+  if (error) {
+    console.error("Erro ao carregar a lista de slugs do Supabase:", error);
+    return [];
+  }
+
+  return (data ?? []).map((row) => row.slug as string);
+}

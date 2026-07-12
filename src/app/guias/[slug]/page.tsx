@@ -17,20 +17,21 @@ import { ScreenshotsGallery } from "@/components/game/ScreenshotsGallery";
 import { SimilarGamesRow } from "@/components/game/SimilarGamesRow";
 import { VideoEmbed } from "@/components/game/VideoEmbed";
 import { GameEngagementBar } from "@/components/game/GameEngagementBar";
-import { games, getGameById, getGameBySlug } from "@/data/mock/games";
-import { getGameDetail } from "@/data/mock/game-details";
+import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games";
+import { getGameDetail } from "@/lib/data/game-details";
 
 interface GuiaPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return games.map((game) => ({ slug: game.slug }));
+export async function generateStaticParams() {
+  const slugs = await getAllGameSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: GuiaPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const game = getGameBySlug(slug);
+  const game = await getGameBySlug(slug);
 
   if (!game) {
     return { title: "Guia não encontrada | NewGame+" };
@@ -44,21 +45,19 @@ export async function generateMetadata({ params }: GuiaPageProps): Promise<Metad
 
 export default async function GuiaPage({ params }: GuiaPageProps) {
   const { slug } = await params;
-  const game = getGameBySlug(slug);
+  const game = await getGameBySlug(slug);
 
   if (!game) {
     notFound();
   }
 
-  const detail = getGameDetail(game.id);
+  const detail = await getGameDetail(game.id);
 
   if (!detail) {
     notFound();
   }
 
-  const similarGames = game.similarGameIds
-    .map((id) => getGameById(id))
-    .filter((g): g is NonNullable<typeof g> => Boolean(g));
+  const similarGames = await getGamesByIds(game.similarGameIds);
 
   return (
     <>
