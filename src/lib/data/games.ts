@@ -66,6 +66,27 @@ export async function getGameBySlug(slug: string): Promise<Game | null> {
 }
 
 /**
+ * Vai buscar os jogos marcados como "destaque" no CMS (campo is_featured),
+ * ordenados por featured_order (quando definido) e depois por título. Usado
+ * no carousel da homepage — nenhum jogo fica fixo no código.
+ */
+export async function getFeaturedGames(): Promise<Game[]> {
+  const { data, error } = await supabase
+    .from("games")
+    .select("*")
+    .eq("is_featured", true)
+    .order("featured_order", { ascending: true, nullsFirst: false })
+    .order("title", { ascending: true });
+
+  if (error) {
+    console.error("Erro ao carregar jogos em destaque do Supabase:", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToGame);
+}
+
+/**
  * Vai buscar vários jogos de uma vez a partir de uma lista de IDs — usado,
  * por exemplo, para mostrar os "jogos semelhantes" na página de um jogo,
  * numa única pergunta à base de dados em vez de uma por jogo.

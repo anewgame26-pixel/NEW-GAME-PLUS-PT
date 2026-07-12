@@ -1,17 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
 import { Game } from "@/types";
 import { SearchInput } from "@/components/ui/SearchInput";
-import { Badge } from "@/components/ui/Badge";
-import { FeaturedGameStats } from "@/components/home/FeaturedGameStats";
+import { FeaturedGameCarousel } from "@/components/home/FeaturedGameCarousel";
 
 interface HeroSectionProps {
-  featuredGame: Game;
+  featuredGames: Game[];
   suggestions: Game[];
 }
 
-export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
+export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
@@ -47,33 +44,7 @@ export function HeroSection({ featuredGame, suggestions }: HeroSectionProps) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-          <div className="flex w-full flex-col gap-4 lg:w-72">
-            <Badge tone="gold" className="w-fit">
-              <Star width={11} height={11} className="fill-current" />
-              Jogo em Destaque
-            </Badge>
-            <div className="relative h-64 w-full overflow-hidden rounded-sm border border-border sm:h-80 lg:h-[26rem]">
-              <Image
-                src={featuredGame.coverUrl}
-                alt={`Capa de ${featuredGame.title}`}
-                fill
-                sizes="(min-width: 1024px) 288px, 100vw"
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent p-5">
-                <p className="font-display text-xl font-bold uppercase tracking-wide text-ink">
-                  {featuredGame.title}
-                </p>
-                <p className="text-xs text-ink-muted">{featuredGame.developer}</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <FeaturedGameStats game={featuredGame} />
-          </div>
-        </div>
+        <FeaturedGameCarousel games={featuredGames} />
       </div>
     </section>
   );

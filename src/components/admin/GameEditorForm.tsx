@@ -61,6 +61,8 @@ const defaultGameForm = {
   guideRequired: false,
   synopsis: "",
   similarGameIds: [] as string[],
+  isFeatured: false,
+  featuredOrder: null as number | null,
 };
 
 const defaultDetailForm = {
@@ -152,6 +154,8 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         guideRequired: g.guide_required ?? false,
         synopsis: g.synopsis ?? "",
         similarGameIds: g.similar_game_ids ?? [],
+        isFeatured: g.is_featured ?? false,
+        featuredOrder: g.featured_order ?? null,
       });
 
       if (detailRes.data) {
@@ -242,6 +246,8 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       guide_required: game.guideRequired,
       synopsis: game.synopsis.trim(),
       similar_game_ids: game.similarGameIds,
+      is_featured: game.isFeatured,
+      featured_order: game.featuredOrder,
     };
 
     let resolvedGameId = gameId;
@@ -399,6 +405,37 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                 </button>
               </div>
             </label>
+          </div>
+
+          <div className="flex flex-wrap items-end gap-4 rounded-sm border border-gold/30 bg-gold/5 p-4">
+            <label className="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="checkbox"
+                checked={game.isFeatured}
+                onChange={(e) => setGame((f) => ({ ...f, isFeatured: e.target.checked }))}
+                className="h-4 w-4 accent-primary"
+              />
+              Jogo em Destaque (aparece no carousel da homepage)
+            </label>
+            {game.isFeatured && (
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+                  Ordem no carousel (opcional)
+                </span>
+                <input
+                  type="number"
+                  value={game.featuredOrder ?? ""}
+                  onChange={(e) =>
+                    setGame((f) => ({
+                      ...f,
+                      featuredOrder: e.target.value === "" ? null : Number(e.target.value),
+                    }))
+                  }
+                  placeholder="Ex: 1"
+                  className="h-10 w-28 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+                />
+              </label>
+            )}
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">

@@ -8,20 +8,27 @@ import { UpcomingVideosCarousel } from "@/components/home/UpcomingVideosCarousel
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { StatsBar } from "@/components/home/StatsBar";
-import { getGames, getGameBySlug } from "@/lib/data/games";
+import { getGames, getFeaturedGames } from "@/lib/data/games";
 import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
 import { getRankingCategories } from "@/lib/data/rankings";
 import { playingNow, platformStats } from "@/data/mock/homepage";
 
 export default async function HomePage() {
   const games = await getGames();
-  const featuredGame = await getGameBySlug("nightfall-ledger");
+  let featuredGames = await getFeaturedGames();
+
+  // Salvaguarda: se ainda nenhum jogo tiver sido marcado como destaque no
+  // admin, mostra os 3 primeiros do catálogo em vez de a secção ficar vazia.
+  if (featuredGames.length === 0) {
+    featuredGames = games.slice(0, 3);
+  }
+
   const suggestions = games.slice(0, 5);
   const latestBeforePlatinum = await getLatestBeforePlatinum();
   const upcomingVideos = await getUpcomingVideos();
   const rankingCategories = await getRankingCategories();
 
-  if (!featuredGame) {
+  if (featuredGames.length === 0) {
     return null;
   }
 
@@ -29,7 +36,7 @@ export default async function HomePage() {
     <>
       <Header />
       <main>
-        <HeroSection featuredGame={featuredGame} suggestions={suggestions} />
+        <HeroSection featuredGames={featuredGames} suggestions={suggestions} />
         <QuickFilters />
 
         <section className="py-10">
