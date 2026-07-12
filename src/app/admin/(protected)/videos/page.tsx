@@ -16,6 +16,7 @@ interface VideoRow {
   status: "publicado" | "agendado";
   verdict: string | null;
   type: string | null;
+  youtube_id: string | null;
 }
 
 const VIDEO_TYPES = ["Antes da Platina", "Review", "Roadmap"];
@@ -26,6 +27,7 @@ const emptyForm = {
   status: "agendado" as "publicado" | "agendado",
   verdict: "",
   type: "Antes da Platina",
+  youtube_id: "",
 };
 
 export default function AdminVideosPage() {
@@ -48,7 +50,7 @@ export default function AdminVideosPage() {
     const [videosRes, gamesRes] = await Promise.all([
       supabase
         .from("videos")
-        .select("id, game_id, publish_date, status, verdict, type")
+        .select("id, game_id, publish_date, status, verdict, type, youtube_id")
         .order("publish_date", { ascending: false }),
       supabase.from("games").select("id, title").order("title", { ascending: true }),
     ]);
@@ -80,6 +82,7 @@ export default function AdminVideosPage() {
       status: row.status,
       verdict: row.verdict ?? "",
       type: row.type ?? "Antes da Platina",
+      youtube_id: row.youtube_id ?? "",
     });
   }
 
@@ -106,6 +109,7 @@ export default function AdminVideosPage() {
       status: form.status,
       verdict: form.status === "publicado" ? form.verdict.trim() : null,
       type: form.status === "agendado" ? form.type : null,
+      youtube_id: form.youtube_id.trim() || null,
     };
 
     if (editingId) {
@@ -222,6 +226,26 @@ export default function AdminVideosPage() {
                 </select>
               </label>
             </div>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+                ID do vídeo no YouTube (opcional)
+              </span>
+              <input
+                type="text"
+                value={form.youtube_id}
+                onChange={(e) => setForm((f) => ({ ...f, youtube_id: e.target.value }))}
+                placeholder="Ex: dQw4w9WgXcQ"
+                className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+              />
+              <span className="text-xs text-ink-dim">
+                Faz o upload do vídeo no YouTube primeiro. Depois cola aqui só o
+                código que vem a seguir a &quot;v=&quot; no URL — em
+                youtube.com/watch?v=<strong>dQw4w9WgXcQ</strong>, o ID é
+                dQw4w9WgXcQ. Podes deixar em branco enquanto o vídeo não estiver
+                pronto.
+              </span>
+            </label>
 
             {form.status === "publicado" ? (
               <label className="flex flex-col gap-1.5">
