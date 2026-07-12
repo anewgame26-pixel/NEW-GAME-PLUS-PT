@@ -42,7 +42,24 @@ export default async function AdminProtectedLayout({
           </div>
         </div>
       </header>
+      <div className="border-b border-border bg-bg-raised">
+        <nav className="mx-auto flex max-w-[1440px] items-center gap-1 px-4 lg:px-8">
+          <AdminNavLink href="/admin">Dashboard</AdminNavLink>
+          <AdminNavLink href="/admin/glossario">Glossário</AdminNavLink>
+        </nav>
+      </div>
       <main className="mx-auto max-w-[1440px] px-4 py-8 lg:px-8">{children}</main>
     </div>
+  );
+}
+
+function AdminNavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-primary hover:text-ink"
+    >
+      {children}
+    </Link>
   );
 }
