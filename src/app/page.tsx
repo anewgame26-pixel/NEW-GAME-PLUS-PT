@@ -11,7 +11,9 @@ import { StatsBar } from "@/components/home/StatsBar";
 import { getGames, getFeaturedGames } from "@/lib/data/games";
 import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
 import { getRankingCategories } from "@/lib/data/rankings";
-import { playingNow, platformStats } from "@/data/mock/homepage";
+import { getNowPlaying, resolveNowPlaying } from "@/lib/data/now-playing";
+import { getTeamMembers } from "@/lib/data/team";
+import { platformStats } from "@/data/mock/homepage";
 
 export default async function HomePage() {
   const games = await getGames();
@@ -27,6 +29,9 @@ export default async function HomePage() {
   const latestBeforePlatinum = await getLatestBeforePlatinum();
   const upcomingVideos = await getUpcomingVideos();
   const rankingCategories = await getRankingCategories();
+  const teamMembers = await getTeamMembers();
+  const nowPlayingRows = await getNowPlaying();
+  const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
 
   if (featuredGames.length === 0) {
     return null;
@@ -41,7 +46,7 @@ export default async function HomePage() {
 
         <section className="py-10">
           <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
-            <ContinuePlayingList items={playingNow} />
+            <ContinuePlayingList items={playingNow} games={games} />
             <LatestBeforePlatinum episodes={latestBeforePlatinum} games={games} />
           </div>
         </section>

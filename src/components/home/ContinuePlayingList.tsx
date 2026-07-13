@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Play, Map as MapIcon, Video } from "lucide-react";
-import { PlayingNow } from "@/types";
-import { getGameById } from "@/data/mock/games";
+import { Game, PlayingNow } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { PlatformIcons } from "@/components/game/PlatformIcons";
 
 interface ContinuePlayingListProps {
   items: PlayingNow[];
+  games: Game[];
 }
 
 const QUICK_LINKS = [
@@ -18,7 +18,7 @@ const QUICK_LINKS = [
   { label: "Vídeo", icon: Video },
 ];
 
-export function ContinuePlayingList({ items }: ContinuePlayingListProps) {
+export function ContinuePlayingList({ items, games }: ContinuePlayingListProps) {
   return (
     <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -32,7 +32,7 @@ export function ContinuePlayingList({ items }: ContinuePlayingListProps) {
 
       <div className="flex flex-col divide-y divide-border">
         {items.map((item) => {
-          const game = getGameById(item.gameId);
+          const game = games.find((g) => g.id === item.gameId);
           if (!game) return null;
 
           return (
