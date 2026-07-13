@@ -7,6 +7,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { genreLabel, platformLabel } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
+import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import type {
   Genre,
   GrindLevel,
@@ -63,6 +64,7 @@ const defaultGameForm = {
   similarGameIds: [] as string[],
   isFeatured: false,
   featuredOrder: null as number | null,
+  igdbId: null as number | null,
 };
 
 const defaultDetailForm = {
@@ -156,6 +158,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         similarGameIds: g.similar_game_ids ?? [],
         isFeatured: g.is_featured ?? false,
         featuredOrder: g.featured_order ?? null,
+        igdbId: g.igdb_id ?? null,
       });
 
       if (detailRes.data) {
@@ -214,6 +217,23 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     }));
   }
 
+  function handleIgdbImport(result: IgdbImportResult) {
+    setGame((f) => ({
+      ...f,
+      title: result.title,
+      slug: slugify(result.title),
+      coverUrl: result.coverUrl ?? f.coverUrl,
+      developer: result.developer ?? f.developer,
+      releaseYear: result.releaseYear ?? f.releaseYear,
+      releaseDate: result.releaseDate ?? f.releaseDate,
+      // Só substitui plataformas/géneros se a IGDB tiver devolvido algo —
+      // caso contrário mantém o que o editor já tinha escolhido.
+      platforms: result.platforms.length ? result.platforms : f.platforms,
+      genres: result.genres.length ? result.genres : f.genres,
+      igdbId: result.igdbId,
+    }));
+  }
+
   async function handleSave() {
     if (!game.title.trim() || !game.slug.trim()) {
       setError("Preenche pelo menos o Título e o Slug antes de guardar.");
@@ -248,6 +268,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       similar_game_ids: game.similarGameIds,
       is_featured: game.isFeatured,
       featured_order: game.featuredOrder,
+      igdb_id: game.igdbId,
     };
 
     let resolvedGameId = gameId;
@@ -371,6 +392,8 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
       {tab === "geral" ? (
         <div className="flex flex-col gap-5">
+          {!gameId && <IgdbImportBox onImport={handleIgdbImport} />}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
