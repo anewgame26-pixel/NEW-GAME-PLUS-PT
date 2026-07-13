@@ -22,7 +22,9 @@ export default async function JogosPage({ searchParams }: JogosPageProps) {
   const params = await searchParams;
 
   // Filtros vindos dos "Filtros rápidos" da homepage (ex: /jogos?time=10h)
+  // e da pesquisa do hero (ex: /jogos?q=elden+ring)
   const initialFilters = {
+    query: typeof params.q === "string" ? params.q : "",
     timeId: typeof params.time === "string" ? params.time : null,
     difficultyId: typeof params.difficulty === "string" ? params.difficulty : null,
     genres: typeof params.genre === "string" ? [params.genre as Genre] : [],

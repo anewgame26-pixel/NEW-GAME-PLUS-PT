@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Game } from "@/types";
-import { SearchInput } from "@/components/ui/SearchInput";
+import { HeroSearchForm } from "@/components/home/HeroSearchForm";
 import { FeaturedGameCarousel } from "@/components/home/FeaturedGameCarousel";
 
 interface HeroSectionProps {
@@ -22,11 +22,11 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
             <Image
               src="/logo-hero.png"
               alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
-              width={1254}
-              height={1254}
+              fill
               priority
-              className="absolute h-auto w-full"
-              style={{ top: "-26.08%" }}
+              sizes="(min-width: 1024px) 560px, (min-width: 640px) 460px, 340px"
+              className="object-cover"
+              style={{ objectPosition: "50% 51.1%" }}
             />
           </h1>
           <p className="mt-6 max-w-xl text-balance text-base text-ink-muted sm:text-lg">
@@ -36,7 +36,7 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
           </p>
 
           <div className="mt-8 max-w-lg rounded-sm shadow-glow">
-            <SearchInput size="lg" placeholder="Que jogo queres platinar?" />
+            <HeroSearchForm />
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-2">
