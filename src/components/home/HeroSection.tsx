@@ -13,16 +13,20 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden border-b border-border">
       <div className="absolute inset-0 bg-radial-fade" aria-hidden />
-      <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 py-12 lg:grid-cols-[1fr_auto] lg:gap-10 lg:px-8 lg:py-16">
-        <div className="flex flex-col justify-center">
-          <h1 className="w-full max-w-[340px] sm:max-w-[460px] lg:max-w-[560px]">
+      <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 pb-12 pt-6 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-10 lg:px-8 lg:pb-16 lg:pt-8">
+        <div className="flex flex-col justify-start">
+          <h1
+            className="relative w-full max-w-[340px] overflow-hidden sm:max-w-[460px] lg:max-w-[560px]"
+            style={{ aspectRatio: "1254 / 614" }}
+          >
             <Image
               src="/logo-hero.png"
               alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
               width={1254}
               height={1254}
               priority
-              className="h-auto w-full"
+              className="absolute h-auto w-full"
+              style={{ top: "-26.08%" }}
             />
           </h1>
           <p className="mt-6 max-w-xl text-balance text-base text-ink-muted sm:text-lg">

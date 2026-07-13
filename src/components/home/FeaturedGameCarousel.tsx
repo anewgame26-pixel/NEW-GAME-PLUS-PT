@@ -79,15 +79,15 @@ export function FeaturedGameCarousel({ games, intervalMs = 10000 }: FeaturedGame
   const game = games[index];
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
-      <div className="flex w-full flex-col gap-4 lg:w-72">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+      <div className="flex w-full flex-col gap-4 lg:w-[22rem]">
         <Badge tone="gold" className="w-fit">
           <Star width={11} height={11} className="fill-current" />
-          Jogo em Destaque
+          Destaques
         </Badge>
 
         <div
-          className="relative h-64 w-full overflow-hidden rounded-sm border border-border sm:h-80 lg:h-[26rem]"
+          className="relative h-72 w-full overflow-hidden rounded-sm border border-border sm:h-96 lg:h-[30rem]"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -104,7 +104,7 @@ export function FeaturedGameCarousel({ games, intervalMs = 10000 }: FeaturedGame
               src={game.coverUrl}
               alt={`Capa de ${game.title}`}
               fill
-              sizes="(min-width: 1024px) 288px, 100vw"
+              sizes="(min-width: 1024px) 352px, 100vw"
               className="object-cover"
               priority={index === 0}
             />
