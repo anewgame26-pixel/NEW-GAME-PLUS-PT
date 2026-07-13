@@ -108,13 +108,26 @@ export interface RatingBreakdownItem {
   value: number;
 }
 
+export interface RoadmapChapterMissable {
+  title: string;
+  description: string;
+}
+
+export interface RoadmapChapter {
+  title: string;
+  description: string;
+  /** ID de vídeo do YouTube deste capítulo (opcional) */
+  youtubeId?: string;
+  /** Missables específicos deste capítulo (opcional) */
+  missables?: RoadmapChapterMissable[];
+}
+
 export interface GameDetail {
   gameId: string;
   minPlaythroughs: number;
   difficultyExplanation: string;
   review: ReviewContent;
-  timeline: TimelineStage[];
-  missables: MissableItem[];
+  roadmapChapters: RoadmapChapter[];
   hardestTrophies: HardestTrophy[];
   prepTips: string[];
   /** ID de vídeo do YouTube (mock/placeholder por agora) */
@@ -124,8 +137,6 @@ export interface GameDetail {
   /** Classificação geral de 0 a 10 */
   overallScore: number;
   ratingBreakdown: RatingBreakdownItem[];
-  /** Passos resumidos do roadmap completo, para preview na página do jogo */
-  roadmapSummary: string[];
   screenshotUrls: string[];
 }
 

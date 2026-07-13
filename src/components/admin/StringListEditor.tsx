@@ -41,7 +41,7 @@ export function StringListEditor({
               value={value}
               onChange={(e) => updateAt(i, e.target.value)}
               placeholder={placeholder}
-              className="resize-none flex-1 rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+              className="min-h-[4.5rem] resize-y flex-1 rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
             />
           ) : (
             <input

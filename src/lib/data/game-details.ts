@@ -3,11 +3,10 @@ import type { GameDetail } from "@/types";
 
 /**
  * Traduz uma linha da tabela "game_details" para o formato "GameDetail"
- * que o resto do site já espera. Os campos "timeline", "missables",
+ * que o resto do site já espera. Os campos "roadmap_chapters",
  * "hardest_trophies" e "rating_breakdown" são guardados como JSON na base
- * de dados, mas já vêm com os nomes certos lá dentro (ex: {"stage": ...,
- * "label": ..., "description": ...}) — por isso não precisam de tradução,
- * só de um "cast" de tipo.
+ * de dados, mas já vêm com os nomes certos lá dentro — por isso não
+ * precisam de tradução, só de um "cast" de tipo.
  */
 function mapRowToGameDetail(row: Record<string, unknown>): GameDetail {
   return {
@@ -21,8 +20,7 @@ function mapRowToGameDetail(row: Record<string, unknown>): GameDetail {
       cons: (row.review_cons as string[]) ?? [],
       verdict: row.review_verdict as string,
     },
-    timeline: (row.timeline as GameDetail["timeline"]) ?? [],
-    missables: (row.missables as GameDetail["missables"]) ?? [],
+    roadmapChapters: (row.roadmap_chapters as GameDetail["roadmapChapters"]) ?? [],
     hardestTrophies: (row.hardest_trophies as GameDetail["hardestTrophies"]) ?? [],
     prepTips: (row.prep_tips as string[]) ?? [],
     videoId: (row.video_id as string | null) ?? undefined,
@@ -30,7 +28,6 @@ function mapRowToGameDetail(row: Record<string, unknown>): GameDetail {
     roadmapHref: row.roadmap_href as string,
     overallScore: Number(row.overall_score),
     ratingBreakdown: (row.rating_breakdown as GameDetail["ratingBreakdown"]) ?? [],
-    roadmapSummary: (row.roadmap_summary as string[]) ?? [],
     screenshotUrls: (row.screenshot_urls as string[]) ?? [],
   };
 }

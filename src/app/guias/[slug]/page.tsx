@@ -7,10 +7,8 @@ import { GameHero } from "@/components/game/GameHero";
 import { GameOverallRating } from "@/components/game/GameOverallRating";
 import { GameQuickInfoCard } from "@/components/game/GameQuickInfoCard";
 import { ReviewSection } from "@/components/game/ReviewSection";
-import { RoadmapSummaryCard } from "@/components/game/RoadmapSummaryCard";
-import { PlatinumTimeline } from "@/components/game/PlatinumTimeline";
+import { RoadmapChapters } from "@/components/game/RoadmapChapters";
 import { DifficultyExplanation } from "@/components/game/DifficultyExplanation";
-import { MissablesList } from "@/components/game/MissablesList";
 import { HardestTrophiesGrid } from "@/components/game/HardestTrophiesGrid";
 import { PrepTipsChecklist } from "@/components/game/PrepTipsChecklist";
 import { ScreenshotsGallery } from "@/components/game/ScreenshotsGallery";
@@ -93,13 +91,9 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
         <DifficultyExplanation game={game} explanation={detail.difficultyExplanation} />
 
-        <div id="roadmap" className="scroll-mt-20">
-          <RoadmapSummaryCard steps={detail.roadmapSummary} roadmapHref={detail.roadmapHref} hideLink />
-        </div>
+        <RoadmapChapters chapters={detail.roadmapChapters} />
 
-        <MissablesList missables={detail.missables} />
         <HardestTrophiesGrid trophies={detail.hardestTrophies} />
-        <PlatinumTimeline stages={detail.timeline} />
         <PrepTipsChecklist tips={detail.prepTips} />
         <ScreenshotsGallery urls={detail.screenshotUrls} gameTitle={game.title} />
         <VideoEmbed videoId={detail.videoId} title={game.title} />

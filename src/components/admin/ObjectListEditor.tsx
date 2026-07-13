@@ -63,7 +63,7 @@ export function ObjectListEditor<T extends Record<string, unknown>>({
                     value={String(item[field.key] ?? "")}
                     onChange={(e) => updateField(i, field.key, e.target.value)}
                     placeholder={field.placeholder}
-                    className="resize-none rounded-sm border border-border bg-bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+                    className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
                   />
                 ) : (
                   <input

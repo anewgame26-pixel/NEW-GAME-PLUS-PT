@@ -7,15 +7,15 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { genreLabel, platformLabel } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
+import { RoadmapChapterEditor } from "@/components/admin/RoadmapChapterEditor";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import type {
   Genre,
   GrindLevel,
-  MissableItem,
   HardestTrophy,
   Platform,
   RatingBreakdownItem,
-  TimelineStage,
+  RoadmapChapter,
 } from "@/types";
 
 const PLATFORM_OPTIONS: Platform[] = ["ps5", "ps4", "xbox", "switch", "pc"];
@@ -71,19 +71,12 @@ const defaultDetailForm = {
   minPlaythroughs: 1,
   difficultyExplanation: "",
   review: { intro: "", whatToExpect: "", pros: [] as string[], cons: [] as string[], verdict: "" },
-  timeline: [
-    { stage: "inicio", label: "Início", description: "" },
-    { stage: "meio", label: "Meio", description: "" },
-    { stage: "final", label: "Final", description: "" },
-    { stage: "cleanup", label: "Cleanup", description: "" },
-  ] as TimelineStage[],
-  missables: [] as MissableItem[],
+  roadmapChapters: [] as RoadmapChapter[],
   hardestTrophies: [] as HardestTrophy[],
   prepTips: [] as string[],
   videoId: "",
   overallScore: 5,
   ratingBreakdown: [] as RatingBreakdownItem[],
-  roadmapSummary: [] as string[],
   screenshotUrls: [] as string[],
 };
 
@@ -173,14 +166,12 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             cons: d.review_cons ?? [],
             verdict: d.review_verdict ?? "",
           },
-          timeline: d.timeline?.length ? d.timeline : defaultDetailForm.timeline,
-          missables: d.missables ?? [],
+          roadmapChapters: d.roadmap_chapters?.length ? d.roadmap_chapters : [],
           hardestTrophies: d.hardest_trophies ?? [],
           prepTips: d.prep_tips ?? [],
           videoId: d.video_id ?? "",
           overallScore: d.overall_score ?? 5,
           ratingBreakdown: d.rating_breakdown ?? [],
-          roadmapSummary: d.roadmap_summary ?? [],
           screenshotUrls: d.screenshot_urls ?? [],
         });
       }
@@ -303,8 +294,16 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       review_pros: detail.review.pros.filter((p) => p.trim() !== ""),
       review_cons: detail.review.cons.filter((c) => c.trim() !== ""),
       review_verdict: detail.review.verdict.trim(),
-      timeline: detail.timeline,
-      missables: detail.missables,
+      roadmap_chapters: detail.roadmapChapters
+        .filter((c) => c.title.trim() !== "" || c.description.trim() !== "")
+        .map((c) => ({
+          title: c.title.trim(),
+          description: c.description.trim(),
+          youtubeId: c.youtubeId?.trim() || undefined,
+          missables: (c.missables ?? []).filter(
+            (m) => m.title.trim() !== "" || m.description.trim() !== ""
+          ),
+        })),
       hardest_trophies: detail.hardestTrophies,
       prep_tips: detail.prepTips.filter((t) => t.trim() !== ""),
       video_id: detail.videoId.trim() || null,
@@ -312,7 +311,6 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       roadmap_href: `/guias/${game.slug.trim()}#roadmap`,
       overall_score: detail.overallScore,
       rating_breakdown: detail.ratingBreakdown,
-      roadmap_summary: detail.roadmapSummary.filter((s) => s.trim() !== ""),
       screenshot_urls: detail.screenshotUrls.filter((s) => s.trim() !== ""),
     };
 
@@ -718,7 +716,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               rows={3}
               value={game.synopsis}
               onChange={(e) => setGame((f) => ({ ...f, synopsis: e.target.value }))}
-              className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
+              className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
             />
           </label>
 
@@ -770,7 +768,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               onChange={(e) =>
                 setDetail((f) => ({ ...f, difficultyExplanation: e.target.value }))
               }
-              className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
+              className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
             />
           </label>
 
@@ -787,7 +785,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                   onChange={(e) =>
                     setDetail((f) => ({ ...f, review: { ...f.review, intro: e.target.value } }))
                   }
-                  className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
+                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
@@ -801,7 +799,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                       review: { ...f.review, whatToExpect: e.target.value },
                     }))
                   }
-                  className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
+                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
 
@@ -827,66 +825,26 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                       review: { ...f.review, verdict: e.target.value },
                     }))
                   }
-                  className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
+                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
             </div>
           </div>
 
-          <div className="rounded-sm border border-border bg-bg-surface p-4">
-            <h3 className="mb-3 font-display text-sm font-bold uppercase tracking-wide text-ink-dim">
-              Timeline da Platina
+          <div className="rounded-sm border border-accent/30 bg-bg-surface p-4">
+            <h3 className="mb-1 font-display text-sm font-bold uppercase tracking-wide text-ink-dim">
+              Roadmap
             </h3>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {detail.timeline.map((stage, i) => (
-                <div key={stage.stage} className="rounded-sm border border-border bg-bg-surface2 p-3">
-                  <p className="mb-2 text-xs font-semibold uppercase text-ink-dim">
-                    {stage.stage}
-                  </p>
-                  <input
-                    type="text"
-                    value={stage.label}
-                    onChange={(e) =>
-                      setDetail((f) => ({
-                        ...f,
-                        timeline: f.timeline.map((s, si) =>
-                          si === i ? { ...s, label: e.target.value } : s
-                        ),
-                      }))
-                    }
-                    placeholder="Rótulo (ex: Início)"
-                    className="mb-2 h-9 w-full rounded-sm border border-border bg-bg-surface px-2.5 text-sm text-ink outline-none focus:border-primary"
-                  />
-                  <textarea
-                    rows={2}
-                    value={stage.description}
-                    onChange={(e) =>
-                      setDetail((f) => ({
-                        ...f,
-                        timeline: f.timeline.map((s, si) =>
-                          si === i ? { ...s, description: e.target.value } : s
-                        ),
-                      }))
-                    }
-                    placeholder="Descrição desta fase..."
-                    className="resize-none w-full rounded-sm border border-border bg-bg-surface px-2.5 py-2 text-sm text-ink outline-none focus:border-primary"
-                  />
-                </div>
-              ))}
-            </div>
+            <p className="mb-4 text-xs text-ink-dim">
+              Divide o roadmap em capítulos. Cada capítulo pode ter um vídeo do
+              YouTube e os seus próprios missables — ambos opcionais. Clica no
+              título de um capítulo para o abrir/fechar.
+            </p>
+            <RoadmapChapterEditor
+              chapters={detail.roadmapChapters}
+              onChange={(roadmapChapters) => setDetail((f) => ({ ...f, roadmapChapters }))}
+            />
           </div>
-
-          <ObjectListEditor<MissableItem & Record<string, unknown>>
-            label="Missables"
-            items={detail.missables as (MissableItem & Record<string, unknown>)[]}
-            onChange={(missables) => setDetail((f) => ({ ...f, missables }))}
-            emptyItem={{ title: "", chapter: "", description: "" }}
-            fields={[
-              { key: "title", label: "Título" },
-              { key: "chapter", label: "Capítulo" },
-              { key: "description", label: "Descrição", type: "textarea" },
-            ]}
-          />
 
           <ObjectListEditor<HardestTrophy & Record<string, unknown>>
             label="Troféus mais difíceis"
@@ -904,13 +862,6 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             label="Dicas antes de começar"
             values={detail.prepTips}
             onChange={(prepTips) => setDetail((f) => ({ ...f, prepTips }))}
-          />
-
-          <StringListEditor
-            label="Roadmap resumido (passos numerados)"
-            values={detail.roadmapSummary}
-            onChange={(roadmapSummary) => setDetail((f) => ({ ...f, roadmapSummary }))}
-            multiline
           />
 
           <ObjectListEditor<RatingBreakdownItem & Record<string, unknown>>
