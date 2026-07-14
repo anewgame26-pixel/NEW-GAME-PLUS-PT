@@ -9,7 +9,7 @@ interface ReviewSectionProps {
 
 export function ReviewSection({ review }: ReviewSectionProps) {
   return (
-    <section className="py-10">
+    <section id="review" className="scroll-mt-20 py-10">
       <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
         <div className="mb-5 flex items-center gap-2">
           <Play width={18} height={18} className="text-primary" />

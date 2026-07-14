@@ -122,6 +122,14 @@ export interface RoadmapChapter {
   missables?: RoadmapChapterMissable[];
 }
 
+export type TrophyTier = "bronze" | "prata" | "ouro" | "platina";
+
+export interface TrophyListItem {
+  name: string;
+  tier: TrophyTier;
+  description: string;
+}
+
 export interface GameDetail {
   gameId: string;
   minPlaythroughs: number;
@@ -129,6 +137,8 @@ export interface GameDetail {
   review: ReviewContent;
   roadmapChapters: RoadmapChapter[];
   hardestTrophies: HardestTrophy[];
+  /** Lista completa de troféus do jogo (substitui a antiga sinopse na página) */
+  trophyList: TrophyListItem[];
   prepTips: string[];
   /** ID de vídeo do YouTube (mock/placeholder por agora) */
   videoId?: string;

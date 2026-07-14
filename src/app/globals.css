@@ -96,6 +96,22 @@ body {
   pointer-events: none;
 }
 
+/* Destaque temporário ao saltar de um troféu na Lista de Troféus para a
+   sua menção na Review */
+@keyframes trophy-mention-flash {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  25% {
+    background-color: rgba(242, 183, 5, 0.35);
+  }
+}
+.trophy-mention-flash {
+  animation: trophy-mention-flash 1.6s ease-out;
+  border-radius: 2px;
+}
+
 /* Transição discreta do carousel de 'Jogo em Destaque' */
 @keyframes carousel-fade {
   from {

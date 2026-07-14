@@ -22,6 +22,7 @@ function mapRowToGameDetail(row: Record<string, unknown>): GameDetail {
     },
     roadmapChapters: (row.roadmap_chapters as GameDetail["roadmapChapters"]) ?? [],
     hardestTrophies: (row.hardest_trophies as GameDetail["hardestTrophies"]) ?? [],
+    trophyList: (row.trophy_list as GameDetail["trophyList"]) ?? [],
     prepTips: (row.prep_tips as string[]) ?? [],
     videoId: (row.video_id as string | null) ?? undefined,
     guideHref: row.guide_href as string,

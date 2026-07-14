@@ -6,6 +6,7 @@ import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { GameHero } from "@/components/game/GameHero";
 import { GameOverallRating } from "@/components/game/GameOverallRating";
 import { GameQuickInfoCard } from "@/components/game/GameQuickInfoCard";
+import { TrophyList } from "@/components/game/TrophyList";
 import { ReviewSection } from "@/components/game/ReviewSection";
 import { RoadmapChapters } from "@/components/game/RoadmapChapters";
 import { DifficultyExplanation } from "@/components/game/DifficultyExplanation";
@@ -77,7 +78,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
               <GameQuickInfoCard game={game} detail={detail} />
             </div>
             <div className="flex-1">
-              <p className="text-balance text-ink-muted">{game.synopsis}</p>
+              <TrophyList trophies={detail.trophyList} />
             </div>
             <div className="hidden shrink-0 lg:block">
               <GameQuickInfoCard game={game} detail={detail} />

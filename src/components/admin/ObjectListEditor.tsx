@@ -5,8 +5,10 @@ import { Plus, Trash2 } from "lucide-react";
 interface FieldDef {
   key: string;
   label: string;
-  type?: "text" | "textarea" | "number";
+  type?: "text" | "textarea" | "number" | "select";
   placeholder?: string;
+  /** Necessário quando type="select" */
+  options?: string[];
 }
 
 interface ObjectListEditorProps<T extends Record<string, unknown>> {
@@ -65,6 +67,18 @@ export function ObjectListEditor<T extends Record<string, unknown>>({
                     placeholder={field.placeholder}
                     className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface px-2.5 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
                   />
+                ) : field.type === "select" ? (
+                  <select
+                    value={String(item[field.key] ?? "")}
+                    onChange={(e) => updateField(i, field.key, e.target.value)}
+                    className="h-9 rounded-sm border border-border bg-bg-surface px-2.5 text-sm text-ink outline-none focus:border-primary"
+                  >
+                    {(field.options ?? []).map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
                   <input
                     type={field.type === "number" ? "number" : "text"}

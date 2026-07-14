@@ -19,7 +19,10 @@ import type {
   Platform,
   RatingBreakdownItem,
   RoadmapChapter,
+  TrophyListItem,
 } from "@/types";
+
+const TROPHY_TIERS = ["bronze", "prata", "ouro", "platina"] as const;
 
 const PLATFORM_OPTIONS: Platform[] = ["ps5", "ps4", "xbox", "switch", "pc"];
 const GENRE_OPTIONS: Genre[] = [
@@ -76,6 +79,7 @@ const defaultDetailForm = {
   review: { intro: "", whatToExpect: "", pros: [] as string[], cons: [] as string[], verdict: "" },
   roadmapChapters: [] as RoadmapChapter[],
   hardestTrophies: [] as HardestTrophy[],
+  trophyList: [] as TrophyListItem[],
   prepTips: [] as string[],
   videoId: "",
   overallScore: 5,
@@ -171,6 +175,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           },
           roadmapChapters: d.roadmap_chapters?.length ? d.roadmap_chapters : [],
           hardestTrophies: d.hardest_trophies ?? [],
+          trophyList: d.trophy_list ?? [],
           prepTips: d.prep_tips ?? [],
           videoId: d.video_id ?? "",
           overallScore: d.overall_score ?? 5,
@@ -308,6 +313,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           ),
         })),
       hardest_trophies: detail.hardestTrophies,
+      trophy_list: detail.trophyList,
       prep_tips: detail.prepTips.filter((t) => t.trim() !== ""),
       video_id: detail.videoId.trim() || null,
       guide_href: `/guias/${game.slug.trim()}`,
@@ -723,7 +729,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
-              Sinopse
+              Sinopse (usada para SEO e partilhas — já não aparece na página)
             </span>
             <textarea
               rows={3}
@@ -862,6 +868,26 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               { key: "tip", label: "Dica", type: "textarea" },
             ]}
           />
+
+          <div>
+            <p className="mb-2 text-xs text-ink-dim">
+              A lista completa aparece na página do jogo, no sítio onde antes
+              estava a sinopse. Se escreveres na descrição o mesmo nome de um
+              troféu mencionado na Review acima, o visitante consegue clicar
+              no troféu e saltar diretamente para essa parte do texto.
+            </p>
+            <ObjectListEditor<TrophyListItem & Record<string, unknown>>
+              label="Lista de Troféus"
+              items={detail.trophyList as (TrophyListItem & Record<string, unknown>)[]}
+              onChange={(trophyList) => setDetail((f) => ({ ...f, trophyList }))}
+              emptyItem={{ name: "", tier: "bronze", description: "" }}
+              fields={[
+                { key: "name", label: "Nome do troféu" },
+                { key: "tier", label: "Tier", type: "select", options: [...TROPHY_TIERS] },
+                { key: "description", label: "Descrição", type: "textarea" },
+              ]}
+            />
+          </div>
 
           <StringListEditor
             label="Dicas antes de começar"
