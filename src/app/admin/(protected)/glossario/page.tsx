@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, Loader2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { revalidatePaths } from "@/lib/admin/revalidate";
 
 interface GlossaryRow {
   id: string;
@@ -70,32 +71,33 @@ export default function AdminGlossarioPage() {
     setSaving(true);
     setError(null);
 
-    if (editingId) {
-      const { error } = await supabase
-        .from("glossary_terms")
-        .update({
+    const result = editingId
+      ? await supabase
+          .from("glossary_terms")
+          .update({
+            term: form.term.trim(),
+            definition: form.definition.trim(),
+            sort_order: form.sort_order,
+          })
+          .eq("id", editingId)
+      : await supabase.from("glossary_terms").insert({
           term: form.term.trim(),
           definition: form.definition.trim(),
           sort_order: form.sort_order,
-        })
-        .eq("id", editingId);
-
-      if (error) setError("Não foi possível guardar as alterações.");
-    } else {
-      const { error } = await supabase.from("glossary_terms").insert({
-        term: form.term.trim(),
-        definition: form.definition.trim(),
-        sort_order: form.sort_order,
-      });
-
-      if (error) setError("Não foi possível criar o termo.");
-    }
+        });
 
     setSaving(false);
-    if (!error) {
-      cancelForm();
-      await loadTerms();
+
+    if (result.error) {
+      setError(
+        editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o termo."
+      );
+      return;
     }
+
+    cancelForm();
+    await loadTerms();
+    revalidatePaths(["/glossario"]);
   }
 
   async function handleDelete(id: string) {
@@ -105,6 +107,7 @@ export default function AdminGlossarioPage() {
       setError("Não foi possível apagar o termo.");
     } else {
       await loadTerms();
+      revalidatePaths(["/glossario"]);
     }
   }
 

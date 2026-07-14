@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, Loader2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { revalidatePaths } from "@/lib/admin/revalidate";
 
 interface TeamRow {
   id: string;
@@ -96,19 +97,22 @@ export default function AdminEquipaPage() {
       sort_order: form.sort_order,
     };
 
-    if (editingId) {
-      const { error } = await supabase.from("team_members").update(payload).eq("id", editingId);
-      if (error) setError("Não foi possível guardar as alterações.");
-    } else {
-      const { error } = await supabase.from("team_members").insert(payload);
-      if (error) setError("Não foi possível criar o membro.");
-    }
+    const result = editingId
+      ? await supabase.from("team_members").update(payload).eq("id", editingId)
+      : await supabase.from("team_members").insert(payload);
 
     setSaving(false);
-    if (!error) {
-      cancelForm();
-      await loadMembers();
+
+    if (result.error) {
+      setError(
+        editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o membro."
+      );
+      return;
     }
+
+    cancelForm();
+    await loadMembers();
+    revalidatePaths(["/covil"]);
   }
 
   async function handleDelete(id: string) {
@@ -118,6 +122,7 @@ export default function AdminEquipaPage() {
       setError("Não foi possível remover o membro.");
     } else {
       await loadMembers();
+      revalidatePaths(["/covil"]);
     }
   }
 

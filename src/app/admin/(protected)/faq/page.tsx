@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, Loader2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { revalidatePaths } from "@/lib/admin/revalidate";
 
 interface FAQRow {
   id: string;
@@ -70,32 +71,35 @@ export default function AdminFAQPage() {
     setSaving(true);
     setError(null);
 
-    if (editingId) {
-      const { error } = await supabase
-        .from("faq_items")
-        .update({
+    const result = editingId
+      ? await supabase
+          .from("faq_items")
+          .update({
+            question: form.question.trim(),
+            answer: form.answer.trim(),
+            sort_order: form.sort_order,
+          })
+          .eq("id", editingId)
+      : await supabase.from("faq_items").insert({
           question: form.question.trim(),
           answer: form.answer.trim(),
           sort_order: form.sort_order,
-        })
-        .eq("id", editingId);
-
-      if (error) setError("Não foi possível guardar as alterações.");
-    } else {
-      const { error } = await supabase.from("faq_items").insert({
-        question: form.question.trim(),
-        answer: form.answer.trim(),
-        sort_order: form.sort_order,
-      });
-
-      if (error) setError("Não foi possível criar a pergunta.");
-    }
+        });
 
     setSaving(false);
-    if (!error) {
-      cancelForm();
-      await loadItems();
+
+    if (result.error) {
+      setError(
+        editingId
+          ? "Não foi possível guardar as alterações."
+          : "Não foi possível criar a pergunta."
+      );
+      return;
     }
+
+    cancelForm();
+    await loadItems();
+    revalidatePaths(["/faq"]);
   }
 
   async function handleDelete(id: string) {
@@ -105,6 +109,7 @@ export default function AdminFAQPage() {
       setError("Não foi possível apagar a pergunta.");
     } else {
       await loadItems();
+      revalidatePaths(["/faq"]);
     }
   }
 

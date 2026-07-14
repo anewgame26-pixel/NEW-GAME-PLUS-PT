@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, Loader2, Clock } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { revalidatePaths } from "@/lib/admin/revalidate";
 
 interface GameOption {
   id: string;
@@ -112,19 +113,22 @@ export default function AdminVideosPage() {
       youtube_id: form.youtube_id.trim() || null,
     };
 
-    if (editingId) {
-      const { error } = await supabase.from("videos").update(payload).eq("id", editingId);
-      if (error) setError("Não foi possível guardar as alterações.");
-    } else {
-      const { error } = await supabase.from("videos").insert(payload);
-      if (error) setError("Não foi possível criar o vídeo.");
-    }
+    const result = editingId
+      ? await supabase.from("videos").update(payload).eq("id", editingId)
+      : await supabase.from("videos").insert(payload);
 
     setSaving(false);
-    if (!error) {
-      cancelForm();
-      await loadAll();
+
+    if (result.error) {
+      setError(
+        editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o vídeo."
+      );
+      return;
     }
+
+    cancelForm();
+    await loadAll();
+    revalidatePaths(["/", "/antes-da-platina"]);
   }
 
   async function handleDelete(id: string) {
@@ -134,6 +138,7 @@ export default function AdminVideosPage() {
       setError("Não foi possível apagar o vídeo.");
     } else {
       await loadAll();
+      revalidatePaths(["/", "/antes-da-platina"]);
     }
   }
 

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { revalidatePaths } from "@/lib/admin/revalidate";
+import { rankingConfigs } from "@/data/mock/rankings-config";
 import { genreLabel, platformLabel } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
@@ -326,6 +328,16 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       );
       return;
     }
+
+    // Um jogo/análise pode afetar a homepage, o catálogo, todos os
+    // rankings (a ordenação pode mudar) e a própria página do jogo.
+    revalidatePaths([
+      "/",
+      "/jogos",
+      `/guias/${game.slug.trim()}`,
+      "/rankings",
+      ...rankingConfigs.map((c) => `/rankings/${c.slug}`),
+    ]);
 
     router.push("/admin/jogos");
   }
