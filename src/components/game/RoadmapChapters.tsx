@@ -5,6 +5,7 @@ import { Map as MapIcon, AlertTriangle, ChevronDown } from "lucide-react";
 import type { RoadmapChapter } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { RichText } from "@/components/ui/RichText";
 
 interface RoadmapChaptersProps {
   chapters: RoadmapChapter[];
@@ -61,9 +62,7 @@ export function RoadmapChapters({ chapters }: RoadmapChaptersProps) {
                   {isOpen && (
                     <div className="flex flex-col gap-5 border-t border-border p-5">
                       {chapter.description && (
-                        <p className="whitespace-pre-line text-sm text-ink-muted">
-                          {chapter.description}
-                        </p>
+                        <RichText html={chapter.description} className="text-sm text-ink-muted" />
                       )}
 
                       {chapter.youtubeId && (

@@ -1,6 +1,7 @@
 import { Check, X, Play } from "lucide-react";
 import { ReviewContent } from "@/types";
 import { Card } from "@/components/ui/Card";
+import { RichText } from "@/components/ui/RichText";
 
 interface ReviewSectionProps {
   review: ReviewContent;
@@ -18,12 +19,12 @@ export function ReviewSection({ review }: ReviewSectionProps) {
         </div>
 
         <Card className="p-6">
-          <p className="text-ink">{review.intro}</p>
+          <RichText html={review.intro} className="text-ink" />
 
           <h3 className="mb-2 mt-6 font-display text-sm font-bold uppercase tracking-wide text-ink-dim">
             O que esperar
           </h3>
-          <p className="text-sm text-ink-muted">{review.whatToExpect}</p>
+          <RichText html={review.whatToExpect} className="text-sm text-ink-muted" />
 
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div>
@@ -60,7 +61,7 @@ export function ReviewSection({ review }: ReviewSectionProps) {
             <h3 className="mb-1.5 font-display text-sm font-bold uppercase tracking-wide text-gold">
               Vale a Pena?
             </h3>
-            <p className="text-sm text-ink">{review.verdict}</p>
+            <RichText html={review.verdict} className="text-sm text-ink" />
           </div>
         </Card>
       </div>

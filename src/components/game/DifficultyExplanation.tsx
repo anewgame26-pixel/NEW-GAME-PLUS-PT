@@ -1,6 +1,7 @@
 import { Game } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { DifficultyBadge } from "@/components/game/DifficultyBadge";
+import { RichText } from "@/components/ui/RichText";
 
 interface DifficultyExplanationProps {
   game: Game;
@@ -18,7 +19,7 @@ export function DifficultyExplanation({ game, explanation }: DifficultyExplanati
           <div className="mb-4">
             <DifficultyBadge value={game.difficulty} />
           </div>
-          <p className="text-sm leading-relaxed text-ink-muted">{explanation}</p>
+          <RichText html={explanation} className="text-sm leading-relaxed text-ink-muted" />
         </Card>
       </div>
     </section>

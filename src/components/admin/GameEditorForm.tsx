@@ -8,6 +8,7 @@ import { revalidatePaths } from "@/lib/admin/revalidate";
 import { rankingConfigs } from "@/data/mock/rankings-config";
 import { genreLabel, platformLabel } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
 import { RoadmapChapterEditor } from "@/components/admin/RoadmapChapterEditor";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
@@ -774,13 +775,11 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
               Dificuldade explicada
             </span>
-            <textarea
-              rows={3}
+            <RichTextEditor
               value={detail.difficultyExplanation}
-              onChange={(e) =>
-                setDetail((f) => ({ ...f, difficultyExplanation: e.target.value }))
+              onChange={(html) =>
+                setDetail((f) => ({ ...f, difficultyExplanation: html }))
               }
-              className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
             />
           </label>
 
@@ -791,27 +790,23 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             <div className="flex flex-col gap-4">
               <label className="flex flex-col gap-1.5">
                 <span className="text-xs text-ink-dim">Introdução</span>
-                <textarea
-                  rows={2}
+                <RichTextEditor
                   value={detail.review.intro}
-                  onChange={(e) =>
-                    setDetail((f) => ({ ...f, review: { ...f.review, intro: e.target.value } }))
+                  onChange={(html) =>
+                    setDetail((f) => ({ ...f, review: { ...f.review, intro: html } }))
                   }
-                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
               <label className="flex flex-col gap-1.5">
                 <span className="text-xs text-ink-dim">O que esperar</span>
-                <textarea
-                  rows={2}
+                <RichTextEditor
                   value={detail.review.whatToExpect}
-                  onChange={(e) =>
+                  onChange={(html) =>
                     setDetail((f) => ({
                       ...f,
-                      review: { ...f.review, whatToExpect: e.target.value },
+                      review: { ...f.review, whatToExpect: html },
                     }))
                   }
-                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
 
@@ -828,16 +823,14 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
               <label className="flex flex-col gap-1.5">
                 <span className="text-xs text-ink-dim">Vale a pena? (veredito)</span>
-                <textarea
-                  rows={2}
+                <RichTextEditor
                   value={detail.review.verdict}
-                  onChange={(e) =>
+                  onChange={(html) =>
                     setDetail((f) => ({
                       ...f,
-                      review: { ...f.review, verdict: e.target.value },
+                      review: { ...f.review, verdict: html },
                     }))
                   }
-                  className="min-h-[4.5rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink outline-none focus:border-primary"
                 />
               </label>
             </div>

@@ -87,6 +87,15 @@ body {
   scrollbar-width: none;
 }
 
+/* Placeholder do editor de texto rico (TipTap) nos formulários do admin */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: #5c6673;
+  pointer-events: none;
+}
+
 /* Transição discreta do carousel de 'Jogo em Destaque' */
 @keyframes carousel-fade {
   from {

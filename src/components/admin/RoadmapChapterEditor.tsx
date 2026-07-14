@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import type { RoadmapChapter, RoadmapChapterMissable } from "@/types";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 interface RoadmapChapterEditorProps {
   chapters: RoadmapChapter[];
@@ -105,12 +106,10 @@ export function RoadmapChapterEditor({ chapters, onChange }: RoadmapChapterEdito
 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-[11px] text-ink-dim">Descrição</span>
-                  <textarea
-                    rows={4}
+                  <RichTextEditor
                     value={chapter.description}
-                    onChange={(e) => updateChapter(i, { description: e.target.value })}
+                    onChange={(html) => updateChapter(i, { description: html })}
                     placeholder="O que fazer nesta parte do jogo..."
-                    className="min-h-[7rem] resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
                   />
                 </label>
 
