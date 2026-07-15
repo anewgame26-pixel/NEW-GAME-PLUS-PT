@@ -104,6 +104,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
   const [loading, setLoading] = useState(Boolean(gameId));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
 
   const [game, setGame] = useState(defaultGameForm);
   const [detail, setDetail] = useState(defaultDetailForm);
@@ -233,7 +234,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     }));
   }
 
-  async function handleSave() {
+  async function handleSave(shouldPublish: boolean) {
     if (!game.title.trim() || !game.slug.trim()) {
       setError("Preenche pelo menos o Título e o Slug antes de guardar.");
       setTab("geral");
@@ -242,6 +243,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
     setSaving(true);
     setError(null);
+    setSavedMessage(null);
 
     const gamePayload = {
       title: game.title.trim(),
@@ -336,6 +338,16 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       return;
     }
 
+    if (!shouldPublish) {
+      // Rascunho: fica guardado no Supabase, mas o site público não é
+      // avisado para se atualizar — continua a mostrar a última versão
+      // publicada até alguém carregar em "Publicar".
+      setSavedMessage(
+        "Rascunho guardado. O site público ainda mostra a última versão publicada."
+      );
+      return;
+    }
+
     // Um jogo/análise pode afetar a homepage, o catálogo, todos os
     // rankings (a ordenação pode mudar) e a própria página do jogo.
     revalidatePaths([
@@ -364,19 +376,37 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-ink">
           {gameId ? `Editar: ${game.title || "..."}` : "Novo Jogo"}
         </h1>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-1.5 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-glow hover:bg-primary-light disabled:opacity-50"
-        >
-          {saving ? (
-            <Loader2 width={15} height={15} className="animate-spin" />
-          ) : (
-            <Check width={15} height={15} />
-          )}
-          Guardar Tudo
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleSave(false)}
+            disabled={saving}
+            title="Guarda no Supabase, mas o site público só atualiza quando publicares"
+            className="flex items-center gap-1.5 rounded-sm border border-border-light px-5 py-2.5 text-sm font-semibold text-ink hover:border-primary hover:text-primary disabled:opacity-50"
+          >
+            {saving ? <Loader2 width={15} height={15} className="animate-spin" /> : <Check width={15} height={15} />}
+            Guardar Rascunho
+          </button>
+          <button
+            onClick={() => handleSave(true)}
+            disabled={saving}
+            title="Guarda e atualiza o site público imediatamente"
+            className="flex items-center gap-1.5 rounded-sm bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-glow hover:bg-primary-light disabled:opacity-50"
+          >
+            {saving ? (
+              <Loader2 width={15} height={15} className="animate-spin" />
+            ) : (
+              <Check width={15} height={15} />
+            )}
+            Guardar e Publicar
+          </button>
+        </div>
       </div>
+
+      {savedMessage && (
+        <div className="mb-4 rounded-sm border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent-light">
+          {savedMessage}
+        </div>
+      )}
 
       {error && (
         <div className="mb-4 rounded-sm border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary-light">

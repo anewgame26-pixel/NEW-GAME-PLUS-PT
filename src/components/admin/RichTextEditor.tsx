@@ -71,7 +71,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     editorProps: {
       attributes: {
         class:
-          "min-h-[6rem] rounded-b-sm border border-t-0 border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink outline-none focus:border-primary [&_p]:mb-2 [&_p:last-child]:mb-0",
+          "h-full min-h-[5.5rem] px-3 py-2.5 text-sm text-ink outline-none [&_p]:mb-2 [&_p:last-child]:mb-0",
       },
     },
     onUpdate: ({ editor }) => {
@@ -141,7 +141,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         ))}
       </div>
 
-      <EditorContent editor={editor} />
+      <div className="resize-y overflow-auto rounded-b-sm border border-t-0 border-border bg-bg-surface2 focus-within:border-primary">
+        <EditorContent editor={editor} className="h-full" />
+      </div>
     </div>
   );
 }
