@@ -112,7 +112,7 @@ export default function AdminEquipaPage() {
 
     cancelForm();
     await loadMembers();
-    revalidatePaths(["/covil"]);
+    await revalidatePaths(["/covil"]);
   }
 
   async function handleDelete(id: string) {
@@ -122,7 +122,7 @@ export default function AdminEquipaPage() {
       setError("Não foi possível remover o membro.");
     } else {
       await loadMembers();
-      revalidatePaths(["/covil"]);
+      await revalidatePaths(["/covil"]);
     }
   }
 

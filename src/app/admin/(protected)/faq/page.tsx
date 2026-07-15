@@ -99,7 +99,7 @@ export default function AdminFAQPage() {
 
     cancelForm();
     await loadItems();
-    revalidatePaths(["/faq"]);
+    await revalidatePaths(["/faq"]);
   }
 
   async function handleDelete(id: string) {
@@ -109,7 +109,7 @@ export default function AdminFAQPage() {
       setError("Não foi possível apagar a pergunta.");
     } else {
       await loadItems();
-      revalidatePaths(["/faq"]);
+      await revalidatePaths(["/faq"]);
     }
   }
 

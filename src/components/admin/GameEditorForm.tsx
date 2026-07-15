@@ -350,7 +350,9 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
     // Um jogo/análise pode afetar a homepage, o catálogo, todos os
     // rankings (a ordenação pode mudar) e a própria página do jogo.
-    revalidatePaths([
+    // Importante aguardar (await) antes de navegar — caso contrário o
+    // browser cancela o pedido a meio ao mudar de página.
+    await revalidatePaths([
       "/",
       "/jogos",
       `/guias/${game.slug.trim()}`,

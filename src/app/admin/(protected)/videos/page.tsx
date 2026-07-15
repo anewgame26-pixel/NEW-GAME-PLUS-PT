@@ -128,7 +128,7 @@ export default function AdminVideosPage() {
 
     cancelForm();
     await loadAll();
-    revalidatePaths(["/", "/antes-da-platina"]);
+    await revalidatePaths(["/", "/antes-da-platina"]);
   }
 
   async function handleDelete(id: string) {
@@ -138,7 +138,7 @@ export default function AdminVideosPage() {
       setError("Não foi possível apagar o vídeo.");
     } else {
       await loadAll();
-      revalidatePaths(["/", "/antes-da-platina"]);
+      await revalidatePaths(["/", "/antes-da-platina"]);
     }
   }
 

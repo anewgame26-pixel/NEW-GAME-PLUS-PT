@@ -97,7 +97,7 @@ export default function AdminGlossarioPage() {
 
     cancelForm();
     await loadTerms();
-    revalidatePaths(["/glossario"]);
+    await revalidatePaths(["/glossario"]);
   }
 
   async function handleDelete(id: string) {
@@ -107,7 +107,7 @@ export default function AdminGlossarioPage() {
       setError("Não foi possível apagar o termo.");
     } else {
       await loadTerms();
-      revalidatePaths(["/glossario"]);
+      await revalidatePaths(["/glossario"]);
     }
   }
 
