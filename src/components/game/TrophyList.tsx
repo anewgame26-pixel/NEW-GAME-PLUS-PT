@@ -11,17 +11,28 @@ interface TrophyListProps {
 }
 
 const TIER_EMOJI: Record<TrophyTier, string> = {
-  bronze: "🥉",
-  prata: "🥈",
-  ouro: "🥇",
   platina: "🏆",
+  ouro: "🥇",
+  prata: "🥈",
+  bronze: "🥉",
 };
 
 const TIER_LABEL: Record<TrophyTier, string> = {
-  bronze: "Bronze",
-  prata: "Prata",
-  ouro: "Ouro",
   platina: "Platina",
+  ouro: "Ouro",
+  prata: "Prata",
+  bronze: "Bronze",
+};
+
+// Ordem de apresentação e estilo visual de cada tier — a Platina destaca-se
+// propositadamente das restantes (é o objetivo final da caça aos troféus).
+const TIER_ORDER: TrophyTier[] = ["platina", "ouro", "prata", "bronze"];
+
+const TIER_STYLES: Record<TrophyTier, string> = {
+  platina: "border-primary/40 hover:border-primary/70",
+  ouro: "border-gold/40 hover:border-gold/70",
+  prata: "border-ink-dim/40 hover:border-ink-muted/70",
+  bronze: "border-border-light hover:border-ink-dim",
 };
 
 /**
@@ -55,8 +66,6 @@ function findAndScrollToMention(name: string, { scroll }: { scroll: boolean }) {
 export function TrophyList({ trophies }: TrophyListProps) {
   const [mentioned, setMentioned] = useState<Set<string>>(new Set());
 
-  // Ao carregar, verifica em silêncio quais os troféus mencionados na
-  // review, para só esses ficarem com o affordance de "clicar para ver".
   useEffect(() => {
     const found = new Set<string>();
     trophies.forEach((t) => {
@@ -67,48 +76,80 @@ export function TrophyList({ trophies }: TrophyListProps) {
 
   if (trophies.length === 0) return null;
 
+  const counts = TIER_ORDER.map((tier) => ({
+    tier,
+    count: trophies.filter((t) => t.tier === tier).length,
+  })).filter((c) => c.count > 0);
+
   return (
     <div>
-      <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-bold uppercase tracking-wide text-ink">
-        <Trophy width={18} height={18} className="text-gold" />
-        Lista de Troféus
-      </h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="flex items-center gap-2 font-display text-lg font-bold uppercase tracking-wide text-ink">
+          <Trophy width={18} height={18} className="text-gold" />
+          Lista de Troféus
+        </h2>
+        <div className="flex items-center gap-3 text-sm text-ink-muted">
+          {counts.map((c) => (
+            <span key={c.tier} className="flex items-center gap-1">
+              {TIER_EMOJI[c.tier]} {c.count}
+            </span>
+          ))}
+        </div>
+      </div>
 
-      <Card className="flex flex-col divide-y divide-border p-0">
-        {trophies.map((trophy) => {
-          const isClickable = mentioned.has(trophy.name);
+      <div className="flex flex-col gap-6">
+        {TIER_ORDER.map((tier) => {
+          const items = trophies.filter((t) => t.tier === tier);
+          if (items.length === 0) return null;
+
           return (
-            <button
-              key={trophy.name}
-              type="button"
-              disabled={!isClickable}
-              onClick={() => findAndScrollToMention(trophy.name, { scroll: true })}
-              className={cn(
-                "flex items-start gap-3 p-4 text-left transition-colors",
-                isClickable ? "cursor-pointer hover:bg-bg-surface2" : "cursor-default"
-              )}
-            >
-              <span className="text-lg leading-none">{TIER_EMOJI[trophy.tier]}</span>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-display text-sm font-semibold text-ink">{trophy.name}</p>
-                  <span className="text-[10px] uppercase tracking-wide text-ink-dim">
-                    {TIER_LABEL[trophy.tier]}
-                  </span>
-                  {isClickable && (
-                    <span className="text-[10px] font-medium text-gold">
-                      → ver na review
-                    </span>
-                  )}
-                </div>
-                {trophy.description && (
-                  <p className="mt-0.5 text-sm text-ink-muted">{trophy.description}</p>
-                )}
+            <div key={tier}>
+              <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">
+                {TIER_EMOJI[tier]} {TIER_LABEL[tier]} · {items.length}
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((trophy) => {
+                  const isClickable = mentioned.has(trophy.name);
+                  return (
+                    <Card
+                      key={trophy.name}
+                      className={cn(
+                        "overflow-hidden border transition-colors",
+                        TIER_STYLES[tier]
+                      )}
+                    >
+                      <button
+                        type="button"
+                        disabled={!isClickable}
+                        onClick={() => findAndScrollToMention(trophy.name, { scroll: true })}
+                        className={cn(
+                          "flex w-full items-start gap-3 p-4 text-left",
+                          isClickable ? "cursor-pointer hover:bg-bg-surface2" : "cursor-default"
+                        )}
+                      >
+                        <span className="text-lg leading-none">{TIER_EMOJI[tier]}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-display text-sm font-semibold text-ink">
+                            {trophy.name}
+                          </p>
+                          {trophy.description && (
+                            <p className="mt-1 text-xs text-ink-muted">{trophy.description}</p>
+                          )}
+                          {isClickable && (
+                            <span className="mt-1.5 inline-block text-[10px] font-medium text-gold">
+                              → ver na review
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    </Card>
+                  );
+                })}
               </div>
-            </button>
+            </div>
           );
         })}
-      </Card>
+      </div>
     </div>
   );
 }

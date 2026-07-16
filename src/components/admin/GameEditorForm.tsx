@@ -9,6 +9,7 @@ import { rankingConfigs } from "@/data/mock/rankings-config";
 import { genreLabel, platformLabel } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
 import { RoadmapChapterEditor } from "@/components/admin/RoadmapChapterEditor";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
@@ -908,6 +909,13 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               troféu mencionado na Review acima, o visitante consegue clicar
               no troféu e saltar diretamente para essa parte do texto.
             </p>
+            <div className="mb-3">
+              <BulkTrophyImport
+                onImport={(items) =>
+                  setDetail((f) => ({ ...f, trophyList: [...f.trophyList, ...items] }))
+                }
+              />
+            </div>
             <ObjectListEditor<TrophyListItem & Record<string, unknown>>
               label="Lista de Troféus"
               items={detail.trophyList as (TrophyListItem & Record<string, unknown>)[]}
