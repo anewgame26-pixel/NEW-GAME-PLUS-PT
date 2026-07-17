@@ -63,6 +63,7 @@ const defaultGameForm = {
   trophyBreakdown: { bronze: 0, prata: 0, ouro: 0, platina: 1 },
   hasMissables: false,
   hasOnlineTrophies: false,
+  hasRng: false,
   grindLevel: "baixo" as GrindLevel,
   worthBuying: 3,
   worthPlatinum: 3,
@@ -152,6 +153,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         trophyBreakdown: g.trophy_breakdown ?? { bronze: 0, prata: 0, ouro: 0, platina: 1 },
         hasMissables: g.has_missables ?? false,
         hasOnlineTrophies: g.has_online_trophies ?? false,
+        hasRng: g.has_rng ?? false,
         grindLevel: g.grind_level ?? "baixo",
         worthBuying: g.worth_buying ?? 3,
         worthPlatinum: g.worth_platinum ?? 3,
@@ -262,6 +264,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       trophy_breakdown: game.trophyBreakdown,
       has_missables: game.hasMissables,
       has_online_trophies: game.hasOnlineTrophies,
+      has_rng: game.hasRng,
       grind_level: game.grindLevel,
       worth_buying: game.worthBuying,
       worth_platinum: game.worthPlatinum,
@@ -748,6 +751,15 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                 className="h-4 w-4 accent-primary"
               />
               Tem troféus online
+            </label>
+            <label className="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="checkbox"
+                checked={game.hasRng}
+                onChange={(e) => setGame((f) => ({ ...f, hasRng: e.target.checked }))}
+                className="h-4 w-4 accent-primary"
+              />
+              Tem RNG (sorte/drops)
             </label>
             <label className="flex items-center gap-2 text-sm text-ink">
               <input

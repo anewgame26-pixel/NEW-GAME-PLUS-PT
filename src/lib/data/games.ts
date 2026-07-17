@@ -25,6 +25,7 @@ function mapRowToGame(row: Record<string, unknown>): Game {
     trophyBreakdown: row.trophy_breakdown as Game["trophyBreakdown"],
     hasMissables: row.has_missables as boolean,
     hasOnlineTrophies: row.has_online_trophies as boolean,
+    hasRng: (row.has_rng as boolean | null) ?? false,
     grindLevel: row.grind_level as Game["grindLevel"],
     worthBuying: row.worth_buying as number,
     worthPlatinum: row.worth_platinum as number,

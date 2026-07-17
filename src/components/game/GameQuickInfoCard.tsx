@@ -1,4 +1,4 @@
-import { BarChart3, Clock, Trophy, AlertTriangle, Repeat, Wifi, Layers, Tag, Gem } from "lucide-react";
+import { BarChart3, Clock, Trophy, AlertTriangle, Repeat, Wifi, Layers, Tag, Gem, Dices, BookOpen } from "lucide-react";
 import { Game, GameDetail } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { StarRating } from "@/components/ui/StarRating";
@@ -47,6 +47,18 @@ export function GameQuickInfoCard({ game, detail }: GameQuickInfoCardProps) {
       label: "Online Obrigatório",
       value: game.hasOnlineTrophies ? "Sim" : "Não",
       warn: game.hasOnlineTrophies,
+    },
+    {
+      icon: Dices,
+      label: "RNG",
+      value: game.hasRng ? "Sim" : "Não",
+      warn: game.hasRng,
+    },
+    {
+      icon: BookOpen,
+      label: "Precisa de Guia",
+      value: game.guideRequired ? "Sim" : "Não",
+      warn: game.guideRequired,
     },
     {
       icon: Layers,

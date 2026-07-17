@@ -38,6 +38,8 @@ export interface Game {
   trophyBreakdown: TrophyBreakdown;
   hasMissables: boolean;
   hasOnlineTrophies: boolean;
+  /** Se o jogo depende de sorte/RNG para algum troféu (drops raros, etc.) */
+  hasRng: boolean;
   grindLevel: GrindLevel;
   /** Vale a pena comprar, de 1 a 5 */
   worthBuying: number;

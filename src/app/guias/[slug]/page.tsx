@@ -76,14 +76,11 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
         <section className="border-t border-border py-10">
           <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 lg:flex-row lg:px-8">
-            <div className="lg:hidden">
+            <div className="shrink-0">
               <GameQuickInfoCard game={game} detail={detail} />
             </div>
             <div className="flex-1">
               <TrophyList trophies={detail.trophyList} />
-            </div>
-            <div className="hidden shrink-0 lg:block">
-              <GameQuickInfoCard game={game} detail={detail} />
             </div>
           </div>
         </section>
