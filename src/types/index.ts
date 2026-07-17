@@ -120,6 +120,8 @@ export interface RoadmapChapter {
   youtubeId?: string;
   /** Missables específicos deste capítulo (opcional) */
   missables?: RoadmapChapterMissable[];
+  /** Imagens/screenshots deste capítulo (opcional, URLs) */
+  imageUrls?: string[];
 }
 
 export type TrophyTier = "bronze" | "prata" | "ouro" | "platina";
@@ -128,6 +130,13 @@ export interface TrophyListItem {
   name: string;
   tier: TrophyTier;
   description: string;
+  /**
+   * Índice (posição, a contar do 0) do capítulo do roadmap onde este troféu
+   * é obtido — opcional. Quando definido, clicar no troféu leva direto a
+   * esse capítulo em vez de depender de encontrar o nome do troféu escrito
+   * algures no texto do roadmap ou da review.
+   */
+  roadmapChapterIndex?: number;
 }
 
 export interface GameDetail {

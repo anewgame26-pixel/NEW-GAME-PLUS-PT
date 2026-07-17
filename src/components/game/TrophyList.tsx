@@ -5,6 +5,7 @@ import { Trophy } from "lucide-react";
 import { TrophyListItem, TrophyTier } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
+import { OPEN_ROADMAP_CHAPTER_EVENT } from "@/components/game/RoadmapChapters";
 
 interface TrophyListProps {
   trophies: TrophyListItem[];
@@ -35,43 +36,100 @@ const TIER_STYLES: Record<TrophyTier, string> = {
   bronze: "border-border-light hover:border-ink-dim",
 };
 
-/**
- * Procura o nome do troféu dentro do texto da Review (secção #review) e,
- * se encontrar, faz scroll até lá e destaca por instantes. Devolve se
- * encontrou ou não, para sabermos se vale a pena tornar o troféu clicável.
- */
-function findAndScrollToMention(name: string, { scroll }: { scroll: boolean }) {
-  const container = document.getElementById("review");
-  if (!container || !name.trim()) return false;
+interface Mention {
+  location: "review" | "roadmap";
+  /** Só definido quando location === "roadmap" */
+  chapterIndex: number | null;
+  element: Element;
+}
 
+/** Percorre todo o texto dentro de um contentor à procura de "query". */
+function walkForText(container: Element, query: string): Node | null {
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
-  const query = name.trim().toLowerCase();
   let node: Node | null;
-
   while ((node = walker.nextNode())) {
-    const text = node.textContent ?? "";
-    if (text.toLowerCase().includes(query)) {
-      if (scroll) {
-        const el = node.parentElement;
-        el?.scrollIntoView({ behavior: "smooth", block: "center" });
-        el?.classList.add("trophy-mention-flash");
-        setTimeout(() => el?.classList.remove("trophy-mention-flash"), 1600);
-      }
-      return true;
+    if ((node.textContent ?? "").toLowerCase().includes(query)) return node;
+  }
+  return null;
+}
+
+/**
+ * Descobre onde um troféu é mencionado, por esta ordem:
+ * 1. Ligação direta a um capítulo do roadmap (definida no /admin) — a mais
+ *    fiável, porque não depende de nomes escritos coincidirem.
+ * 2. O nome do troféu escrito dentro de algum capítulo do roadmap.
+ * 3. O nome do troféu escrito na Review.
+ */
+function findMention(trophy: TrophyListItem): Mention | null {
+  if (typeof trophy.roadmapChapterIndex === "number") {
+    const chapterEl = document.querySelector(
+      `[data-chapter-index="${trophy.roadmapChapterIndex}"]`
+    );
+    if (chapterEl) {
+      return { location: "roadmap", chapterIndex: trophy.roadmapChapterIndex, element: chapterEl };
     }
   }
-  return false;
+
+  const query = trophy.name.trim().toLowerCase();
+  if (!query) return null;
+
+  const roadmapContainer = document.getElementById("roadmap");
+  if (roadmapContainer) {
+    const node = walkForText(roadmapContainer, query);
+    const el = node?.parentElement;
+    if (el) {
+      const chapterEl = el.closest("[data-chapter-index]");
+      const chapterIndex = chapterEl
+        ? Number(chapterEl.getAttribute("data-chapter-index"))
+        : null;
+      return { location: "roadmap", chapterIndex, element: el };
+    }
+  }
+
+  const reviewContainer = document.getElementById("review");
+  if (reviewContainer) {
+    const node = walkForText(reviewContainer, query);
+    const el = node?.parentElement;
+    if (el) return { location: "review", chapterIndex: null, element: el };
+  }
+
+  return null;
+}
+
+function scrollAndFlash(el: Element) {
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.classList.add("trophy-mention-flash");
+  setTimeout(() => el.classList.remove("trophy-mention-flash"), 1600);
+}
+
+function goToMention(trophy: TrophyListItem) {
+  const mention = findMention(trophy);
+  if (!mention) return;
+
+  if (mention.location === "roadmap" && mention.chapterIndex !== null) {
+    // Pede ao Roadmap para abrir o capítulo certo primeiro (pode estar
+    // fechado) e só faz scroll depois de lhe dar tempo para abrir.
+    window.dispatchEvent(
+      new CustomEvent(OPEN_ROADMAP_CHAPTER_EVENT, { detail: { index: mention.chapterIndex } })
+    );
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollAndFlash(mention.element));
+    });
+  } else {
+    scrollAndFlash(mention.element);
+  }
 }
 
 export function TrophyList({ trophies }: TrophyListProps) {
-  const [mentioned, setMentioned] = useState<Set<string>>(new Set());
+  const [mentions, setMentions] = useState<Map<string, "review" | "roadmap">>(new Map());
 
   useEffect(() => {
-    const found = new Set<string>();
+    const found = new Map<string, "review" | "roadmap">();
     trophies.forEach((t) => {
-      if (findAndScrollToMention(t.name, { scroll: false })) found.add(t.name);
+      const mention = findMention(t);
+      if (mention) found.set(t.name, mention.location);
     });
-    setMentioned(found);
+    setMentions(found);
   }, [trophies]);
 
   if (trophies.length === 0) return null;
@@ -109,7 +167,8 @@ export function TrophyList({ trophies }: TrophyListProps) {
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((trophy) => {
-                  const isClickable = mentioned.has(trophy.name);
+                  const mentionLocation = mentions.get(trophy.name);
+                  const isClickable = Boolean(mentionLocation);
                   return (
                     <Card
                       key={trophy.name}
@@ -121,7 +180,7 @@ export function TrophyList({ trophies }: TrophyListProps) {
                       <button
                         type="button"
                         disabled={!isClickable}
-                        onClick={() => findAndScrollToMention(trophy.name, { scroll: true })}
+                        onClick={() => goToMention(trophy)}
                         className={cn(
                           "flex w-full items-start gap-3 p-4 text-left",
                           isClickable ? "cursor-pointer hover:bg-bg-surface2" : "cursor-default"
@@ -137,7 +196,7 @@ export function TrophyList({ trophies }: TrophyListProps) {
                           )}
                           {isClickable && (
                             <span className="mt-1.5 inline-block text-[10px] font-medium text-gold">
-                              → ver na review
+                              {mentionLocation === "roadmap" ? "→ ver no roadmap" : "→ ver na review"}
                             </span>
                           )}
                         </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import type { RoadmapChapter, RoadmapChapterMissable } from "@/types";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
+import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 interface RoadmapChapterEditorProps {
@@ -16,6 +17,7 @@ const emptyChapter: RoadmapChapter = {
   description: "",
   youtubeId: "",
   missables: [],
+  imageUrls: [],
 };
 
 export function RoadmapChapterEditor({ chapters, onChange }: RoadmapChapterEditorProps) {
@@ -54,7 +56,7 @@ export function RoadmapChapterEditor({ chapters, onChange }: RoadmapChapterEdito
       {chapters.length === 0 && (
         <p className="text-sm text-ink-dim">
           Ainda não há capítulos. Cria o primeiro abaixo — cada capítulo pode ter um
-          vídeo do YouTube e os seus próprios missables, ambos opcionais.
+          vídeo do YouTube, imagens e os seus próprios missables, todos opcionais.
         </p>
       )}
 
@@ -125,6 +127,15 @@ export function RoadmapChapterEditor({ chapters, onChange }: RoadmapChapterEdito
                     className="h-10 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
                   />
                 </label>
+
+                <div className="rounded-sm border border-border bg-bg-surface2 p-3">
+                  <StringListEditor
+                    label="Imagens deste capítulo (opcional, um link por imagem)"
+                    values={chapter.imageUrls ?? []}
+                    onChange={(imageUrls) => updateChapter(i, { imageUrls })}
+                    placeholder="https://..."
+                  />
+                </div>
 
                 <div className="rounded-sm border border-border bg-bg-surface2 p-3">
                   <ObjectListEditor<RoadmapChapterMissable & Record<string, unknown>>

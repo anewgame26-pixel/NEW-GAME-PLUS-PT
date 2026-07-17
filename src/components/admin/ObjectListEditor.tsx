@@ -7,8 +7,10 @@ interface FieldDef {
   label: string;
   type?: "text" | "textarea" | "number" | "select";
   placeholder?: string;
-  /** Necessário quando type="select" */
-  options?: string[];
+  /** Necessário quando type="select". Aceita strings simples ("igual para valor e texto") ou {value, label} quando o texto mostrado deve ser diferente do valor guardado. */
+  options?: (string | { value: string; label: string })[];
+  /** Quando true (tipicamente com type="select"), guarda o valor como número (ou "undefined" se vazio) em vez de texto. */
+  numeric?: boolean;
 }
 
 interface ObjectListEditorProps<T extends Record<string, unknown>> {
@@ -26,7 +28,7 @@ export function ObjectListEditor<T extends Record<string, unknown>>({
   emptyItem,
   onChange,
 }: ObjectListEditorProps<T>) {
-  const updateField = (index: number, key: string, value: string | number) => {
+  const updateField = (index: number, key: string, value: string | number | undefined) => {
     onChange(items.map((item, i) => (i === index ? { ...item, [key]: value } : item)));
   };
 
@@ -69,15 +71,25 @@ export function ObjectListEditor<T extends Record<string, unknown>>({
                   />
                 ) : field.type === "select" ? (
                   <select
-                    value={String(item[field.key] ?? "")}
-                    onChange={(e) => updateField(i, field.key, e.target.value)}
+                    value={item[field.key] == null ? "" : String(item[field.key])}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      updateField(
+                        i,
+                        field.key,
+                        field.numeric ? (raw === "" ? undefined : Number(raw)) : raw
+                      );
+                    }}
                     className="h-9 rounded-sm border border-border bg-bg-surface px-2.5 text-sm text-ink outline-none focus:border-primary"
                   >
-                    {(field.options ?? []).map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
+                    {(field.options ?? []).map((opt) => {
+                      const o = typeof opt === "string" ? { value: opt, label: opt } : opt;
+                      return (
+                        <option key={o.value} value={o.value}>
+                          {o.label}
+                        </option>
+                      );
+                    })}
                   </select>
                 ) : (
                   <input

@@ -905,9 +905,11 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           <div>
             <p className="mb-2 text-xs text-ink-dim">
               A lista completa aparece na página do jogo, no sítio onde antes
-              estava a sinopse. Se escreveres na descrição o mesmo nome de um
-              troféu mencionado na Review acima, o visitante consegue clicar
-              no troféu e saltar diretamente para essa parte do texto.
+              estava a sinopse. Se ligares um troféu a um capítulo do roadmap
+              (abaixo, em &quot;Roadmap&quot;), o visitante consegue clicar no troféu e
+              saltar diretamente para esse capítulo. Se não ligares nenhum, o
+              site também tenta encontrar sozinho o nome do troféu escrito no
+              roadmap ou na review.
             </p>
             <div className="mb-3">
               <BulkTrophyImport
@@ -925,6 +927,19 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                 { key: "name", label: "Nome do troféu" },
                 { key: "tier", label: "Tier", type: "select", options: [...TROPHY_TIERS] },
                 { key: "description", label: "Descrição", type: "textarea" },
+                {
+                  key: "roadmapChapterIndex",
+                  label: "Capítulo do roadmap onde se obtém (opcional)",
+                  type: "select",
+                  numeric: true,
+                  options: [
+                    { value: "", label: "— não ligar a um capítulo —" },
+                    ...detail.roadmapChapters.map((chapter, i) => ({
+                      value: String(i),
+                      label: `Capítulo ${i + 1} — ${chapter.title.trim() || "sem título"}`,
+                    })),
+                  ],
+                },
               ]}
             />
           </div>
