@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ReactNode, useState } from "react";
-import { Search, Menu, X, Youtube, Instagram } from "lucide-react";
+import { ReactNode, useEffect, useState } from "react";
+import { Search, Menu, X, Youtube, Instagram, User } from "lucide-react";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -15,6 +17,27 @@ const NAV_LINKS = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  // null = ainda não sabemos (primeira renderização); undefined nunca
+  // acontece — ou há utilizador, ou sabemos que não há.
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setAuthChecked(true);
+    });
+
+    // Mantém o link atualizado sem recarregar a página, ex.: depois de
+    // entrar em /entrar ou sair em /perfil.
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.subscription.unsubscribe();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
@@ -47,6 +70,15 @@ export function Header() {
             <SocialIcon icon={<Youtube width={15} height={15} />} label="YouTube" />
             <SocialIcon icon={<Instagram width={15} height={15} />} label="Instagram" />
           </div>
+          {authChecked && (
+            <Link
+              href={user ? "/perfil" : "/entrar"}
+              className="hidden items-center gap-1.5 rounded-sm border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted transition-colors hover:border-border-light hover:text-ink lg:flex"
+            >
+              <User width={14} height={14} />
+              {user ? "Perfil" : "Entrar"}
+            </Link>
+          )}
           <button
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             onClick={() => setMobileOpen((v) => !v)}
@@ -81,6 +113,17 @@ export function Header() {
                 </Link>
               </li>
             ))}
+            {authChecked && (
+              <li>
+                <Link
+                  href={user ? "/perfil" : "/entrar"}
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-sm px-3 py-2.5 text-sm font-medium text-ink-muted hover:bg-bg-surface hover:text-ink"
+                >
+                  {user ? "O Meu Perfil" : "Entrar / Registar"}
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       )}

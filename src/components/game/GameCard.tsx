@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Game } from "@/types";
 import { Badge } from "@/components/ui/Badge";
 import { PlatformIcons } from "@/components/game/PlatformIcons";
+import { FavoriteButton } from "@/components/game/FavoriteButton";
 import { cn } from "@/lib/utils";
 
 interface GameCardProps {
@@ -34,6 +35,9 @@ export function GameCard({ game, eyebrow, eyebrowTone = "red", footer, className
             <Badge tone={eyebrowTone}>{eyebrow}</Badge>
           </div>
         )}
+        <div className="absolute right-2 top-2">
+          <FavoriteButton gameId={game.id} />
+        </div>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-2 pt-6">
           <PlatformIcons platforms={game.platforms} />
         </div>

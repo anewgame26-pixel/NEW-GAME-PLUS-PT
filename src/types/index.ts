@@ -182,3 +182,13 @@ export interface CommunityPost {
   repliesCount: number;
   timeAgo: string;
 }
+
+/**
+ * Perfil de um visitante autenticado (tabela `profiles`). Não confundir
+ * com `TeamMember`, que é o perfil público de alguém da equipa editorial.
+ */
+export interface Profile {
+  id: string;
+  username: string | null;
+  createdAt: string;
+}

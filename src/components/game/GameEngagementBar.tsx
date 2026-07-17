@@ -1,10 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Heart, MessageCircle, Send } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
+import { FavoriteButton } from "@/components/game/FavoriteButton";
 
 interface MockComment {
   id: string;
@@ -18,11 +18,11 @@ const SEED_COMMENTS: MockComment[] = [
 ];
 
 interface GameEngagementBarProps {
+  gameId: string;
   gameTitle: string;
 }
 
-export function GameEngagementBar({ gameTitle }: GameEngagementBarProps) {
-  const [favorited, setFavorited] = useState(false);
+export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps) {
   const [comments, setComments] = useState<MockComment[]>(SEED_COMMENTS);
   const [draft, setDraft] = useState("");
 
@@ -49,21 +49,17 @@ export function GameEngagementBar({ gameTitle }: GameEngagementBarProps) {
                 Guarda nos favoritos para acompanhares o teu progresso e deixa o teu comentário à comunidade.
               </p>
             </div>
-            <Button
-              variant={favorited ? "primary" : "secondary"}
-              onClick={() => setFavorited((v) => !v)}
-              className={cn("shrink-0", favorited && "shadow-glow")}
-            >
-              <Heart
-                width={16}
-                height={16}
-                className={favorited ? "fill-white" : ""}
-              />
-              {favorited ? "Nos Favoritos" : "Guardar nos Favoritos"}
-            </Button>
+            <FavoriteButton gameId={gameId} variant="full" />
           </div>
 
           <div className="mt-5">
+            {/*
+              Os comentários abaixo continuam só de demonstração (dados
+              inventados, perdem-se ao recarregar a página) — ainda fazem
+              parte da fase "Comunidade", que vem depois de Favoritos,
+              Votos e Progresso. Só o botão de favoritos acima já está
+              ligado à base de dados a sério.
+            */}
             <form onSubmit={handleSubmit} className="flex gap-2">
               <input
                 type="text"

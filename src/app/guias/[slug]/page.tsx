@@ -98,7 +98,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
         <ScreenshotsGallery urls={detail.screenshotUrls} gameTitle={game.title} />
         <VideoEmbed videoId={detail.videoId} title={game.title} />
         <SimilarGamesRow games={similarGames} />
-        <GameEngagementBar gameTitle={game.title} />
+        <GameEngagementBar gameId={game.id} gameTitle={game.title} />
       </main>
       <Footer />
     </>

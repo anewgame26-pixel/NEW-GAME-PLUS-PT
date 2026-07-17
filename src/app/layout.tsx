@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Chakra_Petch, Inter, JetBrains_Mono } from "next/font/google";
+import { FavoritesProvider } from "@/components/providers/FavoritesProvider";
 import "./globals.css";
 
 const display = Chakra_Petch({
@@ -33,7 +34,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-PT" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <FavoritesProvider>{children}</FavoritesProvider>
+      </body>
     </html>
   );
 }
