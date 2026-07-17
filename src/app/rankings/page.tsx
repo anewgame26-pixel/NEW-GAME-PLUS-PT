@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { getRankingCategories } from "@/lib/data/rankings";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Rankings | NewGame+",
   description: "As melhores, piores, mais rápidas e mais difíceis platinas do catálogo NewGame+.",

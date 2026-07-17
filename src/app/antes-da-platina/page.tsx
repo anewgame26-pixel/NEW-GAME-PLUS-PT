@@ -7,6 +7,8 @@ import { EpisodeRow } from "@/components/game/EpisodeRow";
 import { getEpisodeArchive } from "@/lib/data/videos";
 import { getGames } from "@/lib/data/games";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Antes da Platina | NewGame+",
   description:

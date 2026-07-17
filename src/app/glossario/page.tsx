@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { GlossaryList } from "@/components/about/GlossaryList";
 import { getGlossaryTerms } from "@/lib/data/glossary";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Glossário de Troféus | NewGame+",
   description: "Termos comuns do mundo da caça aos troféus, explicados.",

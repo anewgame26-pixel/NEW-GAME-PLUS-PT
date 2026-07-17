@@ -7,8 +7,10 @@ import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { StatsBar } from "@/components/home/StatsBar";
 import { TeamGrid } from "@/components/about/TeamGrid";
 import { Button } from "@/components/ui/Button";
-import { platformStats } from "@/data/mock/homepage";
 import { getTeamMembers } from "@/lib/data/team";
+import { getPlatformStats } from "@/lib/data/stats";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "O Covil | NewGame+",
@@ -18,6 +20,7 @@ export const metadata: Metadata = {
 
 export default async function CovilPage() {
   const teamMembers = await getTeamMembers();
+  const platformStats = await getPlatformStats();
 
   return (
     <>

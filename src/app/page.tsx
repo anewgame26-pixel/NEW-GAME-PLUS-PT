@@ -13,10 +13,13 @@ import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
 import { getRankingCategories } from "@/lib/data/rankings";
 import { getNowPlaying, resolveNowPlaying } from "@/lib/data/now-playing";
 import { getTeamMembers } from "@/lib/data/team";
-import { platformStats } from "@/data/mock/homepage";
+import { getPlatformStats } from "@/lib/data/stats";
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const games = await getGames();
+  const platformStats = await getPlatformStats();
   let featuredGames = await getFeaturedGames();
 
   // Salvaguarda: se ainda nenhum jogo tiver sido marcado como destaque no

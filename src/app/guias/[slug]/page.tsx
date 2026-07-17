@@ -13,6 +13,8 @@ import { DifficultyExplanation } from "@/components/game/DifficultyExplanation";
 import { HardestTrophiesGrid } from "@/components/game/HardestTrophiesGrid";
 import { PrepTipsChecklist } from "@/components/game/PrepTipsChecklist";
 import { ScreenshotsGallery } from "@/components/game/ScreenshotsGallery";
+
+export const dynamic = "force-dynamic";
 import { SimilarGamesRow } from "@/components/game/SimilarGamesRow";
 import { VideoEmbed } from "@/components/game/VideoEmbed";
 import { GameEngagementBar } from "@/components/game/GameEngagementBar";

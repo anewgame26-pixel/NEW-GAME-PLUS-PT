@@ -8,6 +8,8 @@ import { RankingList } from "@/components/game/RankingList";
 import { getGames } from "@/lib/data/games";
 import { getRankingConfig, rankingConfigs } from "@/data/mock/rankings-config";
 
+export const dynamic = "force-dynamic";
+
 interface RankingCategoryPageProps {
   params: Promise<{ categoria: string }>;
 }

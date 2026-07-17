@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { FAQAccordion } from "@/components/about/FAQAccordion";
 import { getFaqItems } from "@/lib/data/faq";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Perguntas Frequentes | NewGame+",
   description: "Respostas às perguntas mais comuns sobre a NewGame+.",
