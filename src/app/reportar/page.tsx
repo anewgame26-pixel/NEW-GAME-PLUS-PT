@@ -4,14 +4,18 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ReportForm } from "@/components/about/ReportForm";
-import { games } from "@/data/mock/games";
+import { getGames } from "@/lib/data/games";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Reportar Erro | NewGame+",
   description: "Encontraste um erro num guia, roadmap ou ficha de jogo? Avisa-nos.",
 };
 
-export default function ReportarPage() {
+export default async function ReportarPage() {
+  const games = await getGames();
+
   return (
     <>
       <Header />

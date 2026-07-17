@@ -3,12 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { Genre } from "@/types";
-import { games } from "@/data/mock/games";
+import { Game, Genre } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Button } from "@/components/ui/Button";
 import { GameCard } from "@/components/game/GameCard";
+
+interface RecommendationWizardProps {
+  games: Game[];
+}
 
 const TIME_OPTIONS = [
   { id: "10h", label: "Até 10h", max: 10 },
@@ -26,7 +29,7 @@ const GENRE_OPTIONS: { id: Genre; label: string }[] = [
   { id: "coop", label: "Coop" },
 ];
 
-export function RecommendationWizard() {
+export function RecommendationWizard({ games }: RecommendationWizardProps) {
   const [time, setTime] = useState(TIME_OPTIONS[1].id);
   const [genre, setGenre] = useState<Genre>("acao");
   const [showResults, setShowResults] = useState(false);
@@ -36,7 +39,7 @@ export function RecommendationWizard() {
     return games
       .filter((g) => g.platinumTimeMax <= selectedTime.max && g.genres.includes(genre))
       .slice(0, 4);
-  }, [time, genre]);
+  }, [time, genre, games]);
 
   return (
     <Card className="p-5">

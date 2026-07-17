@@ -60,7 +60,7 @@ export default async function HomePage() {
 
         <section className="border-t border-border py-10">
           <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
-            <RecommendationWizard />
+            <RecommendationWizard games={games} />
           </div>
         </section>
 
