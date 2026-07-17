@@ -3,11 +3,40 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { Mark } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import BoldExtension from "@tiptap/extension-bold";
+import ItalicExtension from "@tiptap/extension-italic";
 import TextStyle from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Bold, Italic } from "lucide-react";
+import { Bold, Italic, List, ListOrdered } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/**
+ * Versões de Negrito/Itálico sem "atalhos de escrita" automáticos (as
+ * chamadas input rules / paste rules do Tiptap). Por omissão, o Tiptap
+ * tenta ser "inteligente" e transforma `**palavra**` ou `__palavra__` em
+ * negrito automaticamente enquanto escreves ou colas texto — o que causava
+ * negrito a aparecer sozinho ao editar/colar texto com asteriscos. Aqui
+ * fica desativado: negrito e itálico só acontecem quando o utilizador
+ * carrega mesmo no botão (ou Ctrl/Cmd+B e Ctrl/Cmd+I).
+ */
+const NoAutoBold = BoldExtension.extend({
+  addInputRules() {
+    return [];
+  },
+  addPasteRules() {
+    return [];
+  },
+});
+
+const NoAutoItalic = ItalicExtension.extend({
+  addInputRules() {
+    return [];
+  },
+  addPasteRules() {
+    return [];
+  },
+});
 
 /**
  * Marca personalizada para o "Tamanho de Destaque". Optámos por não dar
@@ -37,11 +66,14 @@ const FontSize = Mark.create({
   },
 });
 
-// Paleta de cores limitada à marca — de propósito, sem seletor de cor livre.
+// Paleta de cores da marca — de propósito, sem seletor de cor livre, para
+// que o texto de qualquer editor continue coerente com o resto do site.
 const COLOR_OPTIONS = [
   { label: "Normal", value: null, swatchClass: "bg-ink" },
   { label: "Vermelho", value: "#E31B33", swatchClass: "bg-primary" },
   { label: "Dourado", value: "#F2B705", swatchClass: "bg-gold" },
+  { label: "Azul", value: "#3E7BFA", swatchClass: "bg-accent" },
+  { label: "Cinza", value: "#96A0AD", swatchClass: "bg-ink-muted" },
 ];
 
 interface RichTextEditorProps {
@@ -54,13 +86,18 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: false,
-        bulletList: false,
-        orderedList: false,
+        bold: false,
+        italic: false,
+        // Só dois níveis de título dentro do editor (Título e Subtítulo) —
+        // suficiente para organizar um texto sem criar títulos gigantes
+        // fora de sítio dentro de uma review ou de um capítulo do roadmap.
+        heading: { levels: [2, 3] },
         blockquote: false,
         codeBlock: false,
         horizontalRule: false,
       }),
+      NoAutoBold,
+      NoAutoItalic,
       TextStyle,
       Color,
       FontSize,
@@ -71,7 +108,12 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     editorProps: {
       attributes: {
         class:
-          "h-full min-h-[5.5rem] px-3 py-2.5 text-sm text-ink outline-none [&_p]:mb-2 [&_p:last-child]:mb-0",
+          "h-full min-h-[5.5rem] px-3 py-2.5 text-sm text-ink outline-none " +
+          "[&_p]:mb-2 [&_p:last-child]:mb-0 " +
+          "[&_h2]:mb-2 [&_h2]:mt-3 [&_h2]:font-display [&_h2]:text-base [&_h2]:font-bold [&_h2]:uppercase [&_h2]:tracking-wide [&_h2]:text-ink [&_h2:first-child]:mt-0 " +
+          "[&_h3]:mb-2 [&_h3]:mt-3 [&_h3]:font-display [&_h3]:text-sm [&_h3]:font-bold [&_h3]:uppercase [&_h3]:tracking-wide [&_h3]:text-ink-muted [&_h3:first-child]:mt-0 " +
+          "[&_ul]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1 " +
+          "[&_ol]:mb-2 [&_ol]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1",
       },
     },
     onUpdate: ({ editor }) => {
@@ -97,6 +139,47 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           label="Itálico"
         >
           <Italic width={14} height={14} />
+        </ToolbarButton>
+
+        <span className="mx-1 h-5 w-px bg-border" />
+
+        <ToolbarButton
+          active={editor.isActive("paragraph")}
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          label="Parágrafo normal"
+        >
+          <span className="text-xs font-semibold">P</span>
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive("heading", { level: 2 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          label="Título"
+        >
+          <span className="text-xs font-semibold">H2</span>
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive("heading", { level: 3 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          label="Subtítulo"
+        >
+          <span className="text-xs font-semibold">H3</span>
+        </ToolbarButton>
+
+        <span className="mx-1 h-5 w-px bg-border" />
+
+        <ToolbarButton
+          active={editor.isActive("bulletList")}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          label="Lista com pontos"
+        >
+          <List width={14} height={14} />
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive("orderedList")}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          label="Lista numerada"
+        >
+          <ListOrdered width={14} height={14} />
         </ToolbarButton>
 
         <span className="mx-1 h-5 w-px bg-border" />
