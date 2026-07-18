@@ -48,6 +48,13 @@ export interface Game {
   guideRequired: boolean;
   synopsis: string;
   similarGameIds: string[];
+  /**
+   * Se este jogo já tem página pública (guia/review). Jogos criados
+   * rapidamente via IGDB só para entrarem em votação começam como
+   * false — não aparecem no catálogo nem têm link clicável até a
+   * equipa terminar o guia e publicar.
+   */
+  isPublished: boolean;
 }
 
 export interface CommunityMember {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import type { VotingCandidate } from "@/types";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -42,26 +43,24 @@ export default async function VotarPage() {
                     {i + 1}
                   </span>
 
-                  <Link
-                    href={`/guias/${candidate.game.slug}`}
-                    className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border"
-                  >
-                    <Image
-                      src={candidate.game.coverUrl}
-                      alt={`Capa de ${candidate.game.title}`}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
-                  </Link>
+                  <CandidateCover candidate={candidate} />
 
                   <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/guias/${candidate.game.slug}`}
-                      className="block truncate font-display text-sm font-bold text-ink hover:text-primary-light"
-                    >
-                      {candidate.game.title}
-                    </Link>
+                    {candidate.game.isPublished ? (
+                      <Link
+                        href={`/guias/${candidate.game.slug}`}
+                        className="block truncate font-display text-sm font-bold text-ink hover:text-primary-light"
+                      >
+                        {candidate.game.title}
+                      </Link>
+                    ) : (
+                      <p className="flex items-center gap-2 truncate font-display text-sm font-bold text-ink">
+                        {candidate.game.title}
+                        <span className="shrink-0 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gold">
+                          Brevemente
+                        </span>
+                      </p>
+                    )}
                     <div className="mt-1">
                       <PlatformIcons platforms={candidate.game.platforms} />
                     </div>
@@ -76,5 +75,43 @@ export default async function VotarPage() {
       </main>
       <Footer />
     </>
+  );
+}
+
+/**
+ * Capa de um candidato — com link para a guia só quando já está
+ * publicada, e uma imagem de reserva para jogos trazidos rapidamente da
+ * IGDB que ainda não têm capa própria escolhida.
+ */
+function CandidateCover({ candidate }: { candidate: VotingCandidate }) {
+  const coverUrl =
+    candidate.game.coverUrl.trim() ||
+    "https://placehold.co/300x400/1a1a1a/666666?text=Sem+Capa";
+
+  const image = (
+    <Image
+      src={coverUrl}
+      alt={`Capa de ${candidate.game.title}`}
+      fill
+      sizes="48px"
+      className="object-cover"
+    />
+  );
+
+  if (!candidate.game.isPublished) {
+    return (
+      <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border opacity-70">
+        {image}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={`/guias/${candidate.game.slug}`}
+      className="relative h-16 w-12 shrink-0 overflow-hidden rounded-sm border border-border"
+    >
+      {image}
+    </Link>
   );
 }

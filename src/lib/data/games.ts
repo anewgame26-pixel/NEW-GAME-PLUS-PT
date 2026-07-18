@@ -32,15 +32,26 @@ function mapRowToGame(row: Record<string, unknown>): Game {
     guideRequired: row.guide_required as boolean,
     synopsis: row.synopsis as string,
     similarGameIds: (row.similar_game_ids as string[] | null) ?? [],
+    isPublished: (row.is_published as boolean | null) ?? true,
   };
 }
 
-/** Vai buscar todos os jogos à base de dados (tabela games). */
-export async function getGames(): Promise<Game[]> {
-  const { data, error } = await supabase
-    .from("games")
-    .select("*")
-    .order("title", { ascending: true });
+/**
+ * Vai buscar todos os jogos à base de dados (tabela games).
+ *
+ * Por omissão, só devolve jogos publicados (is_published = true) — é o
+ * que as páginas públicas do site (homepage, /jogos, rankings, etc.)
+ * devem sempre usar. O painel /admin passa includeUnpublished: true
+ * para também ver rascunhos e jogos ainda sem análise (ex.: os
+ * adicionados rapidamente via IGDB só para entrarem em votação).
+ */
+export async function getGames(options?: { includeUnpublished?: boolean }): Promise<Game[]> {
+  let query = supabase.from("games").select("*").order("title", { ascending: true });
+  if (!options?.includeUnpublished) {
+    query = query.eq("is_published", true);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Erro ao carregar jogos do Supabase:", error);
@@ -50,12 +61,18 @@ export async function getGames(): Promise<Game[]> {
   return (data ?? []).map(mapRowToGame);
 }
 
-/** Vai buscar um único jogo pelo "slug" (usado nas páginas /guias/[slug]). */
+/**
+ * Vai buscar um único jogo pelo "slug" (usado nas páginas /guias/[slug]).
+ * Só devolve jogos publicados — um jogo ainda em rascunho (ex.: criado
+ * rapidamente via IGDB só para votação) não tem página pública própria
+ * ainda, mesmo que alguém tente aceder ao link diretamente.
+ */
 export async function getGameBySlug(slug: string): Promise<Game | null> {
   const { data, error } = await supabase
     .from("games")
     .select("*")
     .eq("slug", slug)
+    .eq("is_published", true)
     .maybeSingle();
 
   if (error) {
@@ -76,6 +93,7 @@ export async function getFeaturedGames(): Promise<Game[]> {
     .from("games")
     .select("*")
     .eq("is_featured", true)
+    .eq("is_published", true)
     .order("featured_order", { ascending: true, nullsFirst: false })
     .order("title", { ascending: true });
 
@@ -90,7 +108,9 @@ export async function getFeaturedGames(): Promise<Game[]> {
 /**
  * Vai buscar vários jogos de uma vez a partir de uma lista de IDs — usado,
  * por exemplo, para mostrar os "jogos semelhantes" na página de um jogo,
- * numa única pergunta à base de dados em vez de uma por jogo.
+ * os favoritos de um visitante, ou os candidatos da votação. De propósito
+ * SEM filtro de publicação: a votação, em particular, precisa de mostrar
+ * candidatos que ainda não têm guia publicada.
  */
 export async function getGamesByIds(ids: string[]): Promise<Game[]> {
   if (ids.length === 0) return [];
@@ -105,9 +125,9 @@ export async function getGamesByIds(ids: string[]): Promise<Game[]> {
   return (data ?? []).map(mapRowToGame);
 }
 
-/** Todos os "slugs" existentes — usado para gerar as páginas estáticas de cada jogo. */
+/** Todos os "slugs" publicados — usado para gerar as páginas estáticas de cada jogo. */
 export async function getAllGameSlugs(): Promise<string[]> {
-  const { data, error } = await supabase.from("games").select("slug");
+  const { data, error } = await supabase.from("games").select("slug").eq("is_published", true);
 
   if (error) {
     console.error("Erro ao carregar a lista de slugs do Supabase:", error);

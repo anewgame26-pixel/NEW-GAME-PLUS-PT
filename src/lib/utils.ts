@@ -6,6 +6,20 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Transforma um título em slug (ex.: "Elden Ring: Nightreign" ->
+ * "elden-ring-nightreign") — usado sempre que um jogo é criado, seja
+ * pelo formulário completo ou pela importação rápida via IGDB.
+ */
+export function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 export function formatPlatinumTime(min: number, max: number) {
   return `${min}-${max}h`;
 }

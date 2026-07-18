@@ -6,7 +6,7 @@ import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { revalidatePaths } from "@/lib/admin/revalidate";
 import { rankingConfigs } from "@/data/mock/rankings-config";
-import { genreLabel, platformLabel } from "@/lib/utils";
+import { genreLabel, platformLabel, slugify } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
@@ -38,15 +38,6 @@ const GENRE_OPTIONS: Genre[] = [
 ];
 const GRIND_OPTIONS: GrindLevel[] = ["baixo", "medio", "alto"];
 
-function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
 const defaultGameForm = {
   title: "",
   slug: "",
@@ -73,6 +64,7 @@ const defaultGameForm = {
   isFeatured: false,
   featuredOrder: null as number | null,
   igdbId: null as number | null,
+  isPublished: true,
 };
 
 const defaultDetailForm = {
@@ -163,6 +155,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         isFeatured: g.is_featured ?? false,
         featuredOrder: g.featured_order ?? null,
         igdbId: g.igdb_id ?? null,
+        isPublished: g.is_published ?? true,
       });
 
       if (detailRes.data) {
@@ -274,6 +267,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       is_featured: game.isFeatured,
       featured_order: game.featuredOrder,
       igdb_id: game.igdbId,
+      is_published: game.isPublished,
     };
 
     let resolvedGameId = gameId;
@@ -770,7 +764,23 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               />
               Guia recomendado
             </label>
+            <label className="flex items-center gap-2 text-sm text-ink">
+              <input
+                type="checkbox"
+                checked={game.isPublished}
+                onChange={(e) => setGame((f) => ({ ...f, isPublished: e.target.checked }))}
+                className="h-4 w-4 accent-primary"
+              />
+              Publicado (visível no catálogo e com página própria)
+            </label>
           </div>
+          {!game.isPublished && (
+            <p className="rounded-sm border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-ink">
+              Este jogo não aparece no site público nem tem link clicável enquanto não marcares
+              &quot;Publicado&quot; — útil para o preparares em segredo, ou para jogos adicionados só
+              para entrarem na Votação antes de teres a análise pronta.
+            </p>
+          )}
 
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">

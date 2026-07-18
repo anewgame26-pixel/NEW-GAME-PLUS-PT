@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { getGames } from "@/lib/data/games";
 
 export default async function AdminJogosPage() {
-  const games = await getGames();
+  const games = await getGames({ includeUnpublished: true });
 
   return (
     <div>
@@ -38,8 +38,15 @@ export default async function AdminJogosPage() {
               className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-bg-surface2"
             >
               <div className="min-w-0">
-                <p className="font-display text-sm font-bold text-ink">{game.title}</p>
-                <p className="text-xs text-ink-dim">{game.developer}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-display text-sm font-bold text-ink">{game.title}</p>
+                  {!game.isPublished && (
+                    <span className="shrink-0 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gold">
+                      Rascunho
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-ink-dim">{game.developer || "Produtora por preencher"}</p>
               </div>
               <div className="flex shrink-0 items-center gap-3 text-xs text-ink-muted">
                 <span>Dificuldade {game.difficulty}/10</span>
