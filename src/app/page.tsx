@@ -14,6 +14,8 @@ import { getRankingCategories } from "@/lib/data/rankings";
 import { getNowPlaying, resolveNowPlaying } from "@/lib/data/now-playing";
 import { getTeamMembers } from "@/lib/data/team";
 import { getPlatformStats } from "@/lib/data/stats";
+import { getVotingCandidates } from "@/lib/data/voting";
+import { VotingTeaser } from "@/components/home/VotingTeaser";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +37,7 @@ export default async function HomePage() {
   const teamMembers = await getTeamMembers();
   const nowPlayingRows = await getNowPlaying();
   const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
+  const votingCandidates = await getVotingCandidates();
 
   if (featuredGames.length === 0) {
     return null;
@@ -48,9 +51,16 @@ export default async function HomePage() {
         <QuickFilters />
 
         <section className="py-10">
-          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
+          <div
+            className={
+              votingCandidates.length > 0
+                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8"
+                : "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
+            }
+          >
             <ContinuePlayingList items={playingNow} games={games} />
             <LatestBeforePlatinum episodes={latestBeforePlatinum} games={games} />
+            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
           </div>
         </section>
 
