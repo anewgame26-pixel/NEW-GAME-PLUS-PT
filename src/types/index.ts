@@ -192,3 +192,14 @@ export interface Profile {
   username: string | null;
   createdAt: string;
 }
+
+/**
+ * Um jogo escolhido pela equipa como candidato a "próxima platina" a
+ * analisar — a lista de candidatos é sempre curada no /admin; os
+ * visitantes só podem votar dentro dela, não sugerir jogos novos.
+ */
+export interface VotingCandidate {
+  id: string;
+  game: Game;
+  votesCount: number;
+}
