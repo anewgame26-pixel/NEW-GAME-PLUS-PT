@@ -23,13 +23,11 @@ export function ProfileEditForm({ userId, initialUsername, initialPsnUrl }: Prof
     setError(null);
 
     const supabase = createBrowserSupabaseClient();
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({
-        username: username.trim() || null,
-        psn_url: psnUrl.trim() || null,
-      })
-      .eq("id", userId);
+    const { error: updateError } = await supabase.from("profiles").upsert({
+      id: userId,
+      username: username.trim() || null,
+      psn_url: psnUrl.trim() || null,
+    });
 
     setSaving(false);
 

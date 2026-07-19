@@ -60,8 +60,7 @@ export function AvatarUploader({ userId, initialAvatarUrl }: AvatarUploaderProps
 
     const { error: profileError } = await supabase
       .from("profiles")
-      .update({ avatar_url: freshUrl })
-      .eq("id", userId);
+      .upsert({ id: userId, avatar_url: freshUrl });
 
     setUploading(false);
 
@@ -80,7 +79,7 @@ export function AvatarUploader({ userId, initialAvatarUrl }: AvatarUploaderProps
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={uploading}
-        className="group relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-accent/10 text-accent disabled:opacity-60"
+        className="group relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent/10 text-accent disabled:opacity-60"
         title="Trocar foto de perfil"
       >
         {avatarUrl ? (
@@ -90,14 +89,22 @@ export function AvatarUploader({ userId, initialAvatarUrl }: AvatarUploaderProps
           <User width={26} height={26} />
         )}
 
-        <span className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+        {/*
+          Badge da câmara sempre visível (não só ao passar o rato) — em
+          telemóvel não há "hover", por isso um botão que só aparecesse ao
+          pairar o cursor nunca seria descoberto por ninguém a usar o site
+          num ecrã tátil.
+        */}
+        <span className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-bg-surface bg-primary text-white shadow-sm transition-transform group-hover:scale-110">
           {uploading ? (
-            <Loader2 width={16} height={16} className="animate-spin text-white" />
+            <Loader2 width={12} height={12} className="animate-spin" />
           ) : (
-            <Camera width={16} height={16} className="text-white" />
+            <Camera width={12} height={12} />
           )}
         </span>
       </button>
+
+      <span className="text-[11px] text-ink-dim">Foto de perfil</span>
 
       <input
         ref={fileInputRef}
