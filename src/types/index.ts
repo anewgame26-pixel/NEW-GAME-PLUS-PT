@@ -197,7 +197,20 @@ export interface CommunityPost {
 export interface Profile {
   id: string;
   username: string | null;
+  avatarUrl: string | null;
+  /** Link para o perfil PSN do visitante (opcional, texto livre — não é validado) */
+  psnUrl: string | null;
   createdAt: string;
+}
+
+export type GameProgressStatus = "a_jogar" | "platinado" | "abandonado";
+
+/** Progresso pessoal de um visitante num jogo (tabela `game_progress`). */
+export interface GameProgressEntry {
+  gameId: string;
+  status: GameProgressStatus;
+  progressPercent: number;
+  updatedAt: string;
 }
 
 /**

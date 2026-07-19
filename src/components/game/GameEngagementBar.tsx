@@ -5,6 +5,7 @@ import { MessageCircle, Send } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { FavoriteButton } from "@/components/game/FavoriteButton";
+import { ProgressTracker } from "@/components/game/ProgressTracker";
 
 interface MockComment {
   id: string;
@@ -50,6 +51,10 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
               </p>
             </div>
             <FavoriteButton gameId={gameId} variant="full" />
+          </div>
+
+          <div className="mt-4">
+            <ProgressTracker gameId={gameId} />
           </div>
 
           <div className="mt-5">
