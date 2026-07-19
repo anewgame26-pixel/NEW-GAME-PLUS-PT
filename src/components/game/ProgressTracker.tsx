@@ -28,6 +28,7 @@ export function ProgressTracker({ gameId }: ProgressTrackerProps) {
   const [percent, setPercent] = useState(0);
   const [percentDraft, setPercentDraft] = useState("0");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createBrowserSupabaseClient();
@@ -63,32 +64,42 @@ export function ProgressTracker({ gameId }: ProgressTrackerProps) {
     return () => subscription.subscription.unsubscribe();
   }, [gameId]);
 
-  async function persist(nextStatus: GameProgressStatus, nextPercent: number) {
-    if (!user) return;
+  async function persist(nextStatus: GameProgressStatus, nextPercent: number): Promise<boolean> {
+    if (!user) return false;
     setSaving(true);
+    setError(null);
     const supabase = createBrowserSupabaseClient();
-    const { error } = await supabase.from("game_progress").upsert({
+    const { error: saveError } = await supabase.from("game_progress").upsert({
       user_id: user.id,
       game_id: gameId,
       status: nextStatus,
       progress_percent: nextPercent,
       updated_at: new Date().toISOString(),
     });
-    if (error) console.error("Erro ao guardar progresso:", error);
     setSaving(false);
+    if (saveError) {
+      console.error("Erro ao guardar progresso:", saveError);
+      setError("Não foi possível guardar. Tenta recarregar a página.");
+      return false;
+    }
+    return true;
   }
 
-  function handleStart() {
+  async function handleStart() {
     if (!ready) return;
     if (!user) {
       router.push(`/entrar?next=${encodeURIComponent(pathname)}`);
       return;
     }
+    // Grava primeiro, e só muda a UI para "a acompanhar" se a gravação
+    // resultar mesmo — evita mostrar o progresso como guardado quando na
+    // realidade falhou (ex.: tabela ainda não criada na base de dados).
+    const ok = await persist("a_jogar", 0);
+    if (!ok) return;
     setTracking(true);
     setStatus("a_jogar");
     setPercent(0);
     setPercentDraft("0");
-    persist("a_jogar", 0);
   }
 
   function handleStatusChange(nextStatus: GameProgressStatus) {
@@ -129,59 +140,70 @@ export function ProgressTracker({ gameId }: ProgressTrackerProps) {
 
   if (!tracking) {
     return (
-      <button
-        type="button"
-        onClick={handleStart}
-        className="flex items-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-border-light hover:text-ink"
-      >
-        <Gamepad2 width={15} height={15} />
-        Acompanhar o meu progresso
-      </button>
+      <div className="flex flex-col items-start gap-1.5">
+        <button
+          type="button"
+          onClick={handleStart}
+          disabled={saving}
+          className="flex items-center gap-2 rounded-sm border border-border px-4 py-2.5 text-sm font-medium text-ink-muted transition-colors hover:border-border-light hover:text-ink disabled:opacity-60"
+        >
+          {saving ? (
+            <Loader2 width={15} height={15} className="animate-spin" />
+          ) : (
+            <Gamepad2 width={15} height={15} />
+          )}
+          Acompanhar o meu progresso
+        </button>
+        {error && <p className="text-xs text-primary-light">{error}</p>}
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-sm border border-border bg-bg-surface2 px-4 py-3">
-      <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">
-        <Gamepad2 width={14} height={14} />
-        O meu progresso
-      </span>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex flex-wrap items-center gap-3 rounded-sm border border-border bg-bg-surface2 px-4 py-3">
+        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">
+          <Gamepad2 width={14} height={14} />
+          O meu progresso
+        </span>
 
-      <select
-        value={status}
-        onChange={(e) => handleStatusChange(e.target.value as GameProgressStatus)}
-        className="h-9 rounded-sm border border-border bg-bg-surface px-2.5 text-sm text-ink outline-none focus:border-primary"
-      >
-        {STATUS_OPTIONS.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        <select
+          value={status}
+          onChange={(e) => handleStatusChange(e.target.value as GameProgressStatus)}
+          className="h-9 rounded-sm border border-border bg-bg-surface px-2.5 text-sm text-ink outline-none focus:border-primary"
+        >
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
 
-      <label className="flex items-center gap-1.5 text-sm text-ink-muted">
-        <input
-          type="number"
-          min={0}
-          max={100}
-          value={percentDraft}
-          onChange={(e) => setPercentDraft(e.target.value)}
-          onBlur={handlePercentBlur}
-          disabled={status === "platinado"}
-          className="h-9 w-16 rounded-sm border border-border bg-bg-surface px-2 text-sm text-ink outline-none focus:border-primary disabled:opacity-50"
-        />
-        %
-      </label>
+        <label className="flex items-center gap-1.5 text-sm text-ink-muted">
+          <input
+            type="number"
+            min={0}
+            max={100}
+            value={percentDraft}
+            onChange={(e) => setPercentDraft(e.target.value)}
+            onBlur={handlePercentBlur}
+            disabled={status === "platinado"}
+            className="h-9 w-16 rounded-sm border border-border bg-bg-surface px-2 text-sm text-ink outline-none focus:border-primary disabled:opacity-50"
+          />
+          %
+        </label>
 
-      {saving && <Loader2 width={14} height={14} className="animate-spin text-ink-dim" />}
+        {saving && <Loader2 width={14} height={14} className="animate-spin text-ink-dim" />}
 
-      <button
-        type="button"
-        onClick={handleRemove}
-        className="ml-auto text-xs text-ink-dim underline-offset-2 hover:text-primary-light hover:underline"
-      >
-        Deixar de acompanhar
-      </button>
+        <button
+          type="button"
+          onClick={handleRemove}
+          className="ml-auto text-xs text-ink-dim underline-offset-2 hover:text-primary-light hover:underline"
+        >
+          Deixar de acompanhar
+        </button>
+      </div>
+      {error && <p className="text-xs text-primary-light">{error}</p>}
     </div>
   );
 }
