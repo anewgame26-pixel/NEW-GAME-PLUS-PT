@@ -4,8 +4,6 @@ import { FormEvent, useState } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { FavoriteButton } from "@/components/game/FavoriteButton";
-import { ProgressTracker } from "@/components/game/ProgressTracker";
 
 interface MockComment {
   id: string;
@@ -19,11 +17,10 @@ const SEED_COMMENTS: MockComment[] = [
 ];
 
 interface GameEngagementBarProps {
-  gameId: string;
   gameTitle: string;
 }
 
-export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps) {
+export function GameEngagementBar({ gameTitle }: GameEngagementBarProps) {
   const [comments, setComments] = useState<MockComment[]>(SEED_COMMENTS);
   const [draft, setDraft] = useState("");
 
@@ -41,29 +38,21 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
     <section className="border-t border-border py-10">
       <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
         <Card className="p-6">
-          <div className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
-                O que achas de {gameTitle}?
-              </h2>
-              <p className="mt-1 text-sm text-ink-muted">
-                Guarda nos favoritos para acompanhares o teu progresso e deixa o teu comentário à comunidade.
-              </p>
-            </div>
-            <FavoriteButton gameId={gameId} variant="full" />
-          </div>
-
-          <div className="mt-4">
-            <ProgressTracker gameId={gameId} />
+          <div className="border-b border-border pb-5">
+            <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+              O que achas de {gameTitle}?
+            </h2>
+            <p className="mt-1 text-sm text-ink-muted">
+              Deixa o teu comentário à comunidade. (Favoritos e progresso já estão no topo da
+              página.)
+            </p>
           </div>
 
           <div className="mt-5">
             {/*
               Os comentários abaixo continuam só de demonstração (dados
               inventados, perdem-se ao recarregar a página) — ainda fazem
-              parte da fase "Comunidade", que vem depois de Favoritos,
-              Votos e Progresso. Só o botão de favoritos acima já está
-              ligado à base de dados a sério.
+              parte da fase "Comunidade", ainda por construir.
             */}
             <form onSubmit={handleSubmit} className="flex gap-2">
               <input
