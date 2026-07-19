@@ -213,6 +213,16 @@ export interface GameProgressEntry {
   updatedAt: string;
 }
 
+/** Comentário de um visitante na página de um jogo (tabela `game_comments`). */
+export interface GameComment {
+  id: string;
+  userId: string;
+  username: string | null;
+  avatarUrl: string | null;
+  body: string;
+  createdAt: string;
+}
+
 /**
  * Um jogo escolhido pela equipa como candidato a "próxima platina" a
  * analisar — a lista de candidatos é sempre curada no /admin; os
