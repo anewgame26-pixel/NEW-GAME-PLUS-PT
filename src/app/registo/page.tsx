@@ -39,7 +39,11 @@ export default function RegistoPage() {
       if (msg.includes("already registered") || msg.includes("already exists")) {
         setError("Já existe uma conta com este email — experimenta entrar em vez de te registares.");
       } else if (msg.includes("password")) {
-        setError("A password precisa de pelo menos 6 caracteres.");
+        // A Supabase já valida a força da password do lado dela (definida
+        // no painel da Supabase, não aqui no código) e devolve uma
+        // mensagem própria quando é fraca a mais — mostramo-la tal como
+        // vem, só traduzida ao mínimo indispensável.
+        setError(signUpError.message);
       } else {
         setError("Não foi possível criar a conta. Tenta novamente.");
       }
@@ -99,12 +103,13 @@ export default function RegistoPage() {
                 </span>
                 <input
                   required
-                  minLength={6}
+                  minLength={8}
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink outline-none focus:border-primary"
                 />
+                <span className="text-[11px] text-ink-dim">Pelo menos 8 caracteres.</span>
               </label>
 
               {error && <p className="text-sm text-primary-light">{error}</p>}

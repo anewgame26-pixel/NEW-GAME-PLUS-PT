@@ -25,6 +25,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
+  const { data: editorRow } = await supabase
+    .from("editors")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!editorRow) {
+    return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
+  }
+
   const body = await request.json().catch(() => null);
   const paths: unknown = body?.paths;
 
