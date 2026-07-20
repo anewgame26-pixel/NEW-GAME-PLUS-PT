@@ -145,7 +145,18 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           "[&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:text-ink",
       },
     },
-    onUpdate: ({ editor }) => {
+    onBlur: ({ editor }) => {
+      // De propósito, só aqui (quando se sai da caixa) e não a cada
+      // letra escrita: este editor vive dentro de um formulário enorme,
+      // com vários editores iguais abertos ao mesmo tempo (Introdução,
+      // Veredito, cada capítulo do roadmap...). Avisar o formulário a
+      // cada letra obrigava-o a refazer-se inteiro constantemente, o
+      // que causava instabilidade visível — a caixa a saltar sozinha ao
+      // clicares ou ao usares a barra de ferramentas. Como qualquer
+      // clique fora da caixa (incluindo nos botões da barra de
+      // ferramentas, ou no botão "Guardar") já dispara este evento
+      // antes de mais nada acontecer, o texto mais recente chega sempre
+      // a tempo ao formulário.
       onChange(editor.getHTML());
     },
   });
