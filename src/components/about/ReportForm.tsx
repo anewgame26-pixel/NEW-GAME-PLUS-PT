@@ -5,18 +5,50 @@ import { Check, Flag } from "lucide-react";
 import { Game } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 interface ReportFormProps {
   games: Game[];
 }
 
 export function ReportForm({ games }: ReportFormProps) {
+  const [gameSlug, setGameSlug] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!location.trim() || !description.trim()) return;
+
+    setSubmitting(true);
+    setError(null);
+
+    const supabase = createBrowserSupabaseClient();
+    const { data: userRes } = await supabase.auth.getUser();
+    const game = games.find((g) => g.slug === gameSlug);
+
+    const { error: insertError } = await supabase.from("reports").insert({
+      game_id: game?.id ?? null,
+      location: location.trim(),
+      description: description.trim(),
+      reporter_email: email.trim() || null,
+      user_id: userRes.user?.id ?? null,
+    });
+
+    setSubmitting(false);
+
+    if (insertError) {
+      console.error("Erro ao enviar o report:", insertError);
+      setError("Não foi possível enviar. Tenta novamente.");
+      return;
+    }
+
     setSubmitted(true);
-  };
+  }
 
   if (submitted) {
     return (
@@ -39,7 +71,11 @@ export function ReportForm({ games }: ReportFormProps) {
           <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
             Jogo relacionado (opcional)
           </span>
-          <select className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink outline-none focus:border-primary">
+          <select
+            value={gameSlug}
+            onChange={(e) => setGameSlug(e.target.value)}
+            className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink outline-none focus:border-primary"
+          >
             <option value="">Não é sobre um jogo específico</option>
             {games.map((g) => (
               <option key={g.id} value={g.slug}>
@@ -56,6 +92,8 @@ export function ReportForm({ games }: ReportFormProps) {
           <input
             required
             type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             placeholder="Ex: Guia, Roadmap, Timeline, dados de dificuldade..."
             className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
           />
@@ -68,8 +106,10 @@ export function ReportForm({ games }: ReportFormProps) {
           <textarea
             required
             rows={5}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Explica o que está incorreto ou em falta..."
-            className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+            className="resize-y rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
           />
         </label>
 
@@ -79,14 +119,18 @@ export function ReportForm({ games }: ReportFormProps) {
           </span>
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="o-teu-email@exemplo.com"
             className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
           />
         </label>
 
-        <Button type="submit" className="self-start">
+        {error && <p className="text-sm text-primary-light">{error}</p>}
+
+        <Button type="submit" disabled={submitting} className="self-start">
           <Flag width={15} height={15} />
-          Reportar Erro
+          {submitting ? "A enviar..." : "Reportar Erro"}
         </Button>
       </form>
     </Card>
