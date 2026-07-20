@@ -17,7 +17,7 @@ interface RichTextProps {
  */
 export function RichText({ html, className }: RichTextProps) {
   const safeHtml = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: ["p", "strong", "em", "span", "br", "h2", "h3", "ul", "ol", "li"],
+    ALLOWED_TAGS: ["p", "strong", "em", "span", "mark", "br", "h2", "h3", "ul", "ol", "li"],
     ALLOWED_ATTR: ["style"],
   });
 
@@ -29,6 +29,7 @@ export function RichText({ html, className }: RichTextProps) {
         "[&_h3]:mb-2 [&_h3]:mt-3 [&_h3]:font-display [&_h3]:text-sm [&_h3]:font-bold [&_h3]:uppercase [&_h3]:tracking-wide [&_h3]:text-ink-muted [&_h3:first-child]:mt-0",
         "[&_ul]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1",
         "[&_ol]:mb-2 [&_ol]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1",
+        "[&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:text-ink",
         className
       )}
       dangerouslySetInnerHTML={{ __html: safeHtml }}
