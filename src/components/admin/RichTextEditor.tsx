@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { Mark } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import BoldExtension from "@tiptap/extension-bold";
@@ -105,9 +105,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       StarterKit.configure({
         bold: false,
         italic: false,
-        // Só dois níveis de título dentro do editor (Título e Subtítulo) —
-        // suficiente para organizar um texto sem criar títulos gigantes
-        // fora de sítio dentro de uma review ou de um capítulo do roadmap.
         heading: { levels: [2, 3] },
         blockquote: false,
         codeBlock: false,
@@ -124,15 +121,16 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     ],
     content: value,
     immediatelyRender: false,
-    // Por omissão, o Tiptap re-renderiza TODO o componente React a cada
-    // letra escrita (a cada "transação"). Com várias destas caixas
-    // abertas ao mesmo tempo numa análise (Introdução, Veredito, etc.),
-    // isto sobrecarregava o formulário inteiro e causava instabilidade
-    // visível (o cursor a saltar, a caixa a voltar ao topo sozinha).
-    // Desligado aqui; o essencial que a barra de ferramentas precisa
-    // (que botão está ativo) é lido à parte, de forma mais eficiente,
-    // pelo useEditorState logo abaixo.
-    shouldRerenderOnTransaction: false,
+    onBlur: ({ editor }) => {
+      // Só avisamos o formulário à volta quando se sai da caixa (não a
+      // cada letra) — este editor vive dentro de um formulário grande,
+      // com vários editores iguais abertos ao mesmo tempo, e avisar a
+      // cada letra sobrecarregava-o. Qualquer clique fora da caixa
+      // (barra de ferramentas, botão "Guardar") já dispara isto antes
+      // de mais nada acontecer, por isso o texto mais recente chega
+      // sempre a tempo.
+      onChange(editor.getHTML());
+    },
     editorProps: {
       attributes: {
         class:
@@ -145,85 +143,46 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           "[&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:text-ink",
       },
     },
-    onBlur: ({ editor }) => {
-      // De propósito, só aqui (quando se sai da caixa) e não a cada
-      // letra escrita: este editor vive dentro de um formulário enorme,
-      // com vários editores iguais abertos ao mesmo tempo (Introdução,
-      // Veredito, cada capítulo do roadmap...). Avisar o formulário a
-      // cada letra obrigava-o a refazer-se inteiro constantemente, o
-      // que causava instabilidade visível — a caixa a saltar sozinha ao
-      // clicares ou ao usares a barra de ferramentas. Como qualquer
-      // clique fora da caixa (incluindo nos botões da barra de
-      // ferramentas, ou no botão "Guardar") já dispara este evento
-      // antes de mais nada acontecer, o texto mais recente chega sempre
-      // a tempo ao formulário.
-      onChange(editor.getHTML());
-    },
   });
 
-  // Lê só o que a barra de ferramentas precisa (que botão mostrar como
-  // ativo), em vez de o componente inteiro reagir a cada transação —
-  // evita o problema de performance/instabilidade descrito acima,
-  // seguindo a recomendação oficial do Tiptap para editores múltiplos
-  // na mesma página (como acontece aqui: review + cada capítulo do
-  // roadmap têm cada um o seu).
-  const toolbarState = useEditorState({
-    editor,
-    selector: (ctx) => {
-      if (!ctx.editor) return null;
-      const e = ctx.editor;
-      return {
-        bold: e.isActive("bold"),
-        italic: e.isActive("italic"),
-        paragraph: e.isActive("paragraph"),
-        heading2: e.isActive("heading", { level: 2 }),
-        heading3: e.isActive("heading", { level: 3 }),
-        bulletList: e.isActive("bulletList"),
-        orderedList: e.isActive("orderedList"),
-        fontSizeLarge: e.isActive("fontSize", { size: "1.2em" }),
-        color: (e.getAttributes("textStyle").color as string | undefined) ?? null,
-        highlight: (e.getAttributes("highlight").color as string | undefined) ?? null,
-        alignLeft: e.isActive({ textAlign: "left" }),
-        alignCenter: e.isActive({ textAlign: "center" }),
-        alignRight: e.isActive({ textAlign: "right" }),
-      };
-    },
-  });
-
-  if (!editor || !toolbarState) return null;
-
-  const headingValue = toolbarState.heading2 ? "h2" : toolbarState.heading3 ? "h3" : "p";
+  if (!editor) return null;
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-wrap items-center gap-1 rounded-t-sm border border-border bg-bg-surface p-1.5">
-        <select
-          value={headingValue}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (v === "p") editor.chain().focus().setParagraph().run();
-            else if (v === "h2") editor.chain().focus().toggleHeading({ level: 2 }).run();
-            else editor.chain().focus().toggleHeading({ level: 3 }).run();
-          }}
-          title="Estilo do parágrafo/capítulo"
-          className="h-7 rounded-sm border border-border bg-bg-surface2 px-1.5 text-xs text-ink outline-none focus:border-primary"
+        <ToolbarButton
+          active={editor.isActive("paragraph")}
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          label="Parágrafo normal"
         >
-          <option value="p">Parágrafo</option>
-          <option value="h2">Título</option>
-          <option value="h3">Subtítulo</option>
-        </select>
+          <span className="text-xs font-semibold">P</span>
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive("heading", { level: 2 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          label="Título"
+        >
+          <span className="text-xs font-semibold">H2</span>
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive("heading", { level: 3 })}
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          label="Subtítulo"
+        >
+          <span className="text-xs font-semibold">H3</span>
+        </ToolbarButton>
 
         <span className="mx-1 h-5 w-px bg-border" />
 
         <ToolbarButton
-          active={toolbarState.bold}
+          active={editor.isActive("bold")}
           onClick={() => editor.chain().focus().toggleBold().run()}
           label="Negrito"
         >
           <Bold width={14} height={14} />
         </ToolbarButton>
         <ToolbarButton
-          active={toolbarState.italic}
+          active={editor.isActive("italic")}
           onClick={() => editor.chain().focus().toggleItalic().run()}
           label="Itálico"
         >
@@ -233,14 +192,14 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         <span className="mx-1 h-5 w-px bg-border" />
 
         <ToolbarButton
-          active={toolbarState.bulletList}
+          active={editor.isActive("bulletList")}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           label="Lista com pontos"
         >
           <List width={14} height={14} />
         </ToolbarButton>
         <ToolbarButton
-          active={toolbarState.orderedList}
+          active={editor.isActive("orderedList")}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           label="Lista numerada"
         >
@@ -250,21 +209,21 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         <span className="mx-1 h-5 w-px bg-border" />
 
         <ToolbarButton
-          active={toolbarState.alignLeft}
+          active={editor.isActive({ textAlign: "left" })}
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
           label="Alinhar à esquerda"
         >
           <AlignLeft width={14} height={14} />
         </ToolbarButton>
         <ToolbarButton
-          active={toolbarState.alignCenter}
+          active={editor.isActive({ textAlign: "center" })}
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
           label="Centrar"
         >
           <AlignCenter width={14} height={14} />
         </ToolbarButton>
         <ToolbarButton
-          active={toolbarState.alignRight}
+          active={editor.isActive({ textAlign: "right" })}
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
           label="Alinhar à direita"
         >
@@ -274,14 +233,14 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         <span className="mx-1 h-5 w-px bg-border" />
 
         <ToolbarButton
-          active={!toolbarState.fontSizeLarge}
+          active={!editor.isActive("fontSize", { size: "1.2em" })}
           onClick={() => editor.chain().focus().unsetMark("fontSize").run()}
           label="Tamanho normal"
         >
           <span className="text-xs font-semibold">A</span>
         </ToolbarButton>
         <ToolbarButton
-          active={toolbarState.fontSizeLarge}
+          active={editor.isActive("fontSize", { size: "1.2em" })}
           onClick={() => editor.chain().focus().setMark("fontSize", { size: "1.2em" }).run()}
           label="Tamanho de destaque"
         >
@@ -290,7 +249,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
         <span className="mx-1 h-5 w-px bg-border" />
 
-        <span className="mr-0.5 text-[10px] uppercase tracking-wide text-ink-dim">Texto</span>
         {COLOR_OPTIONS.map((c) => (
           <button
             key={c.label}
@@ -304,22 +262,20 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             className={cn(
               "h-6 w-6 shrink-0 rounded-full border-2 transition-transform hover:scale-110",
               c.swatchClass,
-              toolbarState.color === c.value ? "border-ink" : "border-transparent"
+              editor.isActive("textStyle", { color: c.value })
+                ? "border-ink"
+                : "border-transparent"
             )}
           />
         ))}
 
         <span className="mx-1 h-5 w-px bg-border" />
 
-        <span className="mr-0.5 text-[10px] uppercase tracking-wide text-ink-dim">Destaque</span>
         <button
           type="button"
           title="Sem destaque"
           onClick={() => editor.chain().focus().unsetHighlight().run()}
-          className={cn(
-            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 bg-bg-surface2 text-[10px] text-ink-dim transition-transform hover:scale-110",
-            !toolbarState.highlight ? "border-ink" : "border-transparent"
-          )}
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-transparent bg-bg-surface2 text-[10px] text-ink-dim transition-transform hover:scale-110"
         >
           ×
         </button>
@@ -332,7 +288,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             style={{ backgroundColor: h.value }}
             className={cn(
               "h-6 w-6 shrink-0 rounded-full border-2 transition-transform hover:scale-110",
-              toolbarState.highlight === h.value ? "border-ink" : "border-transparent"
+              editor.isActive("highlight", { color: h.value })
+                ? "border-ink"
+                : "border-transparent"
             )}
           />
         ))}
