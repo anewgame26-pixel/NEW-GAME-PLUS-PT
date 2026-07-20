@@ -200,6 +200,8 @@ export interface Profile {
   avatarUrl: string | null;
   /** Link para o perfil PSN do visitante (opcional, texto livre — não é validado) */
   psnUrl: string | null;
+  /** Se o link do PSN é visível a outros visitantes (comentários, fórum) */
+  psnPublic: boolean;
   createdAt: string;
 }
 
@@ -219,6 +221,35 @@ export interface GameComment {
   userId: string;
   username: string | null;
   avatarUrl: string | null;
+  psnUrl: string | null;
+  body: string;
+  createdAt: string;
+}
+
+/** Tópico do fórum da comunidade (tabela `forum_threads`). */
+export interface ForumThread {
+  id: string;
+  userId: string;
+  username: string | null;
+  avatarUrl: string | null;
+  psnUrl: string | null;
+  gameId: string | null;
+  gameTitle: string | null;
+  gameSlug: string | null;
+  title: string;
+  body: string;
+  createdAt: string;
+  repliesCount: number;
+}
+
+/** Resposta a um tópico do fórum (tabela `forum_replies`). */
+export interface ForumReply {
+  id: string;
+  threadId: string;
+  userId: string;
+  username: string | null;
+  avatarUrl: string | null;
+  psnUrl: string | null;
   body: string;
   createdAt: string;
 }

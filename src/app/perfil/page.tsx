@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Heart, Gamepad2, ExternalLink } from "lucide-react";
+import { LogOut, Heart, Gamepad2, ExternalLink, ShieldAlert } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getGamesByIds } from "@/lib/data/games";
 import { Header } from "@/components/layout/Header";
@@ -43,9 +43,15 @@ export default async function PerfilPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("username, avatar_url, psn_url, created_at")
+    .select("username, avatar_url, psn_url, psn_public, created_at")
     .eq("id", user.id)
     .single();
+
+  const { data: ownBan } = await supabase
+    .from("user_bans")
+    .select("reason, banned_at")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
   const [{ data: favoriteRows }, { data: progressRows }] = await Promise.all([
     supabase.from("favorites").select("game_id").eq("user_id", user.id),
@@ -80,6 +86,15 @@ export default async function PerfilPage() {
       <main>
         <PageHeader title="O Meu Perfil" description="A tua conta de visitante na NewGame+." />
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
+          {ownBan && (
+            <div className="mb-6 flex items-start gap-2 rounded-sm border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-ink-muted">
+              <ShieldAlert width={16} height={16} className="mt-0.5 shrink-0 text-primary-light" />
+              <span>
+                A tua conta está impedida de publicar comentários ou tópicos.
+                {ownBan.reason && <> Motivo: {ownBan.reason}</>}
+              </span>
+            </div>
+          )}
           <Card className="p-6">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
               <AvatarUploader userId={user.id} initialAvatarUrl={profile?.avatar_url ?? null} />
@@ -106,6 +121,7 @@ export default async function PerfilPage() {
                     userId={user.id}
                     initialUsername={profile?.username ?? null}
                     initialPsnUrl={profile?.psn_url ?? null}
+                    initialPsnPublic={profile?.psn_public ?? false}
                   />
                 </div>
               </div>

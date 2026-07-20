@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: "Jogos", href: "/jogos" },
   { label: "Rankings", href: "/rankings" },
   { label: "Votar", href: "/votar" },
+  { label: "Comunidade", href: "/comunidade" },
   { label: "O Covil", href: "/covil" },
 ];
 

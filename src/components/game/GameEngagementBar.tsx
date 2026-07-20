@@ -2,13 +2,15 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { MessageCircle, Send, Trash2, User as UserIcon, Loader2 } from "lucide-react";
-import type { User } from "@supabase/supabase-js";
+import { usePathname } from "next/navigation";
+import { MessageCircle, Send, Trash2, Loader2 } from "lucide-react";
 import type { GameComment } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { useCommunityAuth } from "@/lib/hooks/useCommunityAuth";
+import { AuthorBadge } from "@/components/community/AuthorBadge";
+import { BanButton } from "@/components/community/BanButton";
 
 interface GameEngagementBarProps {
   gameId: string;
@@ -19,95 +21,69 @@ interface PublicProfileRow {
   id: string;
   username: string | null;
   avatar_url: string | null;
+  psn_url: string | null;
 }
 
 export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps) {
-  const router = useRouter();
   const pathname = usePathname();
+  const { ready, user, isEditor, isBanned, banReason } = useCommunityAuth();
 
-  const [user, setUser] = useState<User | null>(null);
-  const [isEditor, setIsEditor] = useState(false);
   const [comments, setComments] = useState<GameComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState("");
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  async function loadComments() {
     const supabase = createBrowserSupabaseClient();
+    const { data: commentRows, error: commentsError } = await supabase
+      .from("game_comments")
+      .select("id, user_id, body, created_at")
+      .eq("game_id", gameId)
+      .order("created_at", { ascending: false });
 
-    async function loadComments() {
-      const { data: commentRows, error: commentsError } = await supabase
-        .from("game_comments")
-        .select("id, user_id, body, created_at")
-        .eq("game_id", gameId)
-        .order("created_at", { ascending: false });
-
-      if (commentsError) {
-        console.error("Erro ao carregar comentários:", commentsError);
-        setLoading(false);
-        return;
-      }
-
-      const authorIds = [...new Set((commentRows ?? []).map((c) => c.user_id as string))];
-      let authorsById = new Map<string, PublicProfileRow>();
-
-      if (authorIds.length > 0) {
-        const { data: authorRows } = await supabase
-          .from("public_profiles")
-          .select("id, username, avatar_url")
-          .in("id", authorIds);
-        authorsById = new Map((authorRows ?? []).map((a) => [a.id as string, a as PublicProfileRow]));
-      }
-
-      setComments(
-        (commentRows ?? []).map((c) => {
-          const author = authorsById.get(c.user_id as string);
-          return {
-            id: c.id as string,
-            userId: c.user_id as string,
-            username: author?.username ?? null,
-            avatarUrl: author?.avatar_url ?? null,
-            body: c.body as string,
-            createdAt: c.created_at as string,
-          };
-        })
-      );
+    if (commentsError) {
+      console.error("Erro ao carregar comentários:", commentsError);
       setLoading(false);
+      return;
     }
 
-    async function loadAuth(currentUser: User | null) {
-      setUser(currentUser);
-      if (currentUser) {
-        const { data } = await supabase
-          .from("editors")
-          .select("user_id")
-          .eq("user_id", currentUser.id)
-          .maybeSingle();
-        setIsEditor(Boolean(data));
-      } else {
-        setIsEditor(false);
-      }
+    const authorIds = [...new Set((commentRows ?? []).map((c) => c.user_id as string))];
+    let authorsById = new Map<string, PublicProfileRow>();
+
+    if (authorIds.length > 0) {
+      const { data: authorRows } = await supabase
+        .from("public_profiles")
+        .select("id, username, avatar_url, psn_url")
+        .in("id", authorIds);
+      authorsById = new Map((authorRows ?? []).map((a) => [a.id as string, a as PublicProfileRow]));
     }
 
+    setComments(
+      (commentRows ?? []).map((c) => {
+        const author = authorsById.get(c.user_id as string);
+        return {
+          id: c.id as string,
+          userId: c.user_id as string,
+          username: author?.username ?? null,
+          avatarUrl: author?.avatar_url ?? null,
+          psnUrl: author?.psn_url ?? null,
+          body: c.body as string,
+          createdAt: c.created_at as string,
+        };
+      })
+    );
+    setLoading(false);
+  }
+
+  useEffect(() => {
     loadComments();
-    supabase.auth.getUser().then(({ data }) => loadAuth(data.user));
-
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      loadAuth(session?.user ?? null);
-    });
-
-    return () => subscription.subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!draft.trim()) return;
-
-    if (!user) {
-      router.push(`/entrar?next=${encodeURIComponent(pathname)}`);
-      return;
-    }
+    if (!draft.trim() || !user) return;
 
     setPosting(true);
     setError(null);
@@ -129,7 +105,7 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
 
     const { data: ownProfile } = await supabase
       .from("public_profiles")
-      .select("username, avatar_url")
+      .select("username, avatar_url, psn_url")
       .eq("id", user.id)
       .maybeSingle();
 
@@ -139,6 +115,7 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
         userId: user.id,
         username: ownProfile?.username ?? null,
         avatarUrl: ownProfile?.avatar_url ?? null,
+        psnUrl: ownProfile?.psn_url ?? null,
         body: draft.trim(),
         createdAt: inserted.created_at as string,
       },
@@ -173,7 +150,12 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
           </div>
 
           <div className="mt-5">
-            {user ? (
+            {!ready ? null : isBanned ? (
+              <div className="rounded-sm border border-primary/30 bg-primary/5 px-4 py-3 text-sm text-ink-muted">
+                A tua conta está impedida de publicar.
+                {banReason && <span> Motivo: {banReason}</span>}
+              </div>
+            ) : user ? (
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <input
                   type="text"
@@ -208,36 +190,31 @@ export function GameEngagementBar({ gameId, gameTitle }: GameEngagementBarProps)
 
             <ul className="mt-3 flex flex-col divide-y divide-border">
               {comments.map((comment) => (
-                <li key={comment.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent/10 text-accent">
-                    {comment.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={comment.avatarUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <UserIcon width={15} height={15} />
-                    )}
-                  </span>
+                <li key={comment.id} className="flex items-start justify-between gap-3 py-3 first:pt-0 last:pb-0">
                   <div className="min-w-0 flex-1">
-                    <p className="font-display text-sm font-semibold text-ink">
-                      {comment.username || "Visitante"}
-                    </p>
-                    <p className="mt-0.5 text-sm text-ink-muted">{comment.body}</p>
+                    <AuthorBadge
+                      username={comment.username}
+                      avatarUrl={comment.avatarUrl}
+                      psnUrl={comment.psnUrl}
+                    />
+                    <p className="mt-1.5 pl-10 text-sm text-ink-muted">{comment.body}</p>
                   </div>
-                  {(user?.id === comment.userId || isEditor) && (
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(comment.id)}
-                      aria-label="Apagar comentário"
-                      title="Apagar comentário"
-                      className="shrink-0 text-ink-dim hover:text-primary-light"
-                    >
-                      <Trash2 width={13} height={13} />
-                    </button>
-                  )}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {isEditor && user?.id !== comment.userId && (
+                      <BanButton targetUserId={comment.userId} targetUsername={comment.username} />
+                    )}
+                    {(user?.id === comment.userId || isEditor) && (
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(comment.id)}
+                        aria-label="Apagar comentário"
+                        title="Apagar comentário"
+                        className="text-ink-dim hover:text-primary-light"
+                      >
+                        <Trash2 width={13} height={13} />
+                      </button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

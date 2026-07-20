@@ -8,11 +8,18 @@ interface ProfileEditFormProps {
   userId: string;
   initialUsername: string | null;
   initialPsnUrl: string | null;
+  initialPsnPublic: boolean;
 }
 
-export function ProfileEditForm({ userId, initialUsername, initialPsnUrl }: ProfileEditFormProps) {
+export function ProfileEditForm({
+  userId,
+  initialUsername,
+  initialPsnUrl,
+  initialPsnPublic,
+}: ProfileEditFormProps) {
   const [username, setUsername] = useState(initialUsername ?? "");
   const [psnUrl, setPsnUrl] = useState(initialPsnUrl ?? "");
+  const [psnPublic, setPsnPublic] = useState(initialPsnPublic);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +34,7 @@ export function ProfileEditForm({ userId, initialUsername, initialPsnUrl }: Prof
       id: userId,
       username: username.trim() || null,
       psn_url: psnUrl.trim() || null,
+      psn_public: psnPublic,
     });
 
     setSaving(false);
@@ -65,6 +73,16 @@ export function ProfileEditForm({ userId, initialUsername, initialPsnUrl }: Prof
           placeholder="https://psnprofiles.com/o-teu-nome"
           className="h-10 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
         />
+      </label>
+
+      <label className="flex items-center gap-2 text-sm text-ink">
+        <input
+          type="checkbox"
+          checked={psnPublic}
+          onChange={(e) => setPsnPublic(e.target.checked)}
+          className="h-4 w-4 accent-primary"
+        />
+        Mostrar o link do PSN publicamente (comentários e fórum)
       </label>
 
       {error && <p className="text-xs text-primary-light">{error}</p>}
