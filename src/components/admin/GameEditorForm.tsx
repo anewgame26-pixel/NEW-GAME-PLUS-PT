@@ -6,7 +6,7 @@ import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { revalidatePaths } from "@/lib/admin/revalidate";
 import { rankingConfigs } from "@/data/mock/rankings-config";
-import { genreLabel, platformLabel, slugify } from "@/lib/utils";
+import { cn, genreLabel, platformLabel, slugify } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
@@ -20,8 +20,10 @@ import type {
   Platform,
   RatingBreakdownItem,
   RoadmapChapter,
+  SufferingBadge,
   TrophyListItem,
 } from "@/types";
+import { SUFFERING_BADGES } from "@/lib/suffering-badges";
 
 const TROPHY_TIERS = ["bronze", "prata", "ouro", "platina"] as const;
 
@@ -70,7 +72,14 @@ const defaultGameForm = {
 const defaultDetailForm = {
   minPlaythroughs: 1,
   difficultyExplanation: "",
-  review: { intro: "", whatToExpect: "", pros: [] as string[], cons: [] as string[], verdict: "" },
+  review: {
+    intro: "",
+    whatToExpect: "",
+    pros: [] as string[],
+    cons: [] as string[],
+    verdict: "",
+    sufferingBadge: null as SufferingBadge | null,
+  },
   roadmapChapters: [] as RoadmapChapter[],
   hardestTrophies: [] as HardestTrophy[],
   trophyList: [] as TrophyListItem[],
@@ -169,6 +178,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             pros: d.review_pros ?? [],
             cons: d.review_cons ?? [],
             verdict: d.review_verdict ?? "",
+            sufferingBadge: d.suffering_badge ?? null,
           },
           roadmapChapters: d.roadmap_chapters?.length ? d.roadmap_chapters : [],
           hardestTrophies: d.hardest_trophies ?? [],
@@ -302,6 +312,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       review_pros: detail.review.pros.filter((p) => p.trim() !== ""),
       review_cons: detail.review.cons.filter((c) => c.trim() !== ""),
       review_verdict: detail.review.verdict.trim(),
+      suffering_badge: detail.review.sufferingBadge,
       roadmap_chapters: detail.roadmapChapters
         .filter((c) => c.title.trim() !== "" || c.description.trim() !== "")
         .map((c) => ({
@@ -894,6 +905,55 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                   }
                 />
               </label>
+
+              <div>
+                <span className="text-xs text-ink-dim">Selo &quot;Nós sofremos&quot; (opcional)</span>
+                <div className="mt-2 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setDetail((f) => ({
+                        ...f,
+                        review: { ...f.review, sufferingBadge: null },
+                      }))
+                    }
+                    className={cn(
+                      "flex h-20 w-20 shrink-0 items-center justify-center rounded-sm border-2 text-xs text-ink-dim",
+                      detail.review.sufferingBadge === null
+                        ? "border-primary bg-primary/10"
+                        : "border-border bg-bg-surface2 hover:border-border-light"
+                    )}
+                  >
+                    Nenhum
+                  </button>
+                  {SUFFERING_BADGES.map((badge) => (
+                    <button
+                      key={badge.value}
+                      type="button"
+                      title={badge.label}
+                      onClick={() =>
+                        setDetail((f) => ({
+                          ...f,
+                          review: { ...f.review, sufferingBadge: badge.value as SufferingBadge },
+                        }))
+                      }
+                      className={cn(
+                        "h-20 w-20 shrink-0 overflow-hidden rounded-sm border-2",
+                        detail.review.sufferingBadge === badge.value
+                          ? "border-primary"
+                          : "border-transparent hover:border-border-light"
+                      )}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={badge.imageUrl}
+                        alt={badge.label}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 

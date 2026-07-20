@@ -1,7 +1,9 @@
 import { Check, X, Play } from "lucide-react";
+import Image from "next/image";
 import { ReviewContent } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { RichText } from "@/components/ui/RichText";
+import { SUFFERING_BADGES } from "@/lib/suffering-badges";
 
 interface ReviewSectionProps {
   review: ReviewContent;
@@ -58,10 +60,30 @@ export function ReviewSection({ review }: ReviewSectionProps) {
           </div>
 
           <div className="mt-6 rounded-sm border border-gold/30 bg-gold/5 p-4">
-            <h3 className="mb-1.5 font-display text-sm font-bold uppercase tracking-wide text-gold">
-              Vale a Pena?
-            </h3>
-            <RichText html={review.verdict} className="text-sm text-ink" />
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              {review.sufferingBadge && (
+                <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
+                  <Image
+                    src={
+                      SUFFERING_BADGES.find((b) => b.value === review.sufferingBadge)?.imageUrl ??
+                      ""
+                    }
+                    alt={
+                      SUFFERING_BADGES.find((b) => b.value === review.sufferingBadge)?.label ?? ""
+                    }
+                    fill
+                    sizes="112px"
+                    className="object-contain"
+                  />
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <h3 className="mb-1.5 font-display text-sm font-bold uppercase tracking-wide text-gold">
+                  Vale a Pena?
+                </h3>
+                <RichText html={review.verdict} className="text-sm text-ink" />
+              </div>
+            </div>
           </div>
         </Card>
       </div>

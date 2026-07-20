@@ -92,12 +92,16 @@ export interface TimelineStage {
   description: string;
 }
 
+export type SufferingBadge = "sofrimento_moderado" | "sofrimento_extremo" | "sem_sofrimento";
+
 export interface ReviewContent {
   intro: string;
   whatToExpect: string;
   pros: string[];
   cons: string[];
   verdict: string;
+  /** Selo "Nós sofremos. Tu escolhes melhor." — opcional, escolhido pelo editor */
+  sufferingBadge: SufferingBadge | null;
 }
 
 export interface MissableItem {

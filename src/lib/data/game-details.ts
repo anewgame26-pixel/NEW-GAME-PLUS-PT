@@ -19,6 +19,7 @@ function mapRowToGameDetail(row: Record<string, unknown>): GameDetail {
       pros: (row.review_pros as string[]) ?? [],
       cons: (row.review_cons as string[]) ?? [],
       verdict: row.review_verdict as string,
+      sufferingBadge: (row.suffering_badge as GameDetail["review"]["sufferingBadge"]) ?? null,
     },
     roadmapChapters: (row.roadmap_chapters as GameDetail["roadmapChapters"]) ?? [],
     hardestTrophies: (row.hardest_trophies as GameDetail["hardestTrophies"]) ?? [],
