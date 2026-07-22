@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { Mark } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
@@ -145,25 +144,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       },
     },
   });
-
-  // Corrige uma corrida específica: quando este campo pertence a um
-  // jogo JÁ EXISTENTE, o texto verdadeiro só chega da Supabase um
-  // instante depois de o editor arrancar (o formulário busca os dados
-  // de forma assíncrona). O editor "nasce" vazio e nunca mais é
-  // avisado sozinho de que o texto real chegou a seguir — parecia
-  // estar tudo bem visualmente, mas por dentro continuava a pensar que
-  // estava vazio, e ao clicares (a primeira interação a sério) ele
-  // "acertava" para esse valor interno errado, apagando a formatação —
-  // e gravar nesse momento gravava o valor errado a sério. Isto aqui
-  // corrige o editor sozinho assim que o valor de fora muda, mas só
-  // quando não estás a escrever nele nesse preciso momento (para nunca
-  // interromper o que estás a fazer).
-  useEffect(() => {
-    if (!editor) return;
-    if (editor.isFocused) return;
-    if (editor.getHTML() === value) return;
-    editor.commands.setContent(value, false);
-  }, [editor, value]);
 
   if (!editor) return null;
 
