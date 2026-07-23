@@ -121,6 +121,22 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     ],
     content: value,
     immediatelyRender: false,
+    // === DIAGNÓSTICO TEMPORÁRIO — remover depois de encontrarmos o problema ===
+    onTransaction: ({ transaction, editor }) => {
+      if (transaction.docChanged) {
+        console.log(
+          "%c[DIAGNÓSTICO] O documento MUDOU numa transação:",
+          "color: orange; font-weight: bold",
+          {
+            numeroDePassos: transaction.steps.length,
+            passos: transaction.steps.map((s) => s.toJSON()),
+            motivo: transaction.getMeta("inputType") ?? "(sem inputType — não foi escrita direta)",
+            htmlDepois: editor.getHTML(),
+          }
+        );
+      }
+    },
+    // === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
     onBlur: ({ editor }) => {
       // Só avisamos o formulário à volta quando se sai da caixa (não a
       // cada letra) — este editor vive dentro de um formulário grande,
