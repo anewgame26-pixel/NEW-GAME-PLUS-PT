@@ -125,15 +125,15 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     onTransaction: ({ transaction, editor }) => {
       if (transaction.docChanged) {
         console.log(
-          "%c[DIAGNÓSTICO] O documento MUDOU numa transação:",
-          "color: orange; font-weight: bold",
-          {
-            numeroDePassos: transaction.steps.length,
-            passos: transaction.steps.map((s) => s.toJSON()),
-            motivo: transaction.getMeta("inputType") ?? "(sem inputType — não foi escrita direta)",
-            htmlDepois: editor.getHTML(),
-          }
+          "%c[DIAGNÓSTICO] Documento mudou — copia TUDO o que aparece a seguir a esta linha, até à linha ===FIM===:",
+          "color: orange; font-weight: bold; font-size: 14px"
         );
+        console.log("MOTIVO:", transaction.getMeta("inputType") ?? "(sem inputType)");
+        console.log("PASSOS (em texto, já expandido):");
+        console.log(JSON.stringify(transaction.steps.map((s) => s.toJSON()), null, 2));
+        console.log("HTML DEPOIS:");
+        console.log(editor.getHTML());
+        console.log("%c===FIM===", "color: orange; font-weight: bold");
       }
     },
     // === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
