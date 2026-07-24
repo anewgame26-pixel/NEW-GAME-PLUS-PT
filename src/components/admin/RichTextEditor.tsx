@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { Mark } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import ListItem from "@tiptap/extension-list-item";
 import BoldExtension from "@tiptap/extension-bold";
 import ItalicExtension from "@tiptap/extension-italic";
 import TextStyle from "@tiptap/extension-text-style";
@@ -44,6 +45,28 @@ const NoAutoItalic = ItalicExtension.extend({
   },
   addPasteRules() {
     return [];
+  },
+});
+
+/**
+ * A CAUSA DO BUG DA LISTA A PARTIR-SE SOZINHA, finalmente encontrada:
+ * por omissão, dentro de um item de lista, a tecla Tab "avança" o item
+ * e Shift+Tab "tira-o" da lista — um comportamento escondido do editor
+ * de texto, que a maioria das pessoas nunca esperaria. Como é hábito
+ * completamente normal usar Tab/Shift+Tab para saltar de campo em
+ * campo num formulário, o editor "roubava" essa tecla para si sempre
+ * que o cursor estava dentro de uma lista, executando um comando de
+ * lista que ninguém pediu — e Shift+Tab em particular tirava o item de
+ * dentro da lista, partindo-a ao meio. Aqui desligamos os dois: Tab e
+ * Shift+Tab passam a comportar-se como em qualquer formulário normal
+ * (avançar/recuar de campo), nunca mexendo na lista.
+ */
+const ListItemWithoutTabHijack = ListItem.extend({
+  addKeyboardShortcuts() {
+    return {
+      Tab: () => false,
+      "Shift-Tab": () => false,
+    };
   },
 });
 
@@ -109,7 +132,9 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         blockquote: false,
         codeBlock: false,
         horizontalRule: false,
+        listItem: false,
       }),
+      ListItemWithoutTabHijack,
       NoAutoBold,
       NoAutoItalic,
       TextStyle,
@@ -121,22 +146,6 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     ],
     content: value,
     immediatelyRender: false,
-    // === DIAGNÓSTICO TEMPORÁRIO — remover depois de encontrarmos o problema ===
-    onTransaction: ({ transaction, editor }) => {
-      if (transaction.docChanged) {
-        console.log(
-          "%c[DIAGNÓSTICO] Documento mudou — copia TUDO o que aparece a seguir a esta linha, até à linha ===FIM===:",
-          "color: orange; font-weight: bold; font-size: 14px"
-        );
-        console.log("MOTIVO:", transaction.getMeta("inputType") ?? "(sem inputType)");
-        console.log("PASSOS (em texto, já expandido):");
-        console.log(JSON.stringify(transaction.steps.map((s) => s.toJSON()), null, 2));
-        console.log("HTML DEPOIS:");
-        console.log(editor.getHTML());
-        console.log("%c===FIM===", "color: orange; font-weight: bold");
-      }
-    },
-    // === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
     onBlur: ({ editor }) => {
       // Só avisamos o formulário à volta quando se sai da caixa (não a
       // cada letra) — este editor vive dentro de um formulário grande,
