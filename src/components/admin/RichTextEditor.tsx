@@ -122,6 +122,31 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
+// === DIAGNÓSTICO TEMPORÁRIO — remover depois de encontrarmos o problema ===
+// Guarda a última tecla premida em qualquer lado da página (mesmo fora
+// da caixa de texto), para conseguirmos correlacionar exatamente qual
+// tecla estava a ser premida no preciso momento em que o documento
+// muda de forma inesperada.
+let lastKeyEvent: { key: string; code: string; shift: boolean; ctrl: boolean; alt: boolean; meta: boolean; when: number } | null = null;
+if (typeof window !== "undefined") {
+  window.addEventListener(
+    "keydown",
+    (e) => {
+      lastKeyEvent = {
+        key: e.key,
+        code: e.code,
+        shift: e.shiftKey,
+        ctrl: e.ctrlKey,
+        alt: e.altKey,
+        meta: e.metaKey,
+        when: Date.now(),
+      };
+    },
+    { capture: true }
+  );
+}
+// === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
+
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -146,6 +171,26 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
     ],
     content: value,
     immediatelyRender: false,
+    // === DIAGNÓSTICO TEMPORÁRIO — remover depois de encontrarmos o problema ===
+    onTransaction: ({ transaction, editor }) => {
+      if (transaction.docChanged) {
+        const msSinceLastKey = lastKeyEvent ? Date.now() - lastKeyEvent.when : null;
+        console.log("%c[DIAGNÓSTICO] Documento mudou — copia tudo até ===FIM===", "color: orange; font-weight: bold; font-size: 14px");
+        console.log(
+          "ÚLTIMA TECLA PREMIDA EM QUALQUER LADO DA PÁGINA:",
+          lastKeyEvent
+            ? `"${lastKeyEvent.key}" (código: ${lastKeyEvent.code}) — Shift:${lastKeyEvent.shift} Ctrl:${lastKeyEvent.ctrl} Alt:${lastKeyEvent.alt} Meta:${lastKeyEvent.meta} — há ${msSinceLastKey}ms`
+            : "NENHUMA TECLA REGISTADA (a página ainda não viu nenhum keydown)"
+        );
+        console.log("MOTIVO (inputType):", transaction.getMeta("inputType") ?? "(sem inputType)");
+        console.log("PASSOS:");
+        console.log(JSON.stringify(transaction.steps.map((s) => s.toJSON()), null, 2));
+        console.log("HTML DEPOIS:");
+        console.log(editor.getHTML());
+        console.log("%c===FIM===", "color: orange; font-weight: bold");
+      }
+    },
+    // === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
     onBlur: ({ editor }) => {
       // Só avisamos o formulário à volta quando se sai da caixa (não a
       // cada letra) — este editor vive dentro de um formulário grande,
