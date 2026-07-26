@@ -128,6 +128,7 @@ interface RichTextEditorProps {
 // tecla estava a ser premida no preciso momento em que o documento
 // muda de forma inesperada.
 let lastKeyEvent: { key: string; code: string; shift: boolean; ctrl: boolean; alt: boolean; meta: boolean; when: number } | null = null;
+let lastPointerEvent: { target: string; x: number; y: number; when: number } | null = null;
 if (typeof window !== "undefined") {
   window.addEventListener(
     "keydown",
@@ -139,6 +140,19 @@ if (typeof window !== "undefined") {
         ctrl: e.ctrlKey,
         alt: e.altKey,
         meta: e.metaKey,
+        when: Date.now(),
+      };
+    },
+    { capture: true }
+  );
+  window.addEventListener(
+    "mousedown",
+    (e) => {
+      const target = e.target as HTMLElement;
+      lastPointerEvent = {
+        target: `<${target.tagName.toLowerCase()}${target.className ? ` class="${target.className}"` : ""}${target.title ? ` title="${target.title}"` : ""}>${(target.textContent ?? "").slice(0, 30)}`,
+        x: e.clientX,
+        y: e.clientY,
         when: Date.now(),
       };
     },
@@ -181,6 +195,12 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           lastKeyEvent
             ? `"${lastKeyEvent.key}" (código: ${lastKeyEvent.code}) — Shift:${lastKeyEvent.shift} Ctrl:${lastKeyEvent.ctrl} Alt:${lastKeyEvent.alt} Meta:${lastKeyEvent.meta} — há ${msSinceLastKey}ms`
             : "NENHUMA TECLA REGISTADA (a página ainda não viu nenhum keydown)"
+        );
+        console.log(
+          "ÚLTIMO CLIQUE/MOUSEDOWN EM QUALQUER LADO DA PÁGINA:",
+          lastPointerEvent
+            ? `elemento: ${lastPointerEvent.target} — em x:${lastPointerEvent.x} y:${lastPointerEvent.y} — há ${Date.now() - lastPointerEvent.when}ms`
+            : "NENHUM CLIQUE REGISTADO"
         );
         console.log("MOTIVO (inputType):", transaction.getMeta("inputType") ?? "(sem inputType)");
         console.log("PASSOS:");
