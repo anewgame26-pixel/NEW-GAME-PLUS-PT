@@ -1,7 +1,8 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import { Mark } from "@tiptap/core";
+import { Mark, Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 import StarterKit from "@tiptap/starter-kit";
 import ListItem from "@tiptap/extension-list-item";
 import BoldExtension from "@tiptap/extension-bold";
@@ -67,6 +68,60 @@ const ListItemWithoutTabHijack = ListItem.extend({
       Tab: () => false,
       "Shift-Tab": () => false,
     };
+  },
+});
+
+/**
+ * REDE DE SEGURANÇA — passámos vários dias a tentar apanhar a causa
+ * exata de um bug em que uma lista se partia sozinha ao clicar dentro
+ * dela, sem tecla nenhuma premida e sem clicar em nenhum botão (já
+ * confirmado com registos reais do site em produção). Não conseguimos
+ * chegar à causa raiz com toda a certeza, mas conseguimos identificar
+ * com precisão a "assinatura" exata dessa alteração: sempre que
+ * acontece, é feita através de um tipo de operação interna chamada
+ * "ReplaceAroundStep" (usada para reestruturar listas), SEM nenhum
+ * "motivo" registado (nem escrita, nem colar, nem desfazer, nem um
+ * clique num botão nosso — todas essas ações deixam sempre um rasto
+ * identificável). Esta extensão intercepta e BLOQUEIA qualquer
+ * alteração com essa assinatura exata que não tenha vindo de uma ação
+ * genuína e identificável, impedindo o estrago de acontecer, mesmo
+ * sem sabermos ao certo o que o está a desencadear.
+ */
+const PreventGhostListSplit = Extension.create({
+  name: "preventGhostListSplit",
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey("preventGhostListSplit"),
+        filterTransaction(tr) {
+          if (!tr.docChanged) return true;
+          // Ações genuínas e identificáveis ficam sempre marcadas —
+          // deixamo-las passar sempre.
+          if (tr.getMeta("intentional")) return true;
+          if (tr.getMeta("inputType")) return true;
+          if (tr.getMeta("uiEvent") === "paste") return true;
+          if (tr.getMeta("paste")) return true;
+          if (tr.getMeta("history$") !== undefined) return true;
+
+          const stepTypes = tr.steps.map((s) => s.constructor.name);
+          const isOnlyReplaceAround =
+            stepTypes.length > 0 && stepTypes.every((t) => t === "ReplaceAroundStep");
+          const touchesList = tr.steps.some((s) => {
+            const json = JSON.stringify(s.toJSON());
+            return json.includes("bulletList") || json.includes("orderedList");
+          });
+
+          if (isOnlyReplaceAround && touchesList) {
+            console.warn(
+              "[Proteção do editor] Bloqueada uma alteração inesperada à estrutura de uma lista — não teve origem em escrita, colagem, desfazer, atalho de teclado nem num botão da barra de ferramentas."
+            );
+            return false;
+          }
+
+          return true;
+        },
+      }),
+    ];
   },
 });
 
@@ -174,6 +229,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
         listItem: false,
       }),
       ListItemWithoutTabHijack,
+      PreventGhostListSplit,
       NoAutoBold,
       NoAutoItalic,
       TextStyle,
@@ -283,14 +339,34 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
 
         <ToolbarButton
           active={editor.isActive("bulletList")}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .command(({ tr }) => {
+                tr.setMeta("intentional", true);
+                return true;
+              })
+              .toggleBulletList()
+              .run()
+          }
           label="Lista com pontos"
         >
           <List width={14} height={14} />
         </ToolbarButton>
         <ToolbarButton
           active={editor.isActive("orderedList")}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .command(({ tr }) => {
+                tr.setMeta("intentional", true);
+                return true;
+              })
+              .toggleOrderedList()
+              .run()
+          }
           label="Lista numerada"
         >
           <ListOrdered width={14} height={14} />
