@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
@@ -99,6 +99,43 @@ interface GameEditorFormProps {
   gameId?: string;
 }
 
+/**
+ * Compara um texto ANTES de ser editado (tal como veio da base de
+ * dados) com o texto ATUAL, prestes a ser gravado — e diz se parece
+ * ter perdido listas de forma suspeita (o texto continua lá, mas as
+ * tags <ul>/<ol> desapareceram). Não impede edições genuínas (apagar a
+ * lista de propósito, reescrever o texto todo) — só apanha o caso
+ * muito específico de "o texto é essencialmente o mesmo, mas perdeu
+ * `<ul>`/`<ol>` que lá estavam".
+ */
+function looksLikeSuspiciousListLoss(original: string, current: string): boolean {
+  if (!original) return false; // campo novo, nada a comparar
+
+  const countTags = (html: string, tag: string) =>
+    (html.match(new RegExp(`<${tag}[ >]`, "g")) ?? []).length;
+
+  // Importante: contamos ITENS de lista (<li>), não blocos <ul>/<ol> —
+  // quando um item é "arrancado" de uma lista, o número de <ul> pode
+  // até AUMENTAR (a lista parte-se em duas à volta do item arrancado),
+  // mas o número de <li> diminui sempre exatamente 1 por cada item
+  // perdido. É esse o sinal certo a vigiar.
+  const originalItems = countTags(original, "li");
+  const currentItems = countTags(current, "li");
+
+  if (originalItems === 0 || currentItems >= originalItems) return false;
+
+  // Só alertamos se o TEXTO em si (sem tags) continuar muito parecido
+  // — ou seja, ninguém reescreveu o parágrafo de propósito, só a
+  // estrutura da lista é que desapareceu sozinha.
+  const stripTags = (html: string) => html.replace(/<[^>]+>/g, "").trim();
+  const originalText = stripTags(original);
+  const currentText = stripTags(current);
+  if (originalText.length === 0) return false;
+
+  const similarity = currentText.length / originalText.length;
+  return similarity > 0.85 && similarity < 1.15;
+}
+
 export function GameEditorForm({ gameId }: GameEditorFormProps) {
   const supabase = createBrowserSupabaseClient();
   const router = useRouter();
@@ -112,6 +149,16 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
   const [game, setGame] = useState(defaultGameForm);
   const [detail, setDetail] = useState(defaultDetailForm);
   const [otherGames, setOtherGames] = useState<GameOption[]>([]);
+
+  // REDE DE SEGURANÇA PARA OS DADOS — guarda o texto exato tal como
+  // veio da Supabase, logo que a página abre, para o podermos comparar
+  // no momento de gravar. Isto protege contra QUALQUER bug do editor
+  // de texto (encontrado ou não) que possa alguma vez apagar
+  // formatação sem ninguém pedir: se o texto a gravar tiver menos
+  // listas do que tinha originalmente mas ainda tiver a maior parte do
+  // texto, algo correu mal — bloqueamos essa gravação específica em
+  // vez de arriscar destruir trabalho.
+  const originalRichTextRef = useRef<Record<string, string>>({});
 
   useEffect(() => {
     async function load() {
@@ -189,6 +236,22 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           ratingBreakdown: d.rating_breakdown ?? [],
           screenshotUrls: d.screenshot_urls ?? [],
         });
+
+        // Guarda o "retrato" original de cada campo de texto rico, tal
+        // como veio da base de dados, para a comparação de segurança
+        // no momento de gravar (ver handleSave).
+        originalRichTextRef.current = {
+          difficultyExplanation: d.difficulty_explanation ?? "",
+          "review.intro": d.review_intro ?? "",
+          "review.whatToExpect": d.review_what_to_expect ?? "",
+          "review.verdict": d.review_verdict ?? "",
+          ...Object.fromEntries(
+            (d.roadmap_chapters ?? []).map(
+              (c: { description?: string }, i: number) =>
+                [`roadmapChapters.${i}.description`, c.description ?? ""] as const
+            )
+          ),
+        };
       }
 
       setLoading(false);
@@ -244,6 +307,35 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     if (!game.title.trim() || !game.slug.trim()) {
       setError("Preenche pelo menos o Título e o Slug antes de guardar.");
       setTab("geral");
+      return;
+    }
+
+    // REDE DE SEGURANÇA — confirma que nenhum campo perdeu listas de
+    // forma suspeita antes de gravarmos seja o que for. Ver a função
+    // looksLikeSuspiciousListLoss() e o comentário junto do
+    // originalRichTextRef para o porquê disto existir.
+    const fieldsToCheck: { key: string; label: string; current: string }[] = [
+      { key: "difficultyExplanation", label: "Dificuldade explicada", current: detail.difficultyExplanation },
+      { key: "review.intro", label: "Introdução da Review", current: detail.review.intro },
+      { key: "review.whatToExpect", label: "O que Esperar", current: detail.review.whatToExpect },
+      { key: "review.verdict", label: "Vale a pena? (veredito)", current: detail.review.verdict },
+      ...detail.roadmapChapters.map((c, i) => ({
+        key: `roadmapChapters.${i}.description`,
+        label: `Roadmap — capítulo ${i + 1} (${c.title.trim() || "sem título"})`,
+        current: c.description,
+      })),
+    ];
+
+    const suspiciousFields = fieldsToCheck.filter((f) => {
+      const original = originalRichTextRef.current[f.key];
+      return original !== undefined && looksLikeSuspiciousListLoss(original, f.current);
+    });
+
+    if (suspiciousFields.length > 0) {
+      setError(
+        `Gravação impedida por segurança: o campo "${suspiciousFields[0].label}" parece ter perdido uma lista com pontos/números sem ninguém pedir (bug conhecido do editor, ainda em investigação). Nada foi gravado. Por favor recarrega a página (F5) sem guardar — o texto bom continua guardado na base de dados — e tenta editar de novo, evitando clicar repetidamente dentro de listas. Se o texto que tens agora no ecrã é mesmo o que queres (removeste a lista de propósito), avisa-nos para desligarmos esta proteção só para este campo.`
+      );
+      setTab(suspiciousFields[0].key.startsWith("roadmapChapters") || suspiciousFields[0].key.startsWith("review") ? "analise" : "geral");
       return;
     }
 
@@ -346,6 +438,21 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       );
       return;
     }
+
+    // Gravação bem-sucedida: atualiza o "retrato" de referência para
+    // os valores que acabaram de ser gravados, para a próxima
+    // comparação de segurança ser feita a partir daqui, não do valor
+    // antigo (permite editar/remover listas de propósito outra vez a
+    // seguir, sem ficar bloqueado para sempre).
+    originalRichTextRef.current = {
+      difficultyExplanation: detail.difficultyExplanation.trim(),
+      "review.intro": detail.review.intro.trim(),
+      "review.whatToExpect": detail.review.whatToExpect.trim(),
+      "review.verdict": detail.review.verdict.trim(),
+      ...Object.fromEntries(
+        detail.roadmapChapters.map((c, i) => [`roadmapChapters.${i}.description`, c.description.trim()] as const)
+      ),
+    };
 
     if (!shouldPublish) {
       // Rascunho: fica guardado no Supabase, mas o site público não é
