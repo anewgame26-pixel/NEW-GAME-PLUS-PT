@@ -93,7 +93,7 @@ const PreventGhostListSplit = Extension.create({
     return [
       new Plugin({
         key: new PluginKey("preventGhostListSplit"),
-        filterTransaction(tr) {
+        filterTransaction(tr, state) {
           if (!tr.docChanged) return true;
           // Ações genuínas e identificáveis ficam sempre marcadas —
           // deixamo-las passar sempre.
@@ -103,17 +103,24 @@ const PreventGhostListSplit = Extension.create({
           if (tr.getMeta("paste")) return true;
           if (tr.getMeta("history$") !== undefined) return true;
 
-          const stepTypes = tr.steps.map((s) => s.constructor.name);
-          const isOnlyReplaceAround =
-            stepTypes.length > 0 && stepTypes.every((t) => t === "ReplaceAroundStep");
-          const touchesList = tr.steps.some((s) => {
-            const json = JSON.stringify(s.toJSON());
-            return json.includes("bulletList") || json.includes("orderedList");
+          // Verificação por CONTEÚDO, não pela "forma" da operação —
+          // conta quantos itens de lista existem antes e depois desta
+          // alteração específica. Não importa que mecanismo interno
+          // esteja a causar isto: se o número de itens de lista
+          // diminuiu sem ser através de escrita/colagem/desfazer/um
+          // botão nosso, bloqueamos sempre.
+          let itemsBefore = 0;
+          state.doc.descendants((node) => {
+            if (node.type.name === "listItem") itemsBefore += 1;
+          });
+          let itemsAfter = 0;
+          tr.doc.descendants((node) => {
+            if (node.type.name === "listItem") itemsAfter += 1;
           });
 
-          if (isOnlyReplaceAround && touchesList) {
+          if (itemsAfter < itemsBefore) {
             console.warn(
-              "[Proteção do editor] Bloqueada uma alteração inesperada à estrutura de uma lista — não teve origem em escrita, colagem, desfazer, atalho de teclado nem num botão da barra de ferramentas."
+              `[Proteção do editor] Bloqueada uma alteração que ia reduzir os itens de lista de ${itemsBefore} para ${itemsAfter}, sem ter origem em escrita, colagem, desfazer, atalho de teclado nem num botão da barra de ferramentas.`
             );
             return false;
           }
