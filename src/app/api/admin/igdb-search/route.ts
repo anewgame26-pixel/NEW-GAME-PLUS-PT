@@ -11,34 +11,47 @@ import { searchIgdbGames } from "@/lib/igdb/search";
  * é o SERVIDOR do nosso site que fala com a IGDB, e o browser fala só com
  * esta rota.
  *
- * Protegida: só editores com sessão iniciada podem usar (evita que
- * qualquer pessoa gaste os pedidos à IGDB do nosso projeto — incluindo
- * visitantes normais, que também têm sessão iniciada desde que passaram
- * a poder criar conta).
+ * Protegida: só editores com sessão iniciada podem usar.
  */
 export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+    // === DIAGNÓSTICO TEMPORÁRIO ===
+    return NextResponse.json(
+      {
+        error: "Não autenticado.",
+        diagnostico: { userError: userError?.message ?? null },
+      },
+      { status: 401 }
+    );
   }
 
-  // Confirma que é mesmo um EDITOR, não só um visitante com conta. A
-  // política de segurança da tabela "editors" já garante isto sozinha:
-  // um visitante normal não consegue ver nenhuma linha desta tabela, nem
-  // sequer a sua própria (porque não está lá) — por isso esta pergunta
-  // só devolve algo quando quem pergunta é mesmo um editor.
-  const { data: editorRow } = await supabase
+  const { data: editorRow, error: editorError } = await supabase
     .from("editors")
     .select("user_id")
     .eq("user_id", user.id)
     .maybeSingle();
 
   if (!editorRow) {
-    return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
+    // === DIAGNÓSTICO TEMPORÁRIO — remover depois de resolvido ===
+    return NextResponse.json(
+      {
+        error: "Sem permissão.",
+        diagnostico: {
+          teuUserId: user.id,
+          teuEmail: user.email,
+          erroDaConsultaEditors: editorError
+            ? { message: editorError.message, code: editorError.code, details: editorError.details }
+            : null,
+        },
+      },
+      { status: 403 }
+    );
   }
 
   const query = request.nextUrl.searchParams.get("q")?.trim();
