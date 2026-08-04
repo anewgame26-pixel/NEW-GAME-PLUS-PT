@@ -452,8 +452,11 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     setSaving(false);
 
     if (detailError) {
+      console.error("Erro ao guardar game_details:", detailError);
       setError(
-        "O jogo foi guardado, mas houve um erro a guardar a Análise. Tenta guardar novamente."
+        `O jogo foi guardado, mas houve um erro a guardar a Análise: ${detailError.message}` +
+          (detailError.details ? ` (${detailError.details})` : "") +
+          " — tira uma fotografia a esta mensagem e envia-a para conseguirmos perceber a causa."
       );
       return;
     }
