@@ -66,7 +66,7 @@ const defaultGameForm = {
   isFeatured: false,
   featuredOrder: null as number | null,
   igdbId: null as number | null,
-  isPublished: true,
+  isPublished: false,
 };
 
 const defaultDetailForm = {
@@ -159,6 +159,11 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
   // texto, algo correu mal — bloqueamos essa gravação específica em
   // vez de arriscar destruir trabalho.
   const originalRichTextRef = useRef<Record<string, string>>({});
+  // Guarda se o jogo já estava PUBLICADO no momento em que a página abriu.
+  // Serve para sabermos se esta gravação vai TORNAR o jogo visível pela
+  // primeira vez (transição oculto → publicado) — só nesse caso
+  // mostramos uma confirmação, para nunca mais acontecer "por engano".
+  const wasPublishedRef = useRef(false);
 
   useEffect(() => {
     async function load() {
@@ -213,6 +218,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         igdbId: g.igdb_id ?? null,
         isPublished: g.is_published ?? true,
       });
+      wasPublishedRef.current = g.is_published ?? true;
 
       if (detailRes.data) {
         const d = detailRes.data;
@@ -308,6 +314,19 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       setError("Preenche pelo menos o Título e o Slug antes de guardar.");
       setTab("geral");
       return;
+    }
+
+    // Se esta gravação vai tornar o jogo visível pela PRIMEIRA vez
+    // (estava oculto, ou é um jogo novo, e a caixa "Publicado" está
+    // marcada), pedimos confirmação explícita. É a rede de segurança
+    // contra cliques acidentais no botão errado.
+    if (game.isPublished && !wasPublishedRef.current) {
+      const confirmed = window.confirm(
+        `Tens a certeza que queres publicar "${game.title.trim() || "este jogo"}"?\n\nVai ficar visível no site (catálogo, homepage, etc.) imediatamente.`
+      );
+      if (!confirmed) {
+        return;
+      }
     }
 
     // REDE DE SEGURANÇA — confirma que nenhum campo perdeu listas de
@@ -453,6 +472,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         detail.roadmapChapters.map((c, i) => [`roadmapChapters.${i}.description`, c.description.trim()] as const)
       ),
     };
+    wasPublishedRef.current = game.isPublished;
 
     if (!shouldPublish) {
       // Rascunho: fica guardado no Supabase, mas o site público não é
@@ -490,7 +510,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-ink">
           {gameId ? `Editar: ${game.title || "..."}` : "Novo Jogo"}
         </h1>
@@ -519,6 +539,32 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           </button>
         </div>
       </div>
+
+      <label
+        className={cn(
+          "mb-6 flex items-center gap-3 rounded-sm border px-4 py-3",
+          game.isPublished
+            ? "border-accent/40 bg-accent/10"
+            : "border-gold/40 bg-gold/10"
+        )}
+      >
+        <input
+          type="checkbox"
+          checked={game.isPublished}
+          onChange={(e) => setGame((f) => ({ ...f, isPublished: e.target.checked }))}
+          className="h-5 w-5 accent-primary"
+        />
+        <span className="flex-1">
+          <span className={cn("block text-sm font-bold uppercase tracking-wide", game.isPublished ? "text-accent" : "text-gold")}>
+            {game.isPublished ? "Publicado — visível no site" : "Oculto — só visível aqui no admin"}
+          </span>
+          <span className="block text-xs text-ink-dim">
+            {game.isPublished
+              ? "Qualquer pessoa consegue ver este jogo no catálogo e aceder à sua página."
+              : "Podes trabalhar à vontade neste jogo. Ninguém fora do admin o consegue ver ou aceder à sua página até marcares esta caixa."}
+          </span>
+        </span>
+      </label>
 
       {savedMessage && (
         <div className="mb-4 rounded-sm border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent-light">
@@ -882,23 +928,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               />
               Guia recomendado
             </label>
-            <label className="flex items-center gap-2 text-sm text-ink">
-              <input
-                type="checkbox"
-                checked={game.isPublished}
-                onChange={(e) => setGame((f) => ({ ...f, isPublished: e.target.checked }))}
-                className="h-4 w-4 accent-primary"
-              />
-              Publicado (visível no catálogo e com página própria)
-            </label>
           </div>
-          {!game.isPublished && (
-            <p className="rounded-sm border border-gold/30 bg-gold/5 px-3 py-2 text-xs text-ink">
-              Este jogo não aparece no site público nem tem link clicável enquanto não marcares
-              &quot;Publicado&quot; — útil para o preparares em segredo, ou para jogos adicionados só
-              para entrarem na Votação antes de teres a análise pronta.
-            </p>
-          )}
 
           <label className="flex flex-col gap-1.5">
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
