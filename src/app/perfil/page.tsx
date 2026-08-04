@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut, Heart, Gamepad2, ExternalLink, ShieldAlert } from "lucide-react";
+import { LogOut, Heart, Gamepad2, ExternalLink, ShieldAlert, ArrowLeft } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getGamesByIds } from "@/lib/data/games";
 import { Header } from "@/components/layout/Header";
@@ -127,15 +127,24 @@ export default async function PerfilPage() {
               </div>
             </div>
 
-            <form action={signOutVisitorAction} className="mt-6 border-t border-border pt-5">
-              <button
-                type="submit"
+            <div className="mt-6 flex items-center gap-3 border-t border-border pt-5">
+              <Link
+                href="/"
                 className="flex items-center gap-1.5 rounded-sm border border-border px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-border-light hover:text-ink"
               >
-                <LogOut width={14} height={14} />
-                Sair
-              </button>
-            </form>
+                <ArrowLeft width={14} height={14} />
+                Voltar ao site
+              </Link>
+              <form action={signOutVisitorAction}>
+                <button
+                  type="submit"
+                  className="flex items-center gap-1.5 rounded-sm border border-border px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-border-light hover:text-ink"
+                >
+                  <LogOut width={14} height={14} />
+                  Sair
+                </button>
+              </form>
+            </div>
           </Card>
 
           <div className="mt-8">

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import { Search, Menu, X, Youtube, Instagram, User } from "lucide-react";
@@ -44,7 +45,14 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center px-4 lg:px-8">
-        <div className="hidden flex-1 lg:block" aria-hidden />
+        <div className="flex flex-1 items-center">
+          <Link href="/" className="flex items-center gap-2" aria-label="Página inicial da NewGame+">
+            <Image src="/logo-icon.png" alt="" width={26} height={26} className="shrink-0" />
+            <span className="hidden font-display text-sm font-bold uppercase tracking-wide text-ink sm:inline">
+              NewGame+
+            </span>
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map((link) => (
