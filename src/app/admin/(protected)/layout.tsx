@@ -21,6 +21,14 @@ export default async function AdminProtectedLayout({
     redirect("/admin/login");
   }
 
+  // Segunda camada: confirma que esta conta é mesmo um editor autorizado
+  // (não basta ter sessão iniciada — uma conta normal de visitante,
+  // criada em /entrar, também tem sessão iniciada).
+  const { data: isEditor } = await supabase.rpc("is_editor");
+  if (!isEditor) {
+    redirect("/admin/login?erro=nao-autorizado");
+  }
+
   return (
     <div className="min-h-screen bg-bg">
       <header className="border-b border-border bg-bg-surface">
