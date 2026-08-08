@@ -9,6 +9,7 @@ export interface IgdbImportResult {
   igdbId: number;
   title: string;
   coverUrl: string | null;
+  heroImageUrl: string | null;
   releaseYear: number | null;
   releaseDate: string | null;
   developer: string | null;

@@ -5,6 +5,8 @@ export interface IgdbSearchResult {
   igdbId: number;
   title: string;
   coverUrl: string | null;
+  /** Imagem larga (artwork ou screenshot), para o carrossel principal. */
+  heroImageUrl: string | null;
   releaseYear: number | null;
   releaseDate: string | null;
   developer: string | null;
@@ -58,6 +60,8 @@ interface IgdbRawGame {
   id: number;
   name: string;
   cover?: { image_id: string };
+  artworks?: { image_id: string }[];
+  screenshots?: { image_id: string }[];
   first_release_date?: number;
   platforms?: { name: string }[];
   genres?: { name: string }[];
@@ -71,7 +75,8 @@ export async function searchIgdbGames(query: string): Promise<IgdbSearchResult[]
 
   const body = `
     search "${query.replace(/"/g, '\\"')}";
-    fields name, cover.image_id, first_release_date, platforms.name, genres.name,
+    fields name, cover.image_id, artworks.image_id, screenshots.image_id,
+           first_release_date, platforms.name, genres.name,
            involved_companies.company.name, involved_companies.developer;
     limit 10;
   `;
@@ -98,11 +103,20 @@ export async function searchIgdbGames(query: string): Promise<IgdbSearchResult[]
       ? new Date(g.first_release_date * 1000).toISOString().slice(0, 10)
       : null;
 
+    // Artworks são imagens promocionais já em formato largo (ideais para
+    // um banner). Se o jogo não tiver nenhuma, usamos uma screenshot como
+    // reserva — também é larga, embora seja só uma captura de ecrã em vez
+    // de arte promocional.
+    const wideImageId = g.artworks?.[0]?.image_id ?? g.screenshots?.[0]?.image_id ?? null;
+
     return {
       igdbId: g.id,
       title: g.name,
       coverUrl: g.cover
         ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${g.cover.image_id}.jpg`
+        : null,
+      heroImageUrl: wideImageId
+        ? `https://images.igdb.com/igdb/image/upload/t_1080p/${wideImageId}.jpg`
         : null,
       releaseYear: releaseDate ? Number(releaseDate.slice(0, 4)) : null,
       releaseDate,

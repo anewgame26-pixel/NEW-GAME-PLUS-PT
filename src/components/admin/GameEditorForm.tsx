@@ -298,6 +298,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       title: result.title,
       slug: slugify(result.title),
       coverUrl: result.coverUrl ?? f.coverUrl,
+      heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
       developer: result.developer ?? f.developer,
       releaseYear: result.releaseYear ?? f.releaseYear,
       releaseDate: result.releaseDate ?? f.releaseDate,
@@ -678,7 +679,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
-                URL da capa
+                URL da capa (vertical)
               </span>
               <input
                 type="text"
@@ -700,6 +701,24 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               />
             </label>
           </div>
+
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+              URL da imagem larga (para o carrossel da homepage)
+            </span>
+            <input
+              type="text"
+              value={game.heroImageUrl}
+              onChange={(e) => setGame((f) => ({ ...f, heroImageUrl: e.target.value }))}
+              placeholder="https://... (deixa em branco para usar a capa normal)"
+              className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+            />
+            <span className="text-xs text-ink-dim">
+              A capa normal é vertical (como a caixa de um jogo) — esticá-la para um banner
+              largo fica cortada. Ao importar da IGDB isto preenche-se sozinho; também podes
+              colar aqui o link de qualquer imagem larga (1920×1080 ou semelhante).
+            </span>
+          </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">

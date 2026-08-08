@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode, type TouchEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
@@ -10,13 +10,15 @@ import { FeaturedGameStats } from "@/components/home/FeaturedGameStats";
 
 interface FeaturedGameCarouselProps {
   games: Game[];
+  /** Conteúdo estático (logo, pesquisa, sugestões) sobreposto à imagem. */
+  children?: ReactNode;
   /** Intervalo do autoplay, em milissegundos. */
   intervalMs?: number;
 }
 
 const SWIPE_THRESHOLD_PX = 40;
 
-export function FeaturedGameCarousel({ games, intervalMs = 10000 }: FeaturedGameCarouselProps) {
+export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: FeaturedGameCarouselProps) {
   const count = games.length;
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -79,42 +81,39 @@ export function FeaturedGameCarousel({ games, intervalMs = 10000 }: FeaturedGame
   const game = games[index];
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-      <div className="flex w-full flex-col gap-4 lg:w-[22rem]">
-        <Badge tone="gold" className="w-fit">
-          <Star width={11} height={11} className="fill-current" />
-          Destaques
-        </Badge>
+    <section
+      className="relative w-full overflow-hidden border-b border-border"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Imagem de fundo, a ocupar toda a largura da secção. */}
+      <div className="animate-carousel-fade absolute inset-0" key={game.id}>
+        <Image
+          src={game.heroImageUrl ?? game.coverUrl}
+          alt={`Imagem de destaque de ${game.title}`}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority={index === 0}
+        />
+        {/* Camada escura sobre a imagem, para o texto por cima ficar legível. */}
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40" />
+      </div>
 
-        <div
-          className="relative h-72 w-full overflow-hidden rounded-sm border border-border sm:h-96 lg:h-[30rem]"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Capa clicável — abre a página do jogo. Fica por baixo do resto
-              na pilha de camadas; a legenda por cima usa pointer-events-none
-              para deixar o clique "passar" para este link. */}
-          <Link
-            key={game.id}
-            href={`/guias/${game.slug}`}
-            className="animate-carousel-fade absolute inset-0 block"
-            aria-label={`Ver página de ${game.title}`}
-          >
-            <Image
-              src={game.coverUrl}
-              alt={`Capa de ${game.title}`}
-              fill
-              sizes="(min-width: 1024px) 352px, 100vw"
-              className="object-cover"
-              priority={index === 0}
-            />
-          </Link>
+      {/* Conteúdo por cima da imagem. */}
+      <div className="relative mx-auto flex min-h-[560px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[600px] lg:px-8 lg:pt-8">
+        <div>{children}</div>
 
-          {/* Legenda + indicadores, sobreposta ao link mas sem bloquear o clique
-              (exceto nos próprios indicadores, que voltam a ser clicáveis). */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-black/95 via-black/30 to-transparent p-5">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-xl">
+            <Badge tone="gold" className="mb-3 w-fit">
+              <Star width={11} height={11} className="fill-current" />
+              Destaques
+            </Badge>
+
             {count > 1 && (
-              <div className="pointer-events-auto flex items-center gap-1.5">
+              <div className="mb-3 flex items-center gap-1.5">
                 {games.map((g, i) => (
                   <button
                     key={g.id}
@@ -131,38 +130,41 @@ export function FeaturedGameCarousel({ games, intervalMs = 10000 }: FeaturedGame
                 ))}
               </div>
             )}
-            <p className="font-display text-xl font-bold uppercase tracking-wide text-ink">
-              {game.title}
-            </p>
-            <p className="text-xs text-ink-muted">{game.developer}</p>
+
+            <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
+              <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
+                {game.title}
+              </p>
+              <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
+            </Link>
           </div>
 
-          {count > 1 && (
-            <>
-              <button
-                type="button"
-                aria-label="Jogo anterior"
-                onClick={prev}
-                className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
-              >
-                <ChevronLeft width={16} height={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="Próximo jogo"
-                onClick={next}
-                className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
-              >
-                <ChevronRight width={16} height={16} />
-              </button>
-            </>
-          )}
+          <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">
+            <FeaturedGameStats game={game} />
+          </div>
         </div>
       </div>
 
-      <div key={game.id} className="animate-carousel-fade">
-        <FeaturedGameStats game={game} />
-      </div>
-    </div>
+      {count > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Jogo anterior"
+            onClick={prev}
+            className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+          >
+            <ChevronLeft width={18} height={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Próximo jogo"
+            onClick={next}
+            className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+          >
+            <ChevronRight width={18} height={18} />
+          </button>
+        </>
+      )}
+    </section>
   );
 }

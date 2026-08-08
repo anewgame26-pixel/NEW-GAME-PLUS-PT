@@ -24,7 +24,9 @@ export interface Game {
   slug: string;
   title: string;
   coverUrl: string;
-  heroImageUrl?: string;
+  /** Imagem larga (widescreen) para o carrossel principal. Opcional — quando
+   * não existe, o carrossel usa a coverUrl (vertical) como recurso. */
+  heroImageUrl: string | null;
   platforms: Platform[];
   genres: Genre[];
   releaseYear: number;
