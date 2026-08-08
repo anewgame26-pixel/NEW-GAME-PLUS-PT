@@ -11,7 +11,10 @@ interface HeroSectionProps {
 
 export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
   return (
-    <FeaturedGameCarousel games={featuredGames}>
+    <FeaturedGameCarousel
+      games={featuredGames}
+      search={<HeroSearchForm />}
+    >
       <div className="flex flex-col items-start">
         <Link
           href="/"
@@ -29,10 +32,6 @@ export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
             style={{ objectPosition: "50% 51.1%" }}
           />
         </Link>
-
-        <div className="mt-5 w-full max-w-md rounded-sm shadow-glow">
-          <HeroSearchForm />
-        </div>
 
         <div className="mt-4 flex max-w-lg flex-wrap items-center gap-2">
           <span className="text-xs text-ink-dim">Sugestões:</span>

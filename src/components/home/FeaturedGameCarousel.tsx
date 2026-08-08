@@ -10,8 +10,10 @@ import { FeaturedGameStats } from "@/components/home/FeaturedGameStats";
 
 interface FeaturedGameCarouselProps {
   games: Game[];
-  /** Conteúdo estático (logo, pesquisa, sugestões) sobreposto à imagem. */
+  /** Conteúdo estático (logo, sugestões) sobreposto ao topo da imagem. */
   children?: ReactNode;
+  /** Barra de pesquisa, sobreposta ao fundo da imagem, junto ao título. */
+  search?: ReactNode;
   /** Intervalo do autoplay, em milissegundos. */
   intervalMs?: number;
 }
@@ -21,7 +23,12 @@ const SWIPE_THRESHOLD_PX = 40;
 // imagem centrada — o ajuste de enquadramento só se aplica abaixo disto.
 const MOBILE_BREAKPOINT_QUERY = "(max-width: 639px)";
 
-export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: FeaturedGameCarouselProps) {
+export function FeaturedGameCarousel({
+  games,
+  children,
+  search,
+  intervalMs = 10000,
+}: FeaturedGameCarouselProps) {
   const count = games.length;
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -118,42 +125,46 @@ export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: Fe
       <div className="relative mx-auto flex min-h-[460px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[520px] lg:min-h-[600px] lg:px-8 lg:pt-8">
         <div>{children}</div>
 
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-xl">
-            <Badge tone="gold" className="mb-3 w-fit">
-              <Star width={11} height={11} className="fill-current" />
-              Destaques
-            </Badge>
+        <div className="flex flex-col gap-5">
+          {search && <div className="w-full max-w-md rounded-sm shadow-glow">{search}</div>}
 
-            {count > 1 && (
-              <div className="mb-3 flex items-center gap-1.5">
-                {games.map((g, i) => (
-                  <button
-                    key={g.id}
-                    type="button"
-                    aria-label={`Ver ${g.title}`}
-                    aria-current={i === index}
-                    onClick={() => goTo(i)}
-                    className={
-                      i === index
-                        ? "h-1.5 w-4 rounded-full bg-white transition-all"
-                        : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
-                    }
-                  />
-                ))}
-              </div>
-            )}
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-xl">
+              <Badge tone="gold" className="mb-3 w-fit">
+                <Star width={11} height={11} className="fill-current" />
+                Destaques
+              </Badge>
 
-            <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
-              <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
-                {game.title}
-              </p>
-              <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
-            </Link>
-          </div>
+              {count > 1 && (
+                <div className="mb-3 flex items-center gap-1.5">
+                  {games.map((g, i) => (
+                    <button
+                      key={g.id}
+                      type="button"
+                      aria-label={`Ver ${g.title}`}
+                      aria-current={i === index}
+                      onClick={() => goTo(i)}
+                      className={
+                        i === index
+                          ? "h-1.5 w-4 rounded-full bg-white transition-all"
+                          : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
+                      }
+                    />
+                  ))}
+                </div>
+              )}
 
-          <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">
-            <FeaturedGameStats game={game} />
+              <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
+                <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
+                  {game.title}
+                </p>
+                <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
+              </Link>
+            </div>
+
+            <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">
+              <FeaturedGameStats game={game} />
+            </div>
           </div>
         </div>
       </div>
