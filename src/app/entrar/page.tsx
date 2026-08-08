@@ -144,6 +144,12 @@ function LoginForm() {
 
         {error && <p className="text-sm text-primary-light">{error}</p>}
 
+        <div className="-mt-1 text-right">
+          <Link href="/recuperar-password" className="text-xs text-ink-dim hover:text-ink">
+            Esqueceste-te da password?
+          </Link>
+        </div>
+
         <Button type="submit" disabled={loading} className="mt-1 w-full">
           {loading ? "A entrar..." : "Entrar"}
         </Button>
