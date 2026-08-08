@@ -49,7 +49,7 @@ export default function AdminReportsPage() {
     return games.find((g) => g.id === gameId) ?? null;
   }
 
-  async function handleToggleResolved(id: string, currentStatus: string) {
+  async function handleToggleResolved(id: string, currentStatus: ReportRow["status"]) {
     const nextStatus = currentStatus === "pendente" ? "resolvido" : "pendente";
     setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status: nextStatus } : r)));
 
