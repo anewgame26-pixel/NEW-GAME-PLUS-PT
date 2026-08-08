@@ -729,30 +729,27 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
           {game.heroImageUrl && (
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
-                Enquadramento no telemóvel
-              </span>
-              <div className="flex overflow-hidden rounded-sm border border-border">
-                {[
-                  { label: "Esquerda", value: 0 },
-                  { label: "Centro", value: 50 },
-                  { label: "Direita", value: 100 },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setGame((f) => ({ ...f, heroFocusX: opt.value }))}
-                    className={`flex-1 py-2 text-sm transition-colors ${
-                      game.heroFocusX === opt.value
-                        ? "bg-primary text-white"
-                        : "bg-bg-surface2 text-ink-muted hover:text-ink"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+                  Enquadramento no telemóvel
+                </span>
+                <span className="text-xs text-ink-dim">{game.heroFocusX}%</span>
               </div>
-              <div className="relative h-28 w-full max-w-[220px] overflow-hidden rounded-sm border border-border">
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={1}
+                value={game.heroFocusX}
+                onChange={(e) => setGame((f) => ({ ...f, heroFocusX: Number(e.target.value) }))}
+                className="w-full max-w-[220px] accent-primary"
+              />
+              <div className="flex w-full max-w-[220px] justify-between text-[10px] text-ink-dim">
+                <span>Esquerda</span>
+                <span>Centro</span>
+                <span>Direita</span>
+              </div>
+              <div className="relative h-44 w-36 overflow-hidden rounded-sm border border-border">
                 <Image
                   src={game.heroImageUrl}
                   alt="Pré-visualização do enquadramento no telemóvel"
@@ -762,10 +759,9 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                 />
               </div>
               <span className="text-xs text-ink-dim">
-                Ecrã do telemóvel é estreito e corta os lados da imagem — usa isto para
-                escolheres qual a parte que fica visível (ex.: se a personagem estiver à
-                direita na imagem original, escolhe &quot;Direita&quot;). No computador a
-                imagem mantém-se sempre centrada, como já está — isto só muda o telemóvel. A
+                Ecrã do telemóvel é estreito e corta os lados da imagem — arrasta para
+                escolheres exatamente qual a parte que fica visível. No computador a imagem
+                mantém-se sempre centrada, como já está — isto só muda o telemóvel. A
                 pré-visualização acima mostra aproximadamente o recorte do telemóvel.
               </span>
             </div>
