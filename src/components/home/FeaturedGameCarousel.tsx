@@ -93,7 +93,7 @@ export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: Fe
           alt={`Imagem de destaque de ${game.title}`}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-center"
           priority={index === 0}
         />
         {/* Camada escura sobre a imagem, para o texto por cima ficar legível. */}
@@ -102,7 +102,7 @@ export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: Fe
       </div>
 
       {/* Conteúdo por cima da imagem. */}
-      <div className="relative mx-auto flex min-h-[560px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[600px] lg:px-8 lg:pt-8">
+      <div className="relative mx-auto flex min-h-[460px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[520px] lg:min-h-[600px] lg:px-8 lg:pt-8">
         <div>{children}</div>
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
