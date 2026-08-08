@@ -17,11 +17,23 @@ interface FeaturedGameCarouselProps {
 }
 
 const SWIPE_THRESHOLD_PX = 40;
+// Larguras a partir daqui já contam como "desktop" e mantêm sempre a
+// imagem centrada — o ajuste de enquadramento só se aplica abaixo disto.
+const MOBILE_BREAKPOINT_QUERY = "(max-width: 639px)";
 
 export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: FeaturedGameCarouselProps) {
   const count = games.length;
   const [index, setIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const touchStartX = useRef<number | null>(null);
+
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
 
   const goTo = useCallback(
     (target: number) => setIndex(((target % count) + count) % count),
@@ -93,7 +105,8 @@ export function FeaturedGameCarousel({ games, children, intervalMs = 10000 }: Fe
           alt={`Imagem de destaque de ${game.title}`}
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover"
+          style={{ objectPosition: `${isMobile ? (game.heroFocusX ?? 50) : 50}% 50%` }}
           priority={index === 0}
         />
         {/* Camada escura sobre a imagem, para o texto por cima ficar legível. */}

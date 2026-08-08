@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
@@ -45,6 +46,7 @@ const defaultGameForm = {
   slug: "",
   coverUrl: "",
   heroImageUrl: "",
+  heroFocusX: 50,
   platforms: [] as Platform[],
   genres: [] as Genre[],
   releaseYear: new Date().getFullYear(),
@@ -195,6 +197,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         slug: g.slug ?? "",
         coverUrl: g.cover_url ?? "",
         heroImageUrl: g.hero_image_url ?? "",
+        heroFocusX: typeof g.hero_focus_x === "number" ? g.hero_focus_x : 50,
         platforms: g.platforms ?? [],
         genres: g.genres ?? [],
         releaseYear: g.release_year ?? new Date().getFullYear(),
@@ -301,6 +304,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       ...(gameId ? {} : { title: result.title, slug: slugify(result.title) }),
       coverUrl: result.coverUrl ?? f.coverUrl,
       heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
+      heroFocusX: result.heroImageUrl ? 50 : f.heroFocusX,
       developer: result.developer ?? f.developer,
       releaseYear: result.releaseYear ?? f.releaseYear,
       releaseDate: result.releaseDate ?? f.releaseDate,
@@ -370,6 +374,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       slug: game.slug.trim(),
       cover_url: game.coverUrl.trim(),
       hero_image_url: game.heroImageUrl.trim() || null,
+      hero_focus_x: game.heroFocusX,
       platforms: game.platforms,
       genres: game.genres,
       release_year: game.releaseYear,
@@ -721,6 +726,50 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               colar aqui o link de qualquer imagem larga (1920×1080 ou semelhante).
             </span>
           </label>
+
+          {game.heroImageUrl && (
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+                Enquadramento no telemóvel
+              </span>
+              <div className="flex overflow-hidden rounded-sm border border-border">
+                {[
+                  { label: "Esquerda", value: 0 },
+                  { label: "Centro", value: 50 },
+                  { label: "Direita", value: 100 },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setGame((f) => ({ ...f, heroFocusX: opt.value }))}
+                    className={`flex-1 py-2 text-sm transition-colors ${
+                      game.heroFocusX === opt.value
+                        ? "bg-primary text-white"
+                        : "bg-bg-surface2 text-ink-muted hover:text-ink"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+              <div className="relative h-28 w-full max-w-[220px] overflow-hidden rounded-sm border border-border">
+                <Image
+                  src={game.heroImageUrl}
+                  alt="Pré-visualização do enquadramento no telemóvel"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: `${game.heroFocusX}% 50%` }}
+                />
+              </div>
+              <span className="text-xs text-ink-dim">
+                Ecrã do telemóvel é estreito e corta os lados da imagem — usa isto para
+                escolheres qual a parte que fica visível (ex.: se a personagem estiver à
+                direita na imagem original, escolhe &quot;Direita&quot;). No computador a
+                imagem mantém-se sempre centrada, como já está — isto só muda o telemóvel. A
+                pré-visualização acima mostra aproximadamente o recorte do telemóvel.
+              </span>
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">
