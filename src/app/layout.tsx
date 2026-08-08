@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Chakra_Petch, Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { FavoritesProvider } from "@/components/providers/FavoritesProvider";
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="pt-PT" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="font-body antialiased">
         <FavoritesProvider>{children}</FavoritesProvider>
+        <Analytics />
       </body>
     </html>
   );
