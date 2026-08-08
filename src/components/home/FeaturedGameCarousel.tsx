@@ -126,8 +126,6 @@ export function FeaturedGameCarousel({
         <div>{children}</div>
 
         <div className="flex flex-col gap-5">
-          {search && <div className="w-full max-w-md rounded-sm shadow-glow">{search}</div>}
-
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-xl">
               <Badge tone="gold" className="mb-3 w-fit">
@@ -160,6 +158,10 @@ export function FeaturedGameCarousel({
                 </p>
                 <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
               </Link>
+
+              {search && (
+                <div className="mt-4 w-full max-w-md rounded-sm shadow-glow">{search}</div>
+              )}
             </div>
 
             <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">

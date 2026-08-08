@@ -6,46 +6,30 @@ import { FeaturedGameCarousel } from "@/components/home/FeaturedGameCarousel";
 
 interface HeroSectionProps {
   featuredGames: Game[];
-  suggestions: Game[];
+  /** Já não é usado no hero (as sugestões foram removidas), mas mantém-se
+   * aqui para não obrigar a mexer em quem chama este componente. */
+  suggestions?: Game[];
 }
 
-export function HeroSection({ featuredGames, suggestions }: HeroSectionProps) {
+export function HeroSection({ featuredGames }: HeroSectionProps) {
   return (
-    <FeaturedGameCarousel
-      games={featuredGames}
-      search={<HeroSearchForm />}
-    >
-      <div className="flex flex-col items-start">
-        <Link
-          href="/"
-          className="relative block w-full max-w-[220px] overflow-hidden sm:max-w-[260px]"
-          style={{ aspectRatio: "1254 / 614" }}
-          aria-label="NewGame+ PT"
-        >
-          <Image
-            src="/logo-hero.png"
-            alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
-            fill
-            priority
-            sizes="260px"
-            className="object-cover"
-            style={{ objectPosition: "50% 51.1%" }}
-          />
-        </Link>
-
-        <div className="mt-4 flex max-w-lg flex-wrap items-center gap-2">
-          <span className="text-xs text-ink-dim">Sugestões:</span>
-          {suggestions.map((game) => (
-            <Link
-              key={game.id}
-              href={`/guias/${game.slug}`}
-              className="rounded-full border border-white/20 bg-black/30 px-3 py-1 text-xs text-ink-muted backdrop-blur-sm transition-colors hover:border-primary hover:text-ink"
-            >
-              {game.title}
-            </Link>
-          ))}
-        </div>
-      </div>
+    <FeaturedGameCarousel games={featuredGames} search={<HeroSearchForm />}>
+      <Link
+        href="/"
+        className="relative block w-full max-w-[220px] overflow-hidden sm:max-w-[260px]"
+        style={{ aspectRatio: "1254 / 614" }}
+        aria-label="NewGame+ PT"
+      >
+        <Image
+          src="/logo-hero.png"
+          alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
+          fill
+          priority
+          sizes="260px"
+          className="object-cover"
+          style={{ objectPosition: "50% 51.1%" }}
+        />
+      </Link>
     </FeaturedGameCarousel>
   );
 }
