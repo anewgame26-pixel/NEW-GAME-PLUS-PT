@@ -27,6 +27,10 @@ export interface Game {
   /** Imagem larga (widescreen) para o carrossel principal. Opcional — quando
    * não existe, o carrossel usa a coverUrl (vertical) como recurso. */
   heroImageUrl: string | null;
+  /** Ponto de foco horizontal da imagem larga, de 0 (esquerda) a 100
+   * (direita), 50 = centro. Ajusta o que fica visível no recorte estreito
+   * do telemóvel. */
+  heroFocusX: number;
   platforms: Platform[];
   genres: Genre[];
   releaseYear: number;
