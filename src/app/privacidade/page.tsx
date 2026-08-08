@@ -3,7 +3,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card } from "@/components/ui/Card";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade | NewGame+",
@@ -17,20 +16,10 @@ export default function PrivacidadePage() {
       <main>
         <PageHeader
           title="Política de Privacidade"
-          description="Última atualização: [a definir antes de publicares o site]"
+          description="Última atualização: 8 de agosto de 2026"
         />
 
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
-          <Card className="mb-6 border-gold/30 bg-gold/5 p-4">
-            <p className="text-sm text-ink">
-              ⚠️ Este texto é um modelo genérico de ponto de partida, não aconselhamento
-              jurídico. Antes de publicares o site, recomenda-se que um advogado ou
-              especialista em proteção de dados reveja este documento e o adapte à tua
-              situação real (que dados recolhes, que ferramentas/analytics usas, onde
-              estão alojados os servidores, etc.).
-            </p>
-          </Card>
-
           <div className="flex flex-col gap-6 text-sm leading-relaxed text-ink-muted">
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">1. Quem somos</h2>
@@ -47,12 +36,14 @@ export default function PrivacidadePage() {
                 2. Que dados recolhemos
               </h2>
               <p>
-                Podemos recolher: (a) dados que forneces voluntariamente, como nome e
-                email ao subscreveres a newsletter, contactares-nos ou comentares; (b)
-                dados de utilização recolhidos automaticamente, como páginas visitadas,
-                tipo de dispositivo e origem do tráfego, tipicamente através de
-                ferramentas de analítica; (c) cookies e tecnologias semelhantes,
-                detalhadas na secção 5.
+                Recolhemos: (a) dados de conta, como email e nome, quando te registas por
+                email/password ou através do Google; (b) conteúdo que publicas
+                voluntariamente, como comentários, pedidos à comunidade e reportes de
+                erros; (c) as tuas listas de favoritos e progresso, se estiveres com
+                sessão iniciada; (d) dados de utilização recolhidos de forma anónima e
+                agregada através do Vercel Analytics (páginas visitadas, tipo de
+                dispositivo, país de origem) — esta ferramenta não usa cookies nem
+                identifica visitantes individualmente.
               </p>
             </section>
 
@@ -61,22 +52,40 @@ export default function PrivacidadePage() {
                 3. Para que usamos os teus dados
               </h2>
               <p>
-                Usamos os dados para: operar e melhorar a plataforma; enviar a
-                newsletter a quem subscreve; responder a contactos e reportes de erro;
-                perceber que conteúdo é mais útil para a comunidade. Não vendemos os
-                teus dados pessoais a terceiros.
+                Usamos os dados para: criar e gerir a tua conta; mostrar os teus
+                favoritos e comentários; responder a contactos e reportes de erro;
+                moderar a comunidade; perceber, de forma agregada, que conteúdo é mais
+                útil para melhorarmos o site. Não vendemos nem partilhamos os teus dados
+                pessoais para fins publicitários.
               </p>
             </section>
 
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">
-                4. Partilha de dados
+                4. Com quem partilhamos dados
               </h2>
               <p>
-                Podemos partilhar dados com fornecedores de serviços que nos ajudam a
-                operar a plataforma (ex: alojamento, envio de newsletter, analítica),
-                sempre limitado ao necessário para prestarem esse serviço.
+                Usamos os seguintes fornecedores para operar o site, cada um só com
+                acesso ao que precisa para prestar o seu serviço:
               </p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>
+                  <span className="font-medium text-ink">Supabase</span> — base de dados
+                  e autenticação de contas.
+                </li>
+                <li>
+                  <span className="font-medium text-ink">Vercel</span> — alojamento do
+                  site e estatísticas de utilização anónimas.
+                </li>
+                <li>
+                  <span className="font-medium text-ink">Resend</span> — envio de emails
+                  transacionais (confirmação de conta, recuperação de password).
+                </li>
+                <li>
+                  <span className="font-medium text-ink">Google</span> — apenas se
+                  escolheres entrar através de &quot;Entrar com Google&quot;.
+                </li>
+              </ul>
             </section>
 
             <section>
@@ -84,9 +93,10 @@ export default function PrivacidadePage() {
                 5. Cookies
               </h2>
               <p>
-                Podemos usar cookies essenciais ao funcionamento do site e cookies
-                opcionais de analítica. Podes gerir as tuas preferências de cookies nas
-                definições do teu navegador.
+                Usamos apenas cookies essenciais, necessários para manteres a sessão
+                iniciada em segurança. Não usamos cookies de publicidade nem de
+                rastreio entre sites. As estatísticas de visitas (Vercel Analytics) não
+                usam cookies.
               </p>
             </section>
 
@@ -97,8 +107,9 @@ export default function PrivacidadePage() {
               <p>
                 Nos termos do RGPD, tens direito a aceder, corrigir, apagar ou limitar o
                 tratamento dos teus dados pessoais, bem como a retirar consentimento a
-                qualquer momento. Para exercer estes direitos, contacta-nos através da
-                página de Contactos.
+                qualquer momento. Podes apagar comentários e favoritos diretamente no
+                teu perfil, ou contactar-nos através da página de Contactos para
+                qualquer outro pedido, incluindo a eliminação total da tua conta.
               </p>
             </section>
 
