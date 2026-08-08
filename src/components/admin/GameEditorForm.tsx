@@ -295,8 +295,10 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
   function handleIgdbImport(result: IgdbImportResult) {
     setGame((f) => ({
       ...f,
-      title: result.title,
-      slug: slugify(result.title),
+      // Num jogo já criado, não tocamos no título/slug — mudar o slug
+      // partiria os links que já foram partilhados. Só atualizamos isso
+      // ao criar um jogo novo (gameId ainda não existe).
+      ...(gameId ? {} : { title: result.title, slug: slugify(result.title) }),
       coverUrl: result.coverUrl ?? f.coverUrl,
       heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
       developer: result.developer ?? f.developer,
@@ -607,7 +609,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
 
       {tab === "geral" ? (
         <div className="flex flex-col gap-5">
-          {!gameId && <IgdbImportBox onImport={handleIgdbImport} />}
+          <IgdbImportBox onImport={handleIgdbImport} isExistingGame={Boolean(gameId)} />
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">

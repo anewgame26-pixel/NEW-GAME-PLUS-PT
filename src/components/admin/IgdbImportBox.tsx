@@ -19,15 +19,17 @@ export interface IgdbImportResult {
 
 interface IgdbImportBoxProps {
   onImport: (result: IgdbImportResult) => void;
+  /** Quando true, mostra texto adaptado a "atualizar" em vez de "criar". */
+  isExistingGame?: boolean;
 }
 
 /**
- * Caixa de pesquisa da IGDB, usada só ao criar um jogo novo.
- * Ao escolher um resultado, o formulário à volta preenche automaticamente
- * título, capa, produtora, ano/data de lançamento, plataformas e géneros
- * (estes dois últimos de forma aproximada — vale a pena confirmar).
+ * Caixa de pesquisa da IGDB. Ao criar um jogo novo, preenche tudo
+ * (título, capa, imagem larga, produtora, ano, plataformas, géneros).
+ * Num jogo já existente, serve sobretudo para trazer a imagem larga do
+ * carrossel (ou atualizar a capa) sem tocar no título/slug já definidos.
  */
-export function IgdbImportBox({ onImport }: IgdbImportBoxProps) {
+export function IgdbImportBox({ onImport, isExistingGame = false }: IgdbImportBoxProps) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export function IgdbImportBox({ onImport }: IgdbImportBoxProps) {
   return (
     <div className="rounded-sm border border-accent/30 bg-accent/5 p-4">
       <p className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-dim">
-        Importar da IGDB (opcional)
+        {isExistingGame ? "Voltar a pesquisar na IGDB" : "Importar da IGDB (opcional)"}
       </p>
       <form onSubmit={handleSearch} className="flex gap-2">
         <input
@@ -115,8 +117,9 @@ export function IgdbImportBox({ onImport }: IgdbImportBoxProps) {
       )}
 
       <p className="mt-3 text-xs text-ink-dim">
-        Plataformas e géneros são traduzidos de forma aproximada — confirma sempre depois de
-        importar.
+        {isExistingGame
+          ? "Ao escolheres um resultado, atualiza a capa, imagem larga, produtora e datas — o título e o link (slug) deste jogo não são alterados."
+          : "Plataformas e géneros são traduzidos de forma aproximada — confirma sempre depois de importar."}
       </p>
     </div>
   );
