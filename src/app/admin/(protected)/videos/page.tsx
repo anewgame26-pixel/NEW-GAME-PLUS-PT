@@ -114,7 +114,7 @@ export default function AdminVideosPage() {
     };
 
     const result = editingId
-      ? await supabase.from("videos").update(payload).eq("id", editingId)
+      ? await supabase.from("videos").update(payload).eq("id", editingId).select("id")
       : await supabase.from("videos").insert(payload);
 
     setSaving(false);
@@ -123,6 +123,14 @@ export default function AdminVideosPage() {
       setError(
         editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o vídeo."
       );
+      return;
+    }
+
+    // Sem o .select() acima, uma atualização bloqueada por falta de
+    // permissão não dá erro nenhum — só não muda nada. Isto apanha esse
+    // caso e avisa, em vez de deixar parecer que gravou.
+    if (editingId && (!result.data || result.data.length === 0)) {
+      setError("Não foi possível guardar as alterações — este vídeo pode já não existir.");
       return;
     }
 

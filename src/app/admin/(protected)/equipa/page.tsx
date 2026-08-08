@@ -98,7 +98,7 @@ export default function AdminEquipaPage() {
     };
 
     const result = editingId
-      ? await supabase.from("team_members").update(payload).eq("id", editingId)
+      ? await supabase.from("team_members").update(payload).eq("id", editingId).select("id")
       : await supabase.from("team_members").insert(payload);
 
     setSaving(false);
@@ -107,6 +107,11 @@ export default function AdminEquipaPage() {
       setError(
         editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o membro."
       );
+      return;
+    }
+
+    if (editingId && (!result.data || result.data.length === 0)) {
+      setError("Não foi possível guardar as alterações — este membro pode já não existir.");
       return;
     }
 

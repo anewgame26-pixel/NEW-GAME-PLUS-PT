@@ -184,12 +184,15 @@ export default function AdminVotacaoPage() {
 
     setSaving(true);
     const [resA, resB] = await Promise.all([
-      supabase.from("voting_candidates").update({ sort_order: b.sort_order }).eq("id", a.id),
-      supabase.from("voting_candidates").update({ sort_order: a.sort_order }).eq("id", b.id),
+      supabase.from("voting_candidates").update({ sort_order: b.sort_order }).eq("id", a.id).select("id"),
+      supabase.from("voting_candidates").update({ sort_order: a.sort_order }).eq("id", b.id).select("id"),
     ]);
     setSaving(false);
 
-    if (resA.error || resB.error) {
+    const rowsAffectedIssue =
+      (resA.data?.length ?? 0) === 0 || (resB.data?.length ?? 0) === 0;
+
+    if (resA.error || resB.error || rowsAffectedIssue) {
       setError("Não foi possível reordenar.");
     } else {
       await loadAll();

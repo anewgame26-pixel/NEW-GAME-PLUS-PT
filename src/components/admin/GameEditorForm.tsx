@@ -402,9 +402,21 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     let resolvedGameId = gameId;
 
     if (gameId) {
-      const { error } = await supabase.from("games").update(gamePayload).eq("id", gameId);
-      if (error) {
-        setError("Não foi possível guardar a informação geral do jogo.");
+      const { error, data } = await supabase
+        .from("games")
+        .update(gamePayload)
+        .eq("id", gameId)
+        .select("id");
+      // Sem o .select() acima, uma gravação bloqueada por falta de
+      // permissão não dá erro nenhum — só não muda nada na base de
+      // dados, e o formulário diz "guardado" na mesma. Isto apanha esse
+      // caso (foi o que aconteceu com o erro da Análise há uns dias).
+      if (error || !data || data.length === 0) {
+        setError(
+          error
+            ? `Não foi possível guardar a informação geral do jogo: ${error.message}`
+            : "Não foi possível guardar a informação geral do jogo — a gravação não afetou nenhuma linha (verifica as permissões no Supabase)."
+        );
         setSaving(false);
         return;
       }

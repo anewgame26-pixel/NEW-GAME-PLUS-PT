@@ -52,7 +52,20 @@ export default function AdminReportsPage() {
   async function handleToggleResolved(id: string, currentStatus: string) {
     const nextStatus = currentStatus === "pendente" ? "resolvido" : "pendente";
     setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status: nextStatus } : r)));
-    await supabase.from("reports").update({ status: nextStatus }).eq("id", id);
+
+    const { data, error } = await supabase
+      .from("reports")
+      .update({ status: nextStatus })
+      .eq("id", id)
+      .select("id");
+
+    // Sem .select() o Supabase não avisa se a atualização não mexeu em
+    // nenhuma linha (ex.: por falta de permissão) — verificamos aqui à
+    // mão, e desfazemos a mudança no ecrã se não gravou mesmo nada.
+    if (error || !data || data.length === 0) {
+      setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status: currentStatus } : r)));
+      alert("Não foi possível atualizar este report. Tenta novamente.");
+    }
   }
 
   async function handleDelete(id: string) {

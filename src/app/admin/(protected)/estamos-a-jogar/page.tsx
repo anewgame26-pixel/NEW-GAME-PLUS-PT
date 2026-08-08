@@ -131,14 +131,18 @@ export default function AdminEstamosAJogarPage() {
       sort_order: form.sort_order,
     };
 
-    const { error } = editingId
-      ? await supabase.from("now_playing").update(payload).eq("id", editingId)
+    const { error, data } = editingId
+      ? await supabase.from("now_playing").update(payload).eq("id", editingId).select("id")
       : await supabase.from("now_playing").insert(payload);
 
-    if (error) setError("Não foi possível guardar. Tenta novamente.");
+    const rowsAffectedIssue = editingId && !error && (!data || data.length === 0);
+
+    if (error || rowsAffectedIssue) {
+      setError("Não foi possível guardar. Tenta novamente.");
+    }
 
     setSaving(false);
-    if (!error) {
+    if (!error && !rowsAffectedIssue) {
       cancelForm();
       await loadAll();
     }

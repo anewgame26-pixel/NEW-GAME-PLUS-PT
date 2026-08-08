@@ -80,6 +80,7 @@ export default function AdminGlossarioPage() {
             sort_order: form.sort_order,
           })
           .eq("id", editingId)
+          .select("id")
       : await supabase.from("glossary_terms").insert({
           term: form.term.trim(),
           definition: form.definition.trim(),
@@ -92,6 +93,11 @@ export default function AdminGlossarioPage() {
       setError(
         editingId ? "Não foi possível guardar as alterações." : "Não foi possível criar o termo."
       );
+      return;
+    }
+
+    if (editingId && (!result.data || result.data.length === 0)) {
+      setError("Não foi possível guardar as alterações — este termo pode já não existir.");
       return;
     }
 

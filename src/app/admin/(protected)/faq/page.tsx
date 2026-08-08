@@ -80,6 +80,7 @@ export default function AdminFAQPage() {
             sort_order: form.sort_order,
           })
           .eq("id", editingId)
+          .select("id")
       : await supabase.from("faq_items").insert({
           question: form.question.trim(),
           answer: form.answer.trim(),
@@ -94,6 +95,11 @@ export default function AdminFAQPage() {
           ? "Não foi possível guardar as alterações."
           : "Não foi possível criar a pergunta."
       );
+      return;
+    }
+
+    if (editingId && (!result.data || result.data.length === 0)) {
+      setError("Não foi possível guardar as alterações — esta pergunta pode já não existir.");
       return;
     }
 
