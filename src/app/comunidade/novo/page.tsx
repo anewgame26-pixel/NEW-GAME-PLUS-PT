@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Honeypot } from "@/components/forms/Honeypot";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { useCommunityAuth } from "@/lib/hooks/useCommunityAuth";
 
@@ -23,6 +24,7 @@ export default function NovoTopicoPage() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [gameId, setGameId] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +47,7 @@ export default function NovoTopicoPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!user || !title.trim() || !body.trim()) return;
+    if (honeypot) return; // preenchido só por bots — ignora silenciosamente
 
     setSaving(true);
     setError(null);
@@ -90,6 +93,7 @@ export default function NovoTopicoPage() {
           ) : (
             <Card className="p-6">
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <Honeypot value={honeypot} onChange={setHoneypot} />
                 <label className="flex flex-col gap-1.5">
                   <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
                     Título

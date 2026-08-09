@@ -5,6 +5,7 @@ import { Check, Flag } from "lucide-react";
 import { Game } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Honeypot } from "@/components/forms/Honeypot";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 interface ReportFormProps {
@@ -16,6 +17,7 @@ export function ReportForm({ games }: ReportFormProps) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +25,7 @@ export function ReportForm({ games }: ReportFormProps) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!location.trim() || !description.trim()) return;
+    if (honeypot) return; // preenchido só por bots — ignora silenciosamente
 
     setSubmitting(true);
     setError(null);
@@ -67,6 +70,7 @@ export function ReportForm({ games }: ReportFormProps) {
   return (
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <Honeypot value={honeypot} onChange={setHoneypot} />
         <label className="flex flex-col gap-1.5">
           <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
             Jogo relacionado (opcional)

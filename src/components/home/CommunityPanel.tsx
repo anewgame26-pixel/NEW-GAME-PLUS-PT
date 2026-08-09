@@ -6,6 +6,7 @@ import { MessageCircle, Check } from "lucide-react";
 import { CommunityPost } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Honeypot } from "@/components/forms/Honeypot";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 interface CommunityPanelProps {
@@ -17,10 +18,12 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeError, setSubscribeError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubscribe = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubscribeError(null);
+    if (honeypot) return; // preenchido só por bots — ignora silenciosamente
 
     const form = e.currentTarget;
     const email = (new FormData(form).get("email") as string)?.trim().toLowerCase();
@@ -112,6 +115,7 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
             </div>
           ) : (
             <form onSubmit={handleSubscribe} className="mt-4 flex flex-col gap-2">
+              <Honeypot value={honeypot} onChange={setHoneypot} />
               <div className="flex gap-2">
                 <input
                   type="email"
