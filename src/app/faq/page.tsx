@@ -16,8 +16,24 @@ export const metadata: Metadata = {
 export default async function FAQPage() {
   const faqItems = await getFaqItems();
 
+  // Dados estruturados (JSON-LD) — ajuda o Google a mostrar as perguntas
+  // e respostas diretamente nos resultados de pesquisa (e a IA a citá-las).
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Header />
       <GameBreadcrumb items={[{ label: "FAQ" }]} />
       <main>

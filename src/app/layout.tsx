@@ -30,12 +30,26 @@ export const metadata: Metadata = {
     "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "NewGame+ PT",
+  url: "https://newgameplus.pt",
+  logo: "https://newgameplus.pt/logo-icon.png",
+  description:
+    "Plataforma portuguesa de reviews, guias e roadmaps de troféus para videojogos.",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-PT" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="font-body antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         <FavoritesProvider>{children}</FavoritesProvider>
         <Analytics />
       </body>

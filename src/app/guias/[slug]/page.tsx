@@ -61,8 +61,35 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
   const similarGames = await getGamesByIds(game.similarGameIds);
 
+  // Dados estruturados (JSON-LD) — informação invisível no ecrã que ajuda
+  // o Google (e a IA de pesquisa) a perceber que esta página é uma
+  // análise, com nota, autor e do que é que trata. Não muda nada visual.
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: {
+      "@type": "VideoGame",
+      name: game.title,
+      image: game.coverUrl,
+      ...(game.developer ? { author: { "@type": "Organization", name: game.developer } } : {}),
+    },
+    author: { "@type": "Organization", name: "NewGame+ PT" },
+    publisher: { "@type": "Organization", name: "NewGame+ PT" },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: detail.overallScore,
+      bestRating: 10,
+      worstRating: 0,
+    },
+    reviewBody: detail.review.verdict || detail.review.intro,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+      />
       <Header />
       <GameBreadcrumb
         items={[
