@@ -39,9 +39,24 @@ export async function generateMetadata({ params }: GuiaPageProps): Promise<Metad
     return { title: "Guia não encontrada | NewGame+" };
   }
 
+  const title = `${game.title} — Guia Completo e Vale a Pena a Platina?`;
+  const description = game.synopsis;
+  const image = game.heroImageUrl ?? game.coverUrl;
+
   return {
-    title: `${game.title} — Guia Completo e Vale a Pena a Platina? | NewGame+`,
-    description: game.synopsis,
+    title: `${title} | NewGame+`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: image }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
   };
 }
 

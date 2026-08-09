@@ -3,7 +3,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card } from "@/components/ui/Card";
 
 export const metadata: Metadata = {
   title: "Termos de Utilização | NewGame+",
@@ -17,19 +16,10 @@ export default function TermosPage() {
       <main>
         <PageHeader
           title="Termos de Utilização"
-          description="Última atualização: [a definir antes de publicares o site]"
+          description="Última atualização: 8 de agosto de 2026"
         />
 
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
-          <Card className="mb-6 border-gold/30 bg-gold/5 p-4">
-            <p className="text-sm text-ink">
-              ⚠️ Este texto é um modelo genérico de ponto de partida, não aconselhamento
-              jurídico. Recomenda-se revisão por um advogado antes de publicares o site,
-              especialmente se vieres a ter contas de utilizador, comentários públicos ou
-              qualquer forma de monetização.
-            </p>
-          </Card>
-
           <div className="flex flex-col gap-6 text-sm leading-relaxed text-ink-muted">
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">

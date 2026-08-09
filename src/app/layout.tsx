@@ -25,9 +25,26 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://newgameplus.pt"),
   title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
   description:
     "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
+  openGraph: {
+    type: "website",
+    locale: "pt_PT",
+    siteName: "NewGame+ PT",
+    title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
+    description:
+      "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
+    images: [{ url: "/logo-ngplus.png", width: 1024, height: 1024, alt: "NewGame+ PT" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
+    description:
+      "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
+    images: ["/logo-ngplus.png"],
+  },
 };
 
 const organizationSchema = {
