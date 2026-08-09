@@ -6,6 +6,7 @@ import { MessageCircle, Check } from "lucide-react";
 import { CommunityPost } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 interface CommunityPanelProps {
   posts: CommunityPost[];
@@ -14,10 +15,36 @@ interface CommunityPanelProps {
 
 export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
   const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeError, setSubscribeError] = useState<string | null>(null);
 
-  const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubscribe = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubscribeError(null);
+
+    const form = e.currentTarget;
+    const email = (new FormData(form).get("email") as string)?.trim().toLowerCase();
+    if (!email) return;
+
+    setSubscribing(true);
+    const supabase = createBrowserSupabaseClient();
+    const { error } = await supabase.from("newsletter_subscribers").insert({ email });
+    setSubscribing(false);
+
+    if (error) {
+      // Código 23505 = "unique_violation" — este email já estava inscrito.
+      // Não é bem um erro do ponto de vista de quem está a subscrever,
+      // por isso mostramos a mesma mensagem de sucesso.
+      if (error.code === "23505") {
+        setSubscribed(true);
+      } else {
+        setSubscribeError("Não foi possível subscrever. Tenta novamente.");
+      }
+      return;
+    }
+
     setSubscribed(true);
+    form.reset();
   };
 
   return (
@@ -81,19 +108,23 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
           {subscribed ? (
             <div className="mt-4 flex items-center gap-2 rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 text-sm text-emerald-400">
               <Check width={15} height={15} />
-              Subscrito! Verifica o teu email.
+              Subscrito! Vais receber as novidades no teu email.
             </div>
           ) : (
-            <form onSubmit={handleSubscribe} className="mt-4 flex gap-2">
-              <input
-                type="email"
-                required
-                placeholder="O teu email..."
-                className="h-10 min-w-0 flex-1 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
-              />
-              <Button type="submit" size="sm">
-                Subscrever
-              </Button>
+            <form onSubmit={handleSubscribe} className="mt-4 flex flex-col gap-2">
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="O teu email..."
+                  className="h-10 min-w-0 flex-1 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+                />
+                <Button type="submit" size="sm" disabled={subscribing}>
+                  {subscribing ? "..." : "Subscrever"}
+                </Button>
+              </div>
+              {subscribeError && <p className="text-xs text-primary-light">{subscribeError}</p>}
             </form>
           )}
 
