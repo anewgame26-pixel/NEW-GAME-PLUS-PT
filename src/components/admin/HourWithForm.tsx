@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, Trash2, Plus, X } from "lucide-react";
-import { slugify } from "@/lib/utils";
+import { slugify, platformLabel } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 
 interface HourWithFormProps {
   articleId?: string;
@@ -80,6 +81,20 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
 
   function updateTitle(title: string) {
     setForm((f) => ({ ...f, title, slug: slugTouched ? f.slug : slugify(title) }));
+  }
+
+  function handleIgdbImport(result: IgdbImportResult) {
+    setForm((f) => ({
+      ...f,
+      // Num artigo já criado, não tocamos no título/slug — mudar o link
+      // partiria referências já partilhadas. Só ao criar de raiz.
+      ...(articleId
+        ? {}
+        : { title: result.title, slug: slugTouched ? f.slug : slugify(result.title) }),
+      coverUrl: result.coverUrl ?? f.coverUrl,
+      heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
+      platform: result.platforms.length ? result.platforms.map(platformLabel).join(", ") : f.platform,
+    }));
   }
 
   function updateListItem(field: "pros" | "contras", index: number, value: string) {
@@ -239,6 +254,8 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
       )}
 
       <div className="flex flex-col gap-5">
+        <IgdbImportBox onImport={handleIgdbImport} isExistingGame={Boolean(articleId)} />
+
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-1.5">
             <span className={labelClass}>Título do jogo</span>
