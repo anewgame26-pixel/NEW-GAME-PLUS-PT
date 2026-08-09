@@ -10,10 +10,9 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Antes da Platina", href: "/antes-da-platina" },
-  { label: "Jogos", href: "/jogos" },
-  { label: "Rankings", href: "/rankings" },
-  { label: "Votar", href: "/votar" },
-  { label: "Comunidade", href: "/comunidade" },
+  { label: "Uma Hora Com...", href: "/uma-hora-com" },
+  { label: "Retro+", href: "/retro" },
+  { label: "Descobertas+", href: "/descobertas" },
   { label: "O Covil", href: "/covil" },
 ];
 

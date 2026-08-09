@@ -21,7 +21,7 @@ export function LatestBeforePlatinum({ episodes, games }: LatestBeforePlatinumPr
           Últimos Antes da Platina
         </h2>
         <Link
-          href="/antes-da-platina"
+          href="/antes-da-platina/episodios"
           className="text-xs font-medium text-primary hover:text-primary-light"
         >
           Ver todos
