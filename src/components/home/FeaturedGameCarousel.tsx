@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode, type TouchEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Game } from "@/types";
-import { Badge } from "@/components/ui/Badge";
 import { FeaturedGameStats } from "@/components/home/FeaturedGameStats";
 
 interface FeaturedGameCarouselProps {
@@ -127,41 +126,44 @@ export function FeaturedGameCarousel({
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-xl">
-              <Badge tone="gold" className="mb-3 w-fit">
-                <Star width={11} height={11} className="fill-current" />
-                Destaques
-              </Badge>
+            <div className="flex max-w-xl gap-3.5">
+              <div className="w-1 shrink-0 rounded-full bg-primary" aria-hidden />
 
-              {count > 1 && (
-                <div className="mb-3 flex items-center gap-1.5">
-                  {games.map((g, i) => (
-                    <button
-                      key={g.id}
-                      type="button"
-                      aria-label={`Ver ${g.title}`}
-                      aria-current={i === index}
-                      onClick={() => goTo(i)}
-                      className={
-                        i === index
-                          ? "h-1.5 w-4 rounded-full bg-white transition-all"
-                          : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
-                      }
-                    />
-                  ))}
-                </div>
-              )}
-
-              <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
-                <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
-                  {game.title}
+              <div>
+                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-light">
+                  Seleção NG+
                 </p>
-                <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
-              </Link>
 
-              {search && (
-                <div className="mt-4 w-full max-w-md rounded-sm shadow-glow">{search}</div>
-              )}
+                {count > 1 && (
+                  <div className="mb-3 flex items-center gap-1.5">
+                    {games.map((g, i) => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        aria-label={`Ver ${g.title}`}
+                        aria-current={i === index}
+                        onClick={() => goTo(i)}
+                        className={
+                          i === index
+                            ? "h-1.5 w-4 rounded-full bg-white transition-all"
+                            : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
+                  <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
+                    {game.title}
+                  </p>
+                  <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
+                </Link>
+
+                {search && (
+                  <div className="mt-4 w-full max-w-md rounded-sm shadow-glow">{search}</div>
+                )}
+              </div>
             </div>
 
             <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">
