@@ -274,3 +274,33 @@ export interface VotingCandidate {
   game: Game;
   votesCount: number;
 }
+
+/**
+ * Um artigo "Uma Hora Com..." — jogámos um jogo durante uma hora e demos
+ * a primeira impressão. Propositadamente separado da tabela "games":
+ * pode cobrir jogos que ainda não têm (ou nunca vão ter) um perfil de
+ * platina completo no site.
+ */
+export interface HourWithArticle {
+  id: string;
+  slug: string;
+  title: string;
+  platform: string | null;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  datePlayed: string | null;
+  youtubeUrl: string | null;
+  firstImpression: string;
+  gameplay: string;
+  historia: string;
+  graficos: string;
+  somMusica: string;
+  performance: string;
+  pros: string[];
+  contras: string[];
+  veredicto: string;
+  /** Resposta a "depois de uma hora, queremos continuar a jogar?". null = ainda por decidir. */
+  continuarAJogar: boolean | null;
+  isPublished: boolean;
+  createdAt: string;
+}

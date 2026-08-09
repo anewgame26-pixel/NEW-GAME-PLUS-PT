@@ -76,3 +76,18 @@ export function platformLabel(platform: string) {
   };
   return map[platform] ?? platform.toUpperCase();
 }
+
+/**
+ * Extrai o ID de um vídeo do YouTube a partir de vários formatos de link
+ * possíveis (youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...)
+ * e devolve o link pronto a usar num <iframe>. Devolve null se o link não
+ * for reconhecido, para nunca partir a página por causa de um link mal
+ * colado no admin.
+ */
+export function getYoutubeEmbedUrl(url: string | null): string | null {
+  if (!url) return null;
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
