@@ -66,18 +66,33 @@ export function Footer() {
             </h3>
             <div className="mt-4 flex items-center gap-2.5">
               <a
-                href="#"
+                href="https://www.youtube.com/@NGPLUSPT"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="YouTube"
                 className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted hover:border-primary hover:text-primary"
               >
                 <Youtube width={16} height={16} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/anewgameplus"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted hover:border-primary hover:text-primary"
               >
                 <Instagram width={16} height={16} />
+              </a>
+              <a
+                href="https://www.tiktok.com/@ngmaispt"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted hover:border-primary hover:text-primary"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M16.5 2h-3.2v14.1c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .6.05.9.14V10.3a6 6 0 0 0-.9-.07 5.9 5.9 0 0 0-5.9 5.9A5.9 5.9 0 0 0 10.6 22a5.9 5.9 0 0 0 5.9-5.9V8.4a8.1 8.1 0 0 0 4.7 1.5V6.7a4.8 4.8 0 0 1-4.7-4.7Z" />
+                </svg>
               </a>
               <a
                 href="#"

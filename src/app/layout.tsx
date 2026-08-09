@@ -55,6 +55,26 @@ const organizationSchema = {
   logo: "https://newgameplus.pt/logo-icon.png",
   description:
     "Plataforma portuguesa de reviews, guias e roadmaps de troféus para videojogos.",
+  sameAs: [
+    "https://www.youtube.com/@NGPLUSPT",
+    "https://www.instagram.com/anewgameplus",
+    "https://www.tiktok.com/@ngmaispt",
+  ],
+};
+
+// Permite que o Google mostre uma caixa de pesquisa diretamente por
+// baixo do link do site nos resultados de pesquisa ("sitelinks search
+// box"), em vez da pessoa ter de entrar no site primeiro para procurar.
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "NewGame+ PT",
+  url: "https://newgameplus.pt",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://newgameplus.pt/jogos?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({
@@ -66,6 +86,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <FavoritesProvider>{children}</FavoritesProvider>
         <Analytics />

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import { Search, Menu, X, Youtube, Instagram, User } from "lucide-react";
@@ -45,14 +44,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center px-4 lg:px-8">
-        <div className="flex flex-1 items-center">
-          <Link href="/" className="flex items-center gap-2" aria-label="Página inicial da NewGame+">
-            <Image src="/logo-icon.png" alt="" width={26} height={26} className="shrink-0" />
-            <span className="hidden font-display text-sm font-bold uppercase tracking-wide text-ink sm:inline">
-              NewGame+
-            </span>
-          </Link>
-        </div>
+        <div className="hidden flex-1 lg:block" aria-hidden />
 
         <nav className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map((link) => (
@@ -77,8 +69,17 @@ export function Header() {
             <Search width={16} height={16} />
           </button>
           <div className="hidden items-center gap-2 lg:flex">
-            <SocialIcon icon={<Youtube width={15} height={15} />} label="YouTube" />
-            <SocialIcon icon={<Instagram width={15} height={15} />} label="Instagram" />
+            <SocialIcon
+              icon={<Youtube width={15} height={15} />}
+              label="YouTube"
+              href="https://www.youtube.com/@NGPLUSPT"
+            />
+            <SocialIcon
+              icon={<Instagram width={15} height={15} />}
+              label="Instagram"
+              href="https://www.instagram.com/anewgameplus"
+            />
+            <SocialIcon icon={<TikTokIcon />} label="TikTok" href="https://www.tiktok.com/@ngmaispt" />
           </div>
           {authChecked && (
             <Link
@@ -141,14 +142,26 @@ export function Header() {
   );
 }
 
-function SocialIcon({ icon, label }: { icon: ReactNode; label: string }) {
+function SocialIcon({ icon, label, href }: { icon: ReactNode; label: string; href: string }) {
   return (
     <a
-      href="#"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={label}
       className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted transition-colors hover:border-border-light hover:text-ink"
     >
       {icon}
     </a>
+  );
+}
+
+// A lucide-react não tem ícone de TikTok, por isso desenhamos um simples
+// à mão, do mesmo tamanho e estilo dos outros (YouTube/Instagram).
+function TikTokIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.5 2h-3.2v14.1c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .6.05.9.14V10.3a6 6 0 0 0-.9-.07 5.9 5.9 0 0 0-5.9 5.9A5.9 5.9 0 0 0 10.6 22a5.9 5.9 0 0 0 5.9-5.9V8.4a8.1 8.1 0 0 0 4.7 1.5V6.7a4.8 4.8 0 0 1-4.7-4.7Z" />
+    </svg>
   );
 }
