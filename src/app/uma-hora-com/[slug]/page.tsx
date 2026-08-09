@@ -7,10 +7,17 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { getHourWithArticleBySlug } from "@/lib/data/hour-with";
 import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { RichText } from "@/components/ui/RichText";
 import type { HourWithArticle } from "@/types";
 
 interface ArtigoPageProps {
   params: Promise<{ slug: string }>;
+}
+
+/** Tira as etiquetas HTML do texto rico, para usar em descrições/schema
+ * (títulos de pesquisa do Google não devem ter <p>, <strong>, etc.). */
+function stripHtml(html: string) {
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 export async function generateMetadata({ params }: ArtigoPageProps): Promise<Metadata> {
@@ -22,7 +29,7 @@ export async function generateMetadata({ params }: ArtigoPageProps): Promise<Met
   }
 
   const title = `Uma Hora Com: ${article.title} — Vale a Pena?`;
-  const description = article.firstImpression.slice(0, 155);
+  const description = stripHtml(article.firstImpression).slice(0, 155);
   const image = article.heroImageUrl ?? article.coverUrl ?? undefined;
 
   return {
@@ -63,7 +70,7 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
     "@context": "https://schema.org",
     "@type": "Article",
     headline: `Uma Hora Com: ${article.title}`,
-    description: article.firstImpression.slice(0, 200),
+    description: stripHtml(article.firstImpression).slice(0, 200),
     ...(heroImage ? { image: [heroImage] } : {}),
     author: { "@type": "Organization", name: "NewGame+ PT" },
     publisher: { "@type": "Organization", name: "NewGame+ PT" },
@@ -142,7 +149,9 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
           )}
 
           {article.firstImpression && (
-            <p className="mt-6 text-[15px] leading-relaxed text-ink">{article.firstImpression}</p>
+            <div className="mt-6 text-[15px] leading-relaxed text-ink">
+              <RichText html={article.firstImpression} />
+            </div>
           )}
 
           {SECTIONS.map(
@@ -152,9 +161,10 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
                   <h2 className="mb-2 font-display text-base font-bold uppercase tracking-wide text-ink">
                     {section.label}
                   </h2>
-                  <p className="text-sm leading-relaxed text-ink-muted">
-                    {article[section.field] as string}
-                  </p>
+                  <RichText
+                    html={article[section.field] as string}
+                    className="text-sm leading-relaxed text-ink-muted"
+                  />
                 </div>
               )
           )}
@@ -199,7 +209,7 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
               <h2 className="mb-2 font-display text-base font-bold uppercase tracking-wide text-ink">
                 Veredicto
               </h2>
-              <p className="text-sm leading-relaxed text-ink-muted">{article.veredicto}</p>
+              <RichText html={article.veredicto} className="text-sm leading-relaxed text-ink-muted" />
             </div>
           )}
         </div>

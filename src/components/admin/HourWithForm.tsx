@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Check, Trash2, Plus, X } from "lucide-react";
+import { Loader2, Check, Trash2 } from "lucide-react";
 import { slugify, platformLabel } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { StringListEditor } from "@/components/admin/StringListEditor";
 
 interface HourWithFormProps {
   articleId?: string;
@@ -97,22 +99,6 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
     }));
   }
 
-  function updateListItem(field: "pros" | "contras", index: number, value: string) {
-    setForm((f) => {
-      const next = [...f[field]];
-      next[index] = value;
-      return { ...f, [field]: next };
-    });
-  }
-
-  function addListItem(field: "pros" | "contras") {
-    setForm((f) => ({ ...f, [field]: [...f[field], ""] }));
-  }
-
-  function removeListItem(field: "pros" | "contras", index: number) {
-    setForm((f) => ({ ...f, [field]: f[field].filter((_, i) => i !== index) }));
-  }
-
   async function handleSave() {
     if (!form.title.trim() || !form.slug.trim()) {
       setError("Preenche pelo menos o Título e o Slug.");
@@ -194,8 +180,6 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
 
   const inputClass =
     "h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary";
-  const textareaClass =
-    "min-h-[90px] rounded-sm border border-border bg-bg-surface2 px-3 py-2 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary";
   const labelClass = "text-xs font-medium uppercase tracking-wide text-ink-dim";
 
   return (
@@ -330,10 +314,9 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Primeira impressão</span>
-          <textarea
+          <RichTextEditor
             value={form.firstImpression}
-            onChange={(e) => setForm((f) => ({ ...f, firstImpression: e.target.value }))}
-            className={textareaClass}
+            onChange={(html) => setForm((f) => ({ ...f, firstImpression: html }))}
           />
         </label>
 
@@ -349,53 +332,32 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
           ).map(([field, label]) => (
             <label key={field} className="flex flex-col gap-1.5">
               <span className={labelClass}>{label}</span>
-              <textarea
+              <RichTextEditor
                 value={form[field]}
-                onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
-                className={textareaClass}
+                onChange={(html) => setForm((f) => ({ ...f, [field]: html }))}
               />
             </label>
           ))}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {(["pros", "contras"] as const).map((field) => (
-            <div key={field} className="flex flex-col gap-2">
-              <span className={labelClass}>{field === "pros" ? "Pontos fortes" : "Pontos fracos"}</span>
-              {form[field].map((item, i) => (
-                <div key={i} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={item}
-                    onChange={(e) => updateListItem(field, i, e.target.value)}
-                    className={`${inputClass} flex-1`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeListItem(field, i)}
-                    className="flex h-11 w-11 items-center justify-center rounded-sm border border-border text-ink-muted hover:border-primary hover:text-primary"
-                  >
-                    <X width={15} height={15} />
-                  </button>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => addListItem(field)}
-                className="flex w-fit items-center gap-1 text-xs font-medium text-primary hover:text-primary-light"
-              >
-                <Plus width={13} height={13} /> Adicionar
-              </button>
-            </div>
-          ))}
+          <StringListEditor
+            label="Pontos fortes"
+            values={form.pros}
+            onChange={(pros) => setForm((f) => ({ ...f, pros }))}
+          />
+          <StringListEditor
+            label="Pontos fracos"
+            values={form.contras}
+            onChange={(contras) => setForm((f) => ({ ...f, contras }))}
+          />
         </div>
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Veredicto</span>
-          <textarea
+          <RichTextEditor
             value={form.veredicto}
-            onChange={(e) => setForm((f) => ({ ...f, veredicto: e.target.value }))}
-            className={textareaClass}
+            onChange={(html) => setForm((f) => ({ ...f, veredicto: html }))}
           />
         </label>
 
