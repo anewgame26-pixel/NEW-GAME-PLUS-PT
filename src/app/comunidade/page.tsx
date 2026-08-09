@@ -105,7 +105,15 @@ export default function ComunidadePage() {
           </div>
 
           {loading ? (
-            <p className="py-8 text-center text-sm text-ink-muted">A carregar...</p>
+            <div className="flex flex-col gap-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-sm border border-border bg-bg-surface p-5">
+                  <div className="h-4 w-2/3 rounded bg-bg-surface2" />
+                  <div className="mt-3 h-3 w-full rounded bg-bg-surface2" />
+                  <div className="mt-2 h-3 w-4/5 rounded bg-bg-surface2" />
+                </div>
+              ))}
+            </div>
           ) : threads.length === 0 ? (
             <Card className="p-6">
               <p className="text-sm text-ink-muted">

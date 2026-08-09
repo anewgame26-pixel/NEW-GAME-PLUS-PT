@@ -193,7 +193,12 @@ export function ThreadDetail({ threadId }: { threadId: string }) {
           </Link>
 
           {!thread ? (
-            <p className="mt-6 text-sm text-ink-muted">A carregar...</p>
+            <div className="mt-4 animate-pulse rounded-sm border border-border bg-bg-surface p-6">
+              <div className="h-5 w-3/4 rounded bg-bg-surface2" />
+              <div className="mt-4 h-3 w-full rounded bg-bg-surface2" />
+              <div className="mt-2 h-3 w-11/12 rounded bg-bg-surface2" />
+              <div className="mt-2 h-3 w-2/3 rounded bg-bg-surface2" />
+            </div>
           ) : (
             <>
               <Card className="mt-4 p-6">
