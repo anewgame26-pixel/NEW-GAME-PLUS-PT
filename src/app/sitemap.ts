@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllGameSlugs } from "@/lib/data/games";
 import { getAllHourWithSlugs } from "@/lib/data/hour-with";
+import { getAllRetroSlugs } from "@/lib/data/retro";
 import { rankingConfigs } from "@/data/mock/rankings-config";
 
 const SITE_URL = "https://newgameplus.pt";
@@ -20,6 +21,7 @@ const SITE_URL = "https://newgameplus.pt";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const gameSlugs = await getAllGameSlugs();
   const hourWithSlugs = await getAllHourWithSlugs();
+  const retroSlugs = await getAllRetroSlugs();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1 },
@@ -59,5 +61,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...gamePages, ...rankingPages, ...hourWithPages];
+  const retroPages: MetadataRoute.Sitemap = retroSlugs.map((slug) => ({
+    url: `${SITE_URL}/retro/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...gamePages, ...rankingPages, ...hourWithPages, ...retroPages];
 }

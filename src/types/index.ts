@@ -304,3 +304,25 @@ export interface HourWithArticle {
   isPublished: boolean;
   createdAt: string;
 }
+
+/**
+ * Um artigo Retro+ — jogos que merecem ser revisitados. Tal como o "Uma
+ * Hora Com", é independente da tabela "games".
+ */
+export interface RetroArticle {
+  id: string;
+  slug: string;
+  title: string;
+  platform: string | null;
+  releaseYear: number | null;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  body: string;
+  pros: string[];
+  contras: string[];
+  veredicto: string;
+  /** Resposta a "ainda vale a pena jogar isto hoje?". null = ainda por decidir. */
+  valeAPenaHoje: boolean | null;
+  isPublished: boolean;
+  createdAt: string;
+}

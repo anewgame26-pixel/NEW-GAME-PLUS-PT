@@ -22,6 +22,7 @@ import { GameEngagementBar } from "@/components/game/GameEngagementBar";
 import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games";
 import { getGameDetail } from "@/lib/data/game-details";
 import { getHourWithArticles } from "@/lib/data/hour-with";
+import { getRetroArticles } from "@/lib/data/retro";
 import { normalizeTitle } from "@/lib/utils";
 import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 
@@ -87,6 +88,10 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   const matchingArticle = hourWithArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(game.title)
   );
+  const retroArticles = await getRetroArticles();
+  const matchingRetro = retroArticles.find(
+    (a) => normalizeTitle(a.title) === normalizeTitle(game.title)
+  );
 
   // Dados estruturados (JSON-LD) — informação invisível no ecrã que ajuda
   // o Google (e a IA de pesquisa) a perceber que esta página é uma
@@ -134,6 +139,17 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
               icon="clock"
               title="Já jogámos isto durante 1 hora, antes de platinar"
               description="Lê a primeira impressão em Uma Hora Com..."
+            />
+          </div>
+        )}
+
+        {matchingRetro && (
+          <div className={matchingArticle ? "pt-2" : "pt-5"}>
+            <CrossLinkBanner
+              href={`/retro/${matchingRetro.slug}`}
+              icon="history"
+              title="Também escrevemos sobre isto em Retro+"
+              description="Vê se ainda vale a pena jogar hoje"
             />
           </div>
         )}
