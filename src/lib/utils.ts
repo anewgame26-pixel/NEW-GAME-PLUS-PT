@@ -78,6 +78,19 @@ export function platformLabel(platform: string) {
 }
 
 /**
+ * Normaliza um título para comparação (usado para ligar automaticamente
+ * um jogo de "Antes da Platina" a um artigo de "Uma Hora Com" com o
+ * mesmo nome, mesmo que a acentuação ou maiúsculas não batam certo).
+ */
+export function normalizeTitle(title: string) {
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+/**
  * Extrai o ID de um vídeo do YouTube a partir de vários formatos de link
  * possíveis (youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...)
  * e devolve o link pronto a usar num <iframe>. Devolve null se o link não

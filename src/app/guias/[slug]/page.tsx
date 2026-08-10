@@ -21,6 +21,9 @@ import { VideoEmbed } from "@/components/game/VideoEmbed";
 import { GameEngagementBar } from "@/components/game/GameEngagementBar";
 import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games";
 import { getGameDetail } from "@/lib/data/game-details";
+import { getHourWithArticles } from "@/lib/data/hour-with";
+import { normalizeTitle } from "@/lib/utils";
+import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 
 interface GuiaPageProps {
   params: Promise<{ slug: string }>;
@@ -76,6 +79,15 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
   const similarGames = await getGamesByIds(game.similarGameIds);
 
+  // Se existir um artigo "Uma Hora Com" sobre o mesmo jogo, ligamos as
+  // duas páginas uma à outra (comparação por título, ignorando
+  // acentos/maiúsculas, já que não há uma referência direta entre as
+  // duas tabelas).
+  const hourWithArticles = await getHourWithArticles();
+  const matchingArticle = hourWithArticles.find(
+    (a) => normalizeTitle(a.title) === normalizeTitle(game.title)
+  );
+
   // Dados estruturados (JSON-LD) — informação invisível no ecrã que ajuda
   // o Google (e a IA de pesquisa) a perceber que esta página é uma
   // análise, com nota, autor e do que é que trata. Não muda nada visual.
@@ -114,6 +126,17 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
       />
       <main>
         <GameHero game={game} roadmapHref={detail.roadmapHref} />
+
+        {matchingArticle && (
+          <div className="pt-5">
+            <CrossLinkBanner
+              href={`/uma-hora-com/${matchingArticle.slug}`}
+              icon="clock"
+              title="Já jogámos isto durante 1 hora, antes de platinar"
+              description="Lê a primeira impressão em Uma Hora Com..."
+            />
+          </div>
+        )}
 
         <GameOverallRating score={detail.overallScore} breakdown={detail.ratingBreakdown} />
 

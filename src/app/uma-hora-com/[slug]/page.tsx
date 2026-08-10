@@ -6,8 +6,10 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { getHourWithArticleBySlug } from "@/lib/data/hour-with";
-import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { getGames } from "@/lib/data/games";
+import { getYoutubeEmbedUrl, normalizeTitle } from "@/lib/utils";
 import { RichText } from "@/components/ui/RichText";
+import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 import type { HourWithArticle } from "@/types";
 
 interface ArtigoPageProps {
@@ -66,6 +68,11 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
   const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
   const heroImage = article.heroImageUrl ?? article.coverUrl;
 
+  // Se o mesmo jogo já tiver um perfil completo em "Antes da Platina",
+  // ligamos as duas páginas uma à outra.
+  const games = await getGames();
+  const matchingGame = games.find((g) => normalizeTitle(g.title) === normalizeTitle(article.title));
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -109,6 +116,18 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
             {article.platform}
             {article.datePlayed ? ` · ${new Date(article.datePlayed).toLocaleDateString("pt-PT")}` : ""}
           </p>
+
+          {matchingGame && (
+            <div className="mt-4">
+              <CrossLinkBanner
+                bare
+                href={`/guias/${matchingGame.slug}`}
+                icon="trophy"
+                title="Também já platinámos este jogo"
+                description="Lê a análise completa em Antes da Platina"
+              />
+            </div>
+          )}
 
           {embedUrl && (
             <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
