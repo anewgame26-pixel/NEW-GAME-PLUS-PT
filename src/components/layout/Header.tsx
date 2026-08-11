@@ -17,7 +17,7 @@ const NAV_LINKS = [
   { label: "Uma Hora Com...", href: "/uma-hora-com" },
   { label: "Retro+", href: "/retro" },
   { label: "Descobertas+", href: "/descobertas" },
-  { label: "O Covil", href: "/covil" },
+  { label: "Sobre Nós", href: "/covil" },
 ];
 
 export function Header() {

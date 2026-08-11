@@ -141,7 +141,7 @@ export default function AdminEquipaPage() {
             Equipa
           </h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Membros visíveis em {'"'}Os Caçadores de Platina{'"'} na página O Covil.
+            Membros visíveis em {'"'}A Equipa{'"'} na página Sobre Nós.
           </p>
         </div>
         {!isFormOpen && (

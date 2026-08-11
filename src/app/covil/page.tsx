@@ -13,7 +13,7 @@ import { getPlatformStats } from "@/lib/data/stats";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "O Covil | NewGame+",
+  title: "Sobre Nós | NewGame+",
   description:
     "Quem somos, porque existe a NewGame+ e quem está por detrás de cada review, roadmap e platina sofrida.",
 };
@@ -46,13 +46,13 @@ export default async function CovilPage() {
   return (
     <>
       <Header />
-      <GameBreadcrumb items={[{ label: "O Covil" }]} />
+      <GameBreadcrumb items={[{ label: "Sobre Nós" }]} />
       <main>
         <section className="relative overflow-hidden border-b border-border">
           <div className="absolute inset-0 bg-radial-fade" aria-hidden />
           <div className="relative mx-auto max-w-[1440px] px-4 py-14 text-center lg:px-8">
             <h1 className="font-display text-4xl font-bold uppercase tracking-wide text-ink sm:text-5xl">
-              O Covil
+              Sobre Nós
             </h1>
             <p className="mx-auto mt-4 max-w-xl font-display text-lg font-bold uppercase tracking-wide text-primary">
               Nós sofremos. <span className="text-ink">Tu escolhes melhor.</span>
@@ -86,7 +86,7 @@ export default async function CovilPage() {
           <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
             <div className="mb-6 text-center">
               <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
-                Os Caçadores de Platina
+                A Equipa
               </h2>
               <p className="mt-1 text-sm text-ink-muted">
                 A equipa por detrás de cada review, roadmap e vídeo Antes da Platina.
