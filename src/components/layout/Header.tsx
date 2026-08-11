@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { label: "Uma Hora Com...", href: "/uma-hora-com" },
   { label: "Retro+", href: "/retro" },
   { label: "Descobertas+", href: "/descobertas" },
+  { label: "Top+", href: "/top" },
   { label: "Sobre Nós", href: "/covil" },
 ];
 
@@ -49,8 +50,6 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center px-4 lg:px-8">
-        <div className="hidden flex-1 lg:block" aria-hidden />
-
         <nav className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
