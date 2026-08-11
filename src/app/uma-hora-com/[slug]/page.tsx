@@ -8,6 +8,7 @@ import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { getHourWithArticleBySlug } from "@/lib/data/hour-with";
 import { getGames } from "@/lib/data/games";
 import { getRetroArticles } from "@/lib/data/retro";
+import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { getYoutubeEmbedUrl, normalizeTitle } from "@/lib/utils";
 import { RichText } from "@/components/ui/RichText";
 import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
@@ -77,6 +78,10 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
   const matchingRetro = retroArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
   );
+  const discoveryArticles = await getDiscoveryArticles();
+  const matchingDiscovery = discoveryArticles.find(
+    (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
+  );
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -142,6 +147,18 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
                 icon="history"
                 title="Também escrevemos sobre isto em Retro+"
                 description="Vê se ainda vale a pena jogar hoje"
+              />
+            </div>
+          )}
+
+          {matchingDiscovery && (
+            <div className={matchingGame || matchingRetro ? "mt-2" : "mt-4"}>
+              <CrossLinkBanner
+                bare
+                href={`/descobertas/${matchingDiscovery.slug}`}
+                icon="compass"
+                title="Este jogo também está em Descobertas+"
+                description="Lê porque vale a pena conhecer"
               />
             </div>
           )}

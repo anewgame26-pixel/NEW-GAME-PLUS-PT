@@ -7,11 +7,12 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 import { RichText } from "@/components/ui/RichText";
-import { getRetroArticleBySlug } from "@/lib/data/retro";
+import { getDiscoveryArticleBySlug } from "@/lib/data/discovery";
 import { getHourWithArticles } from "@/lib/data/hour-with";
+import { getRetroArticles } from "@/lib/data/retro";
 import { getGames } from "@/lib/data/games";
-import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { normalizeTitle } from "@/lib/utils";
+import { DISCOVERY_TAGS } from "@/types";
 
 interface ArtigoPageProps {
   params: Promise<{ slug: string }>;
@@ -23,13 +24,13 @@ function stripHtml(html: string) {
 
 export async function generateMetadata({ params }: ArtigoPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getRetroArticleBySlug(slug);
+  const article = await getDiscoveryArticleBySlug(slug);
 
   if (!article) {
     return { title: "Artigo não encontrado | NewGame+" };
   }
 
-  const title = `${article.title} — Ainda Vale a Pena em ${new Date().getFullYear()}?`;
+  const title = `${article.title} | Descobertas+`;
   const description = stripHtml(article.body).slice(0, 155);
   const image = article.heroImageUrl ?? article.coverUrl ?? undefined;
 
@@ -50,25 +51,26 @@ export async function generateMetadata({ params }: ArtigoPageProps): Promise<Met
   };
 }
 
-export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
+export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) {
   const { slug } = await params;
-  const article = await getRetroArticleBySlug(slug);
+  const article = await getDiscoveryArticleBySlug(slug);
 
   if (!article) notFound();
 
   const heroImage = article.heroImageUrl ?? article.coverUrl;
 
-  // Liga automaticamente a artigos "Uma Hora Com" e a jogos de "Antes da
-  // Platina" sobre o mesmo título, tal como já acontece nesses dois.
-  const [hourWithArticles, games] = await Promise.all([getHourWithArticles(), getGames()]);
+  const [hourWithArticles, retroArticles, games] = await Promise.all([
+    getHourWithArticles(),
+    getRetroArticles(),
+    getGames(),
+  ]);
   const matchingHourWith = hourWithArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
   );
-  const matchingGame = games.find((g) => normalizeTitle(g.title) === normalizeTitle(article.title));
-  const discoveryArticles = await getDiscoveryArticles();
-  const matchingDiscovery = discoveryArticles.find(
+  const matchingRetro = retroArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
   );
+  const matchingGame = games.find((g) => normalizeTitle(g.title) === normalizeTitle(article.title));
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -87,7 +89,7 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <Header />
-      <GameBreadcrumb items={[{ label: "Retro+", href: "/retro" }, { label: article.title }]} />
+      <GameBreadcrumb items={[{ label: "Descobertas+", href: "/descobertas" }, { label: article.title }]} />
       <main>
         {heroImage && (
           <div className="relative h-[260px] w-full sm:h-[360px]">
@@ -97,7 +99,9 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
         )}
 
         <div className="mx-auto max-w-3xl px-4 py-8 lg:px-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">Retro+</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+            Descobertas+
+          </p>
           <h1 className="mt-1 font-display text-3xl font-bold uppercase tracking-wide text-ink">
             {article.title}
           </h1>
@@ -105,6 +109,22 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
             {article.platform}
             {article.releaseYear ? ` · ${article.releaseYear}` : ""}
           </p>
+
+          {article.tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {article.tags.map((tag) => {
+                const meta = DISCOVERY_TAGS.find((t) => t.value === tag);
+                return (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-border bg-bg-surface px-2.5 py-0.5 text-[11px] text-ink-muted"
+                  >
+                    {meta?.label ?? tag}
+                  </span>
+                );
+              })}
+            </div>
+          )}
 
           <div className="mt-4 flex flex-col gap-2">
             {matchingGame && (
@@ -125,38 +145,36 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
                 description="Lê a primeira impressão em Uma Hora Com..."
               />
             )}
-            {matchingDiscovery && (
+            {matchingRetro && (
               <CrossLinkBanner
                 bare
-                href={`/descobertas/${matchingDiscovery.slug}`}
-                icon="compass"
-                title="Este jogo também está em Descobertas+"
-                description="Lê porque vale a pena conhecer"
+                href={`/retro/${matchingRetro.slug}`}
+                icon="history"
+                title="Também escrevemos sobre isto em Retro+"
+                description="Vê se ainda vale a pena jogar hoje"
               />
             )}
           </div>
 
-          {article.valeAPenaHoje !== null && (
+          {article.recomendamos !== null && (
             <div
               className={`mt-6 flex items-center gap-3 rounded-sm border p-4 ${
-                article.valeAPenaHoje ? "border-accent/40 bg-accent/10" : "border-primary/40 bg-primary/10"
+                article.recomendamos ? "border-accent/40 bg-accent/10" : "border-primary/40 bg-primary/10"
               }`}
             >
-              {article.valeAPenaHoje ? (
+              {article.recomendamos ? (
                 <ThumbsUp width={22} height={22} className="shrink-0 text-accent" />
               ) : (
                 <ThumbsDown width={22} height={22} className="shrink-0 text-primary" />
               )}
               <div>
-                <p className="text-xs uppercase tracking-wide text-ink-dim">
-                  Ainda vale a pena jogar isto hoje?
-                </p>
+                <p className="text-xs uppercase tracking-wide text-ink-dim">Recomendamos?</p>
                 <p
                   className={`font-display text-base font-bold uppercase ${
-                    article.valeAPenaHoje ? "text-accent" : "text-primary-light"
+                    article.recomendamos ? "text-accent" : "text-primary-light"
                   }`}
                 >
-                  {article.valeAPenaHoje ? "Sim, continua a valer." : "Não, já envelheceu."}
+                  {article.recomendamos ? "Sim, vale a pena." : "Não, passa ao lado."}
                 </p>
               </div>
             </div>
@@ -173,7 +191,7 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
               {article.pros.length > 0 && (
                 <div className="rounded-sm border border-accent/30 bg-accent/5 p-4">
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-accent">
-                    Porque ainda vale a pena
+                    Pontos fortes
                   </p>
                   <ul className="flex flex-col gap-1.5">
                     {article.pros.map((p, i) => (
@@ -188,7 +206,7 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
               {article.contras.length > 0 && (
                 <div className="rounded-sm border border-primary/30 bg-primary/5 p-4">
                   <p className="mb-2 text-xs font-bold uppercase tracking-wide text-primary-light">
-                    Onde já envelheceu
+                    Pontos fracos
                   </p>
                   <ul className="flex flex-col gap-1.5">
                     {article.contras.map((c, i) => (

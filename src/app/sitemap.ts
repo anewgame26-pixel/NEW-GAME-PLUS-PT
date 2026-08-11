@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllGameSlugs } from "@/lib/data/games";
 import { getAllHourWithSlugs } from "@/lib/data/hour-with";
 import { getAllRetroSlugs } from "@/lib/data/retro";
+import { getAllDiscoverySlugs } from "@/lib/data/discovery";
 import { rankingConfigs } from "@/data/mock/rankings-config";
 
 const SITE_URL = "https://newgameplus.pt";
@@ -22,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const gameSlugs = await getAllGameSlugs();
   const hourWithSlugs = await getAllHourWithSlugs();
   const retroSlugs = await getAllRetroSlugs();
+  const discoverySlugs = await getAllDiscoverySlugs();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1 },
@@ -67,5 +69,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...gamePages, ...rankingPages, ...hourWithPages, ...retroPages];
+  const discoveryPages: MetadataRoute.Sitemap = discoverySlugs.map((slug) => ({
+    url: `${SITE_URL}/descobertas/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...gamePages, ...rankingPages, ...hourWithPages, ...retroPages, ...discoveryPages];
 }

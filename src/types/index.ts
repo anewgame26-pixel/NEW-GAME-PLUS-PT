@@ -326,3 +326,39 @@ export interface RetroArticle {
   isPublished: boolean;
   createdAt: string;
 }
+
+/** Categorias possíveis de um artigo Descobertas+, usadas como filtros. */
+export const DISCOVERY_TAGS = [
+  { value: "indie", label: "Indie" },
+  { value: "pequeno-estudio", label: "Pequeno Estúdio" },
+  { value: "portugues", label: "Jogo Português" },
+  { value: "early-access", label: "Early Access" },
+  { value: "demo", label: "Demo" },
+  { value: "experimental", label: "Experimental" },
+  { value: "recomendacao-comunidade", label: "Recomendação da Comunidade" },
+] as const;
+
+export type DiscoveryTag = (typeof DISCOVERY_TAGS)[number]["value"];
+
+/**
+ * Um artigo Descobertas+ — jogos que talvez ainda não conheças. Tal como
+ * os outros dois pilares novos, é independente da tabela "games".
+ */
+export interface DiscoveryArticle {
+  id: string;
+  slug: string;
+  title: string;
+  platform: string | null;
+  releaseYear: number | null;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  tags: string[];
+  body: string;
+  pros: string[];
+  contras: string[];
+  veredicto: string;
+  /** Resposta a "recomendamos?". null = ainda por decidir. */
+  recomendamos: boolean | null;
+  isPublished: boolean;
+  createdAt: string;
+}

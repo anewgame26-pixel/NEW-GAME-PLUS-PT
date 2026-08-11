@@ -23,6 +23,7 @@ import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games"
 import { getGameDetail } from "@/lib/data/game-details";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
+import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { normalizeTitle } from "@/lib/utils";
 import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 
@@ -92,6 +93,10 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   const matchingRetro = retroArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(game.title)
   );
+  const discoveryArticles = await getDiscoveryArticles();
+  const matchingDiscovery = discoveryArticles.find(
+    (a) => normalizeTitle(a.title) === normalizeTitle(game.title)
+  );
 
   // Dados estruturados (JSON-LD) — informação invisível no ecrã que ajuda
   // o Google (e a IA de pesquisa) a perceber que esta página é uma
@@ -150,6 +155,17 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
               icon="history"
               title="Também escrevemos sobre isto em Retro+"
               description="Vê se ainda vale a pena jogar hoje"
+            />
+          </div>
+        )}
+
+        {matchingDiscovery && (
+          <div className={matchingArticle || matchingRetro ? "pt-2" : "pt-5"}>
+            <CrossLinkBanner
+              href={`/descobertas/${matchingDiscovery.slug}`}
+              icon="compass"
+              title="Este jogo também está em Descobertas+"
+              description="Lê porque vale a pena conhecer"
             />
           </div>
         )}

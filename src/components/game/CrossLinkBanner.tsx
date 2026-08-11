@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Trophy, History } from "lucide-react";
+import { ArrowRight, Clock, Trophy, History, Compass } from "lucide-react";
 
 interface CrossLinkBannerProps {
   href: string;
   title: string;
   description: string;
-  icon: "clock" | "trophy" | "history";
+  icon: "clock" | "trophy" | "history" | "compass";
   /** Quando true, não aplica o próprio contentor de largura/padding —
    * usar dentro de sítios que já têm o seu próprio (ex.: dentro de um
    * artigo estreito). Por defeito aplica, para uso direto dentro de <main>. */
@@ -14,12 +14,12 @@ interface CrossLinkBannerProps {
 
 /**
  * Chamada de atenção mostrada quando o mesmo jogo tem perfis em mais do
- * que um dos pilares do site (Antes da Platina, Uma Hora Com, Retro+) —
- * para as páginas se ligarem umas às outras, em vez de ficarem ilhas
- * separadas.
+ * que um dos pilares do site (Antes da Platina, Uma Hora Com, Retro+,
+ * Descobertas+) — para as páginas se ligarem umas às outras, em vez de
+ * ficarem ilhas separadas.
  */
 export function CrossLinkBanner({ href, title, description, icon, bare = false }: CrossLinkBannerProps) {
-  const Icon = icon === "clock" ? Clock : icon === "trophy" ? Trophy : History;
+  const Icon = icon === "clock" ? Clock : icon === "trophy" ? Trophy : icon === "history" ? History : Compass;
 
   const link = (
     <Link
