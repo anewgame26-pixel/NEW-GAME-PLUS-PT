@@ -87,25 +87,9 @@ export default async function HomePage() {
         <QuickFilters />
 
         <section className="py-10">
-          <div
-            className={
-              votingCandidates.length > 0
-                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8"
-                : "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
-            }
-          >
+          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8">
             <ContinuePlayingList items={playingNow} games={games} />
             <LatestBeforePlatinum episodes={latestBeforePlatinum} games={games} />
-            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
-          </div>
-        </section>
-
-        <div className="border-t border-border">
-          <UpcomingVideosCarousel videos={upcomingVideos} games={games} />
-        </div>
-
-        <section className="border-t border-border py-10">
-          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8">
             <ArticleTeaserPanel
               title="Uma Hora Com..."
               icon={Clock}
@@ -113,6 +97,18 @@ export default async function HomePage() {
               items={hourWithItems}
               emptyLabel="Ainda não há artigos publicados."
             />
+          </div>
+        </section>
+
+        <section className="border-t border-border py-10">
+          <div
+            className={
+              votingCandidates.length > 0
+                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8"
+                : "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
+            }
+          >
+            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
             <ArticleTeaserPanel
               title="Retro+"
               icon={History}
@@ -138,6 +134,10 @@ export default async function HomePage() {
 
         <div className="border-t border-border">
           <RankingsGrid categories={rankingCategories} />
+        </div>
+
+        <div className="border-t border-border">
+          <UpcomingVideosCarousel videos={upcomingVideos} games={games} />
         </div>
 
         <StatsBar stats={platformStats} />
