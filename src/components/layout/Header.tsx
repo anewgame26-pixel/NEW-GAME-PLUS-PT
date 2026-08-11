@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
-import { Search, Menu, X, Youtube, Instagram, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Menu, X, Youtube, Instagram, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { HeaderSearch } from "@/components/layout/HeaderSearch";
+import { SearchInput } from "@/components/ui/SearchInput";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -18,7 +21,9 @@ const NAV_LINKS = [
 ];
 
 export function Header() {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileQuery, setMobileQuery] = useState("");
   // null = ainda não sabemos (primeira renderização); undefined nunca
   // acontece — ou há utilizador, ou sabemos que não há.
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -62,12 +67,7 @@ export function Header() {
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-3">
-          <button
-            aria-label="Pesquisar"
-            className="hidden h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted transition-colors hover:border-border-light hover:text-ink lg:flex"
-          >
-            <Search width={16} height={16} />
-          </button>
+          <HeaderSearch />
           <ThemeToggle className="hidden h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted transition-colors hover:border-border-light hover:text-ink lg:flex" />
           <div className="hidden items-center gap-2 lg:flex">
             <SocialIcon
@@ -103,16 +103,23 @@ export function Header() {
 
       {mobileOpen && (
         <nav className="border-t border-border bg-bg px-4 py-3 lg:hidden">
-          <div className="mb-3">
-            <div className="relative flex items-center">
-              <Search className="absolute left-3 text-ink-dim" width={16} height={16} />
-              <input
-                type="text"
-                placeholder="Que jogo queres platinar?"
-                className="h-10 w-full rounded-sm border border-border bg-bg-surface pl-9 pr-3 text-sm text-ink outline-none focus:border-primary"
-              />
-            </div>
-          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const trimmed = mobileQuery.trim();
+              if (!trimmed) return;
+              router.push(`/jogos?q=${encodeURIComponent(trimmed)}`);
+              setMobileOpen(false);
+              setMobileQuery("");
+            }}
+            className="mb-3"
+          >
+            <SearchInput
+              placeholder="Que jogo queres platinar?"
+              value={mobileQuery}
+              onChange={(e) => setMobileQuery(e.target.value)}
+            />
+          </form>
           <ul className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
