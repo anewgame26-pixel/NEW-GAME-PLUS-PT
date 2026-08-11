@@ -53,14 +53,19 @@ export default async function HomePage() {
     return null;
   }
 
-  // --- "Antes da Platina": os jogos com episódio publicado mais recente,
-  // sem repetir o mesmo jogo duas vezes. Dados reais (tabela videos).
-  const beforePlatinumGames = latestBeforePlatinum
+  // --- "Antes da Platina": prioriza os jogos com episódio publicado mais
+  // recente (dados reais da tabela videos). Se ainda não há nenhum vídeo
+  // publicado, mostra jogos do catálogo na mesma — a informação de
+  // dificuldade/duração/perdíveis/grind já existe em qualquer jogo, não
+  // devia depender de haver vídeo.
+  const beforePlatinumFromVideos = latestBeforePlatinum
     .map((ep) => games.find((g) => g.id === ep.gameId))
     .filter(
       (g, i, arr): g is NonNullable<typeof g> => Boolean(g) && arr.findIndex((x) => x?.id === g?.id) === i
-    )
-    .slice(0, 10);
+    );
+  const beforePlatinumGames = (
+    beforePlatinumFromVideos.length > 0 ? beforePlatinumFromVideos : games
+  ).slice(0, 10);
 
   // --- "Conteúdo Novo": junta os 4 formatos editoriais, ordenados por
   // data, para a homepage deixar de parecer só um site de troféus.
