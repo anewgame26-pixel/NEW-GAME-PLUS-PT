@@ -1,3 +1,4 @@
+import { Clock, History, Compass } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -8,6 +9,7 @@ import { UpcomingVideosCarousel } from "@/components/home/UpcomingVideosCarousel
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { StatsBar } from "@/components/home/StatsBar";
+import { ArticleTeaserPanel, ArticleTeaserItem } from "@/components/home/ArticleTeaserPanel";
 import { getGames, getFeaturedGames } from "@/lib/data/games";
 import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
 import { getRankingCategories } from "@/lib/data/rankings";
@@ -15,6 +17,9 @@ import { getNowPlaying, resolveNowPlaying } from "@/lib/data/now-playing";
 import { getTeamMembers } from "@/lib/data/team";
 import { getPlatformStats } from "@/lib/data/stats";
 import { getVotingCandidates } from "@/lib/data/voting";
+import { getHourWithArticles } from "@/lib/data/hour-with";
+import { getRetroArticles } from "@/lib/data/retro";
+import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { VotingTeaser } from "@/components/home/VotingTeaser";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +43,37 @@ export default async function HomePage() {
   const nowPlayingRows = await getNowPlaying();
   const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
   const votingCandidates = await getVotingCandidates();
+
+  const hourWithArticles = await getHourWithArticles();
+  const retroArticles = await getRetroArticles();
+  const discoveryArticles = await getDiscoveryArticles();
+
+  const hourWithItems: ArticleTeaserItem[] = hourWithArticles.slice(0, 3).map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    imageUrl: a.heroImageUrl ?? a.coverUrl,
+    meta: a.platform,
+    badgeLabel: a.continuarAJogar === null ? undefined : a.continuarAJogar ? "Continuamos" : "Não continuamos",
+    badgeTone: a.continuarAJogar ? "green" : "red",
+  }));
+
+  const retroItems: ArticleTeaserItem[] = retroArticles.slice(0, 3).map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    imageUrl: a.heroImageUrl ?? a.coverUrl,
+    meta: a.platform && a.releaseYear ? `${a.platform} · ${a.releaseYear}` : a.platform ?? (a.releaseYear ? `${a.releaseYear}` : null),
+    badgeLabel: a.valeAPenaHoje === null ? undefined : a.valeAPenaHoje ? "Ainda vale a pena" : "Já envelheceu",
+    badgeTone: a.valeAPenaHoje ? "green" : "red",
+  }));
+
+  const discoveryItems: ArticleTeaserItem[] = discoveryArticles.slice(0, 3).map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    imageUrl: a.heroImageUrl ?? a.coverUrl,
+    meta: a.platform,
+    badgeLabel: a.recomendamos === null ? undefined : a.recomendamos ? "Recomendamos" : "Não recomendamos",
+    badgeTone: a.recomendamos ? "green" : "red",
+  }));
 
   if (featuredGames.length === 0) {
     return null;
@@ -67,6 +103,32 @@ export default async function HomePage() {
         <div className="border-t border-border">
           <UpcomingVideosCarousel videos={upcomingVideos} games={games} />
         </div>
+
+        <section className="border-t border-border py-10">
+          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8">
+            <ArticleTeaserPanel
+              title="Uma Hora Com..."
+              icon={Clock}
+              basePath="/uma-hora-com"
+              items={hourWithItems}
+              emptyLabel="Ainda não há artigos publicados."
+            />
+            <ArticleTeaserPanel
+              title="Retro+"
+              icon={History}
+              basePath="/retro"
+              items={retroItems}
+              emptyLabel="Ainda não há artigos publicados."
+            />
+            <ArticleTeaserPanel
+              title="Descobertas+"
+              icon={Compass}
+              basePath="/descobertas"
+              items={discoveryItems}
+              emptyLabel="Ainda não há artigos publicados."
+            />
+          </div>
+        </section>
 
         <section className="border-t border-border py-10">
           <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
