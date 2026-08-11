@@ -6,6 +6,7 @@ import { Search, Menu, X, Youtube, Instagram, User } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -67,6 +68,7 @@ export function Header() {
           >
             <Search width={16} height={16} />
           </button>
+          <ThemeToggle className="hidden h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted transition-colors hover:border-border-light hover:text-ink lg:flex" />
           <div className="hidden items-center gap-2 lg:flex">
             <SocialIcon
               icon={<Youtube width={15} height={15} />}
@@ -135,6 +137,10 @@ export function Header() {
               </li>
             )}
           </ul>
+          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+            <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Modo claro</span>
+            <ThemeToggle />
+          </div>
         </nav>
       )}
     </header>

@@ -77,11 +77,25 @@ const websiteSchema = {
   },
 };
 
+const THEME_INIT_SCRIPT = `
+(function () {
+  try {
+    var saved = window.localStorage.getItem("ngplus-theme");
+    if (saved === "light") {
+      document.documentElement.classList.add("light");
+    }
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-PT" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="font-body antialiased">
         <script
           type="application/ld+json"

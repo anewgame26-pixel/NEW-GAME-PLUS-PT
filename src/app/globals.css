@@ -2,12 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------
+   Cores do site como variáveis CSS (formato "R G B", sem vírgulas, para
+   o Tailwind poder aplicar opacidade com bg-primary/10, border-gold/30,
+   etc.). :root tem os valores do modo escuro (o visual original e
+   default do site); :root.light substitui-os pelos valores do modo
+   claro. A classe "light" é posta em <html> pelo ThemeToggle.
+   --------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
+
+  --color-bg: 10 12 17;
+  --color-bg-raised: 18 21 28;
+  --color-bg-surface: 23 27 36;
+  --color-bg-surface2: 30 36 48;
+
+  --color-border: 36 43 55;
+  --color-border-light: 50 59 74;
+
+  --color-primary: 227 27 51;
+  --color-primary-dim: 168 19 39;
+  --color-primary-light: 255 77 99;
+
+  --color-accent: 62 123 250;
+  --color-accent-dim: 44 91 199;
+  --color-accent-light: 124 166 255;
+
+  --color-gold: 242 183 5;
+  --color-gold-dim: 201 154 8;
+
+  --color-ink: 243 245 247;
+  --color-ink-muted: 150 160 173;
+  --color-ink-dim: 92 102 115;
+  --color-ink-soft: 147 175 201;
+
+  --scrollbar-track: 10 12 17;
+  --scrollbar-thumb: 36 43 55;
+}
+
+:root.light {
+  color-scheme: light;
+
+  --color-bg: 247 248 250;
+  --color-bg-raised: 255 255 255;
+  --color-bg-surface: 255 255 255;
+  --color-bg-surface2: 238 241 244;
+
+  --color-border: 224 228 233;
+  --color-border-light: 203 210 218;
+
+  --color-primary: 227 27 51;
+  --color-primary-dim: 168 19 39;
+  --color-primary-light: 196 16 43;
+
+  --color-accent: 47 99 214;
+  --color-accent-dim: 33 74 173;
+  --color-accent-light: 62 123 250;
+
+  --color-gold: 168 121 8;
+  --color-gold-dim: 133 96 5;
+
+  --color-ink: 18 21 28;
+  --color-ink-muted: 92 102 115;
+  --color-ink-dim: 150 160 173;
+  --color-ink-soft: 55 88 115;
+
+  --scrollbar-track: 247 248 250;
+  --scrollbar-thumb: 224 228 233;
 }
 
 * {
-  scrollbar-color: #323b4a #0a0c11;
+  scrollbar-color: rgb(var(--scrollbar-thumb)) rgb(var(--scrollbar-track));
 }
 
 *::-webkit-scrollbar {
@@ -15,14 +80,14 @@
   height: 10px;
 }
 *::-webkit-scrollbar-track {
-  background: #0a0c11;
+  background: rgb(var(--scrollbar-track));
 }
 *::-webkit-scrollbar-thumb {
-  background: #242b37;
+  background: rgb(var(--color-border));
   border-radius: 6px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #3e7bfa;
+  background: rgb(var(--color-accent));
 }
 
 html {
@@ -30,8 +95,9 @@ html {
 }
 
 body {
-  background-color: #0a0c11;
-  color: #f3f5f7;
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-ink));
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

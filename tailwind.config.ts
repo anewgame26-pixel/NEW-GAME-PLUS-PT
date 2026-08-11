@@ -1,39 +1,49 @@
 import type { Config } from "tailwindcss";
 
+// Cada cor é definida como "rgb(var(--x) / <alpha-value>)" em vez de um hex
+// fixo. Isto permite que classes como bg-primary/10 continuem a funcionar
+// (o Tailwind injeta a opacidade), e ao mesmo tempo os valores por trás de
+// cada variável podem mudar consoante o tema (claro/escuro) — ver
+// globals.css, onde --color-bg, --color-ink, etc. têm um valor para :root
+// (escuro, default) e outro para :root.light.
+function withOpacity(variable: string) {
+  return `rgb(var(${variable}) / <alpha-value>)`;
+}
+
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
         bg: {
-          DEFAULT: "#0A0C11",
-          raised: "#12151C",
-          surface: "#171B24",
-          surface2: "#1E2430",
+          DEFAULT: withOpacity("--color-bg"),
+          raised: withOpacity("--color-bg-raised"),
+          surface: withOpacity("--color-bg-surface"),
+          surface2: withOpacity("--color-bg-surface2"),
         },
         border: {
-          DEFAULT: "#242B37",
-          light: "#323B4A",
+          DEFAULT: withOpacity("--color-border"),
+          light: withOpacity("--color-border-light"),
         },
         primary: {
-          DEFAULT: "#E31B33",
-          dim: "#A81327",
-          light: "#FF4D63",
+          DEFAULT: withOpacity("--color-primary"),
+          dim: withOpacity("--color-primary-dim"),
+          light: withOpacity("--color-primary-light"),
         },
         accent: {
-          DEFAULT: "#3E7BFA",
-          dim: "#2C5BC7",
-          light: "#7CA6FF",
+          DEFAULT: withOpacity("--color-accent"),
+          dim: withOpacity("--color-accent-dim"),
+          light: withOpacity("--color-accent-light"),
         },
         gold: {
-          DEFAULT: "#F2B705",
-          dim: "#C99A08",
+          DEFAULT: withOpacity("--color-gold"),
+          dim: withOpacity("--color-gold-dim"),
         },
         ink: {
-          DEFAULT: "#F3F5F7",
-          muted: "#96A0AD",
-          dim: "#5C6673",
-          soft: "#93AFC9",
+          DEFAULT: withOpacity("--color-ink"),
+          muted: withOpacity("--color-ink-muted"),
+          dim: withOpacity("--color-ink-dim"),
+          soft: withOpacity("--color-ink-soft"),
         },
       },
       fontFamily: {
@@ -57,3 +67,4 @@ const config: Config = {
 };
 
 export default config;
+
