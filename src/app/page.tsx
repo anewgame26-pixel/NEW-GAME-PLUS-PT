@@ -1,15 +1,17 @@
-import { Clock, History, Compass } from "lucide-react";
+import { History, Compass } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
 import { QuickFilters } from "@/components/home/QuickFilters";
-import { ContinuePlayingList } from "@/components/home/ContinuePlayingList";
-import { LatestBeforePlatinum } from "@/components/home/LatestBeforePlatinum";
-import { UpcomingVideosCarousel } from "@/components/home/UpcomingVideosCarousel";
+import { NowPlayingCarousel } from "@/components/home/NowPlayingCarousel";
+import { RecentContentGrid, RecentContentItem } from "@/components/home/RecentContentGrid";
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
+import { VotingTeaser } from "@/components/home/VotingTeaser";
+import { BeforePlatinumCarousel } from "@/components/home/BeforePlatinumCarousel";
+import { HourWithFeature } from "@/components/home/HourWithFeature";
+import { ArticleTeaserPanel, ArticleTeaserItem } from "@/components/home/ArticleTeaserPanel";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { StatsBar } from "@/components/home/StatsBar";
-import { ArticleTeaserPanel, ArticleTeaserItem } from "@/components/home/ArticleTeaserPanel";
 import { getGames, getFeaturedGames } from "@/lib/data/games";
 import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
 import { getRankingCategories } from "@/lib/data/rankings";
@@ -20,7 +22,6 @@ import { getVotingCandidates } from "@/lib/data/voting";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
-import { VotingTeaser } from "@/components/home/VotingTeaser";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function HomePage() {
 
   const suggestions = games.slice(0, 5);
   const latestBeforePlatinum = await getLatestBeforePlatinum();
-  const upcomingVideos = await getUpcomingVideos();
+  await getUpcomingVideos(); // mantido a carregar para não afetar outras páginas (ex: /antes-da-platina/episodios); não é usado nesta página
   const rankingCategories = await getRankingCategories();
   const teamMembers = await getTeamMembers();
   const nowPlayingRows = await getNowPlaying();
@@ -48,20 +49,80 @@ export default async function HomePage() {
   const retroArticles = await getRetroArticles();
   const discoveryArticles = await getDiscoveryArticles();
 
-  const hourWithItems: ArticleTeaserItem[] = hourWithArticles.slice(0, 3).map((a) => ({
-    slug: a.slug,
-    title: a.title,
-    imageUrl: a.heroImageUrl ?? a.coverUrl,
-    meta: a.platform,
-    badgeLabel: a.continuarAJogar === null ? undefined : a.continuarAJogar ? "Continuamos" : "Não continuamos",
-    badgeTone: a.continuarAJogar ? "green" : "red",
-  }));
+  if (featuredGames.length === 0) {
+    return null;
+  }
+
+  // --- "Antes da Platina": os jogos com episódio publicado mais recente,
+  // sem repetir o mesmo jogo duas vezes. Dados reais (tabela videos).
+  const beforePlatinumGames = latestBeforePlatinum
+    .map((ep) => games.find((g) => g.id === ep.gameId))
+    .filter(
+      (g, i, arr): g is NonNullable<typeof g> => Boolean(g) && arr.findIndex((x) => x?.id === g?.id) === i
+    )
+    .slice(0, 10);
+
+  // --- "Conteúdo Novo": junta os 4 formatos editoriais, ordenados por
+  // data, para a homepage deixar de parecer só um site de troféus.
+  const recentItems: RecentContentItem[] = [
+    ...latestBeforePlatinum.flatMap((ep) => {
+      const game = games.find((g) => g.id === ep.gameId);
+      if (!game) return [];
+      return [
+        {
+          key: `bp-${ep.id}`,
+          category: "Antes da Platina" as const,
+          categoryTone: "red" as const,
+          title: `${game.title} — Antes da Platina`,
+          subtitle: ep.verdict || null,
+          imageUrl: game.heroImageUrl ?? game.coverUrl,
+          date: ep.publishDate,
+          href: `/guias/${game.slug}`,
+        },
+      ];
+    }),
+    ...hourWithArticles.map((a) => ({
+      key: `hw-${a.id}`,
+      category: "Uma Hora Com" as const,
+      categoryTone: "blue" as const,
+      title: `${a.title} — Vale a pena?`,
+      subtitle: a.firstImpression || null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/uma-hora-com/${a.slug}`,
+    })),
+    ...retroArticles.map((a) => ({
+      key: `retro-${a.id}`,
+      category: "Retro+" as const,
+      categoryTone: "gold" as const,
+      title: a.title,
+      subtitle: a.veredicto || null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/retro/${a.slug}`,
+    })),
+    ...discoveryArticles.map((a) => ({
+      key: `disc-${a.id}`,
+      category: "Descobertas+" as const,
+      categoryTone: "green" as const,
+      title: a.title,
+      subtitle: a.veredicto || null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/descobertas/${a.slug}`,
+    })),
+  ]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10);
 
   const retroItems: ArticleTeaserItem[] = retroArticles.slice(0, 3).map((a) => ({
     slug: a.slug,
     title: a.title,
     imageUrl: a.heroImageUrl ?? a.coverUrl,
-    meta: a.platform && a.releaseYear ? `${a.platform} · ${a.releaseYear}` : a.platform ?? (a.releaseYear ? `${a.releaseYear}` : null),
+    meta:
+      a.platform && a.releaseYear
+        ? `${a.platform} · ${a.releaseYear}`
+        : a.platform ?? (a.releaseYear ? `${a.releaseYear}` : null),
     badgeLabel: a.valeAPenaHoje === null ? undefined : a.valeAPenaHoje ? "Ainda vale a pena" : "Já envelheceu",
     badgeTone: a.valeAPenaHoje ? "green" : "red",
   }));
@@ -75,71 +136,77 @@ export default async function HomePage() {
     badgeTone: a.recomendamos ? "green" : "red",
   }));
 
-  if (featuredGames.length === 0) {
-    return null;
-  }
-
   return (
     <>
       <Header />
       <main>
+        {/* 1. HERO — carrossel de destaques, já com pesquisa embutida. */}
         <HeroSection featuredGames={featuredGames} suggestions={suggestions} />
         <QuickFilters />
 
-        <section className="py-10">
-          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8">
-            <ContinuePlayingList items={playingNow} games={games} />
-            <LatestBeforePlatinum episodes={latestBeforePlatinum} games={games} />
-            <ArticleTeaserPanel
-              title="Uma Hora Com..."
-              icon={Clock}
-              basePath="/uma-hora-com"
-              items={hourWithItems}
-              emptyLabel="Ainda não há artigos publicados."
-            />
-          </div>
-        </section>
+        {/* 2. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
+        <NowPlayingCarousel items={playingNow} games={games} />
 
+        {/* 3. CONTEÚDO NOVO — grelha, propositadamente sem carrossel. */}
+        <RecentContentGrid items={recentItems} />
+
+        {/* 4. FERRAMENTAS — Escolhe a tua Próxima Platina + Vota na Próxima Platina lado a lado. */}
         <section className="border-t border-border py-10">
           <div
             className={
               votingCandidates.length > 0
-                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8"
-                : "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
+                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
+                : "mx-auto max-w-[1440px] px-4 lg:px-8"
             }
           >
-            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
-            <ArticleTeaserPanel
-              title="Retro+"
-              icon={History}
-              basePath="/retro"
-              items={retroItems}
-              emptyLabel="Ainda não há artigos publicados."
-            />
-            <ArticleTeaserPanel
-              title="Descobertas+"
-              icon={Compass}
-              basePath="/descobertas"
-              items={discoveryItems}
-              emptyLabel="Ainda não há artigos publicados."
-            />
-          </div>
-        </section>
-
-        <section className="border-t border-border py-10">
-          <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
             <RecommendationWizard games={games} />
+            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
           </div>
         </section>
 
+        {/* 5. ANTES DA PLATINA — carrossel (2ª e última das 3 zonas de carrossel). */}
+        <BeforePlatinumCarousel games={beforePlatinumGames} />
+
+        {/* 6. ZONA EDITORIAL — Uma Hora Com em destaque + Descobre (Retro+/Descobertas+). */}
+        <section className="border-t border-border py-10">
+          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
+            <HourWithFeature article={hourWithArticles[0] ?? null} />
+
+            <div className="flex flex-col gap-4">
+              <div>
+                <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
+                  Descobre
+                </h2>
+                <p className="mt-1 text-sm text-ink-muted">
+                  Retro+, Descobertas+ e, brevemente, Top+ — o que fica fora do circuito habitual.
+                </p>
+              </div>
+              <div className="grid flex-1 gap-4 sm:grid-cols-2">
+                <ArticleTeaserPanel
+                  title="Retro+"
+                  icon={History}
+                  basePath="/retro"
+                  items={retroItems}
+                  emptyLabel="Ainda não há artigos publicados."
+                />
+                <ArticleTeaserPanel
+                  title="Descobertas+"
+                  icon={Compass}
+                  basePath="/descobertas"
+                  items={discoveryItems}
+                  emptyLabel="Ainda não há artigos publicados."
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* RANKINGS — mantém-se como grelha própria, a largura total, para não ficar espremida numa coluna. */}
         <div className="border-t border-border">
           <RankingsGrid categories={rankingCategories} />
         </div>
 
-        <div className="border-t border-border">
-          <UpcomingVideosCarousel videos={upcomingVideos} games={games} />
-        </div>
-
+        {/* 7. ESTATÍSTICAS */}
         <StatsBar stats={platformStats} />
       </main>
       <Footer />

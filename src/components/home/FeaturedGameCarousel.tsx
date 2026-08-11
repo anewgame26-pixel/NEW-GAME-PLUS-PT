@@ -121,7 +121,7 @@ export function FeaturedGameCarousel({
       </div>
 
       {/* Conteúdo por cima da imagem. */}
-      <div className="relative mx-auto flex min-h-[460px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[520px] lg:min-h-[600px] lg:px-8 lg:pt-8">
+      <div className="relative mx-auto flex min-h-[400px] max-w-[1440px] flex-col justify-between gap-8 px-4 pb-8 pt-6 sm:min-h-[440px] lg:min-h-[500px] lg:px-8 lg:pt-8">
         <div>{children}</div>
 
         <div className="flex flex-col gap-5">
