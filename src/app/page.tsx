@@ -1,4 +1,4 @@
-import { History, Compass } from "lucide-react";
+import { History, Compass, ListOrdered } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -22,6 +22,7 @@ import { getVotingCandidates } from "@/lib/data/voting";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
+import { getTopArticles } from "@/lib/data/top";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export default async function HomePage() {
   const hourWithArticles = await getHourWithArticles();
   const retroArticles = await getRetroArticles();
   const discoveryArticles = await getDiscoveryArticles();
+  const topArticles = await getTopArticles();
 
   if (featuredGames.length === 0) {
     return null;
@@ -116,6 +118,16 @@ export default async function HomePage() {
       date: a.createdAt,
       href: `/descobertas/${a.slug}`,
     })),
+    ...topArticles.map((a) => ({
+      key: `top-${a.id}`,
+      category: "Top+" as const,
+      categoryTone: "neutral" as const,
+      title: a.title,
+      subtitle: a.items.length > 0 ? a.items.map((i) => i.label).join(", ") : null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/top/${a.slug}`,
+    })),
   ]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
@@ -139,6 +151,13 @@ export default async function HomePage() {
     meta: a.platform,
     badgeLabel: a.recomendamos === null ? undefined : a.recomendamos ? "Recomendamos" : "Não recomendamos",
     badgeTone: a.recomendamos ? "green" : "red",
+  }));
+
+  const topItems: ArticleTeaserItem[] = topArticles.slice(0, 3).map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    imageUrl: a.heroImageUrl ?? a.coverUrl,
+    meta: `${a.items.length} ${a.items.length === 1 ? "entrada" : "entradas"}`,
   }));
 
   return (
@@ -183,10 +202,10 @@ export default async function HomePage() {
                   Descobre
                 </h2>
                 <p className="mt-1 text-sm text-ink-muted">
-                  Retro+, Descobertas+ e, brevemente, Top+ — o que fica fora do circuito habitual.
+                  Retro+, Descobertas+ e Top+ — o que fica fora do circuito habitual.
                 </p>
               </div>
-              <div className="grid flex-1 gap-4 sm:grid-cols-2">
+              <div className="grid flex-1 gap-4 sm:grid-cols-3">
                 <ArticleTeaserPanel
                   title="Retro+"
                   icon={History}
@@ -200,6 +219,13 @@ export default async function HomePage() {
                   basePath="/descobertas"
                   items={discoveryItems}
                   emptyLabel="Ainda não há artigos publicados."
+                />
+                <ArticleTeaserPanel
+                  title="Top+"
+                  icon={ListOrdered}
+                  basePath="/top"
+                  items={topItems}
+                  emptyLabel="Ainda não há listas publicadas."
                 />
               </div>
             </div>

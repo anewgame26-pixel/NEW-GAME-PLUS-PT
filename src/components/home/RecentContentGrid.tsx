@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/Badge";
 
 export interface RecentContentItem {
   key: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+";
-  categoryTone: "red" | "blue" | "gold" | "green";
+  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Top+";
+  categoryTone: "red" | "blue" | "gold" | "green" | "neutral";
   title: string;
   subtitle: string | null;
   imageUrl: string | null;

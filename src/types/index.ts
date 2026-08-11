@@ -340,11 +340,36 @@ export const DISCOVERY_TAGS = [
 
 export type DiscoveryTag = (typeof DISCOVERY_TAGS)[number]["value"];
 
+/** Uma entrada dentro de um artigo Top+ (ex: um jogo dentro da lista "5 jogos mais difíceis"). */
+export interface TopArticleItem {
+  label: string;
+  note: string;
+}
+
+/**
+ * Um artigo Top+ — série de vídeo em formato de listas (ex: "5 jogos mais
+ * difíceis de platinar"). Cada artigo é essencialmente um vídeo do
+ * YouTube com uma lista de jogos por trás.
+ */
+export interface TopArticle {
+  id: string;
+  slug: string;
+  title: string;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  youtubeUrl: string | null;
+  intro: string;
+  items: TopArticleItem[];
+  isPublished: boolean;
+  createdAt: string;
+}
+
 /**
  * Um artigo Descobertas+ — jogos que talvez ainda não conheças. Tal como
  * os outros dois pilares novos, é independente da tabela "games".
  */
 export interface DiscoveryArticle {
+
   id: string;
   slug: string;
   title: string;

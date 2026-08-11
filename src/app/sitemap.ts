@@ -3,6 +3,7 @@ import { getAllGameSlugs } from "@/lib/data/games";
 import { getAllHourWithSlugs } from "@/lib/data/hour-with";
 import { getAllRetroSlugs } from "@/lib/data/retro";
 import { getAllDiscoverySlugs } from "@/lib/data/discovery";
+import { getAllTopSlugs } from "@/lib/data/top";
 import { rankingConfigs } from "@/data/mock/rankings-config";
 
 const SITE_URL = "https://newgameplus.pt";
@@ -24,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const hourWithSlugs = await getAllHourWithSlugs();
   const retroSlugs = await getAllRetroSlugs();
   const discoverySlugs = await getAllDiscoverySlugs();
+  const topSlugs = await getAllTopSlugs();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1 },
@@ -37,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/descobertas`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/comunidade`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/covil`, changeFrequency: "monthly", priority: 0.4 },
-    { url: `${SITE_URL}/top`, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${SITE_URL}/top`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/votar`, changeFrequency: "weekly", priority: 0.5 },
     { url: `${SITE_URL}/faq`, changeFrequency: "monthly", priority: 0.3 },
     { url: `${SITE_URL}/ajuda`, changeFrequency: "monthly", priority: 0.3 },
@@ -76,5 +78,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...gamePages, ...rankingPages, ...hourWithPages, ...retroPages, ...discoveryPages];
+  const topPages: MetadataRoute.Sitemap = topSlugs.map((slug) => ({
+    url: `${SITE_URL}/top/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [
+    ...staticPages,
+    ...gamePages,
+    ...rankingPages,
+    ...hourWithPages,
+    ...retroPages,
+    ...discoveryPages,
+    ...topPages,
+  ];
 }
