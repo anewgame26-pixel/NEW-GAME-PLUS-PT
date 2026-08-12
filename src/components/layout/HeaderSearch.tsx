@@ -67,7 +67,7 @@ export function HeaderSearch() {
           onKeyDown={(e) => {
             if (e.key === "Escape") setOpen(false);
           }}
-          placeholder="Que jogo queres platinar?"
+          placeholder="Que jogo queres conhecer?"
           className={cn(
             "h-9 w-56 rounded-sm border border-border bg-bg-surface pl-8 pr-8 text-sm text-ink outline-none",
             "placeholder:text-ink-dim focus:border-primary"

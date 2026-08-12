@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/Badge";
 
 export interface RecentContentItem {
   key: string;
@@ -16,6 +15,17 @@ export interface RecentContentItem {
 interface RecentContentGridProps {
   items: RecentContentItem[];
 }
+
+// Versão sólida/opaca, própria para cima de capas de jogos (o Badge
+// normal do site é translúcido, pensado para fundos escuros lisos — em
+// cima de uma imagem colorida fica ilegível).
+const CATEGORY_BADGE_STYLES: Record<RecentContentItem["categoryTone"], string> = {
+  red: "bg-primary text-white",
+  blue: "bg-accent text-white",
+  gold: "bg-gold text-black",
+  green: "bg-emerald-500 text-white",
+  neutral: "bg-ink text-bg",
+};
 
 /**
  * "Conteúdo Novo": grelha (não carrossel, de propósito) com o mais recente
@@ -50,7 +60,11 @@ export function RecentContentGrid({ items }: RecentContentGridProps) {
                   />
                 )}
                 <div className="absolute left-2 top-2">
-                  <Badge tone={item.categoryTone}>{item.category}</Badge>
+                  <span
+                    className={`inline-flex items-center rounded-sm px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide shadow-sm ${CATEGORY_BADGE_STYLES[item.categoryTone]}`}
+                  >
+                    {item.category}
+                  </span>
                 </div>
               </div>
               <p className="mt-2 line-clamp-2 font-display text-sm font-semibold text-ink group-hover:text-primary-light">

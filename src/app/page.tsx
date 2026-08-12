@@ -23,6 +23,7 @@ import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { getTopArticles } from "@/lib/data/top";
+import { stripHtml } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -93,7 +94,7 @@ export default async function HomePage() {
       category: "Uma Hora Com" as const,
       categoryTone: "blue" as const,
       title: `${a.title} — Vale a pena?`,
-      subtitle: a.firstImpression || null,
+      subtitle: stripHtml(a.firstImpression) || null,
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/uma-hora-com/${a.slug}`,
@@ -103,7 +104,7 @@ export default async function HomePage() {
       category: "Retro+" as const,
       categoryTone: "gold" as const,
       title: a.title,
-      subtitle: a.veredicto || null,
+      subtitle: stripHtml(a.veredicto) || null,
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/retro/${a.slug}`,
@@ -113,7 +114,7 @@ export default async function HomePage() {
       category: "Descobertas+" as const,
       categoryTone: "green" as const,
       title: a.title,
-      subtitle: a.veredicto || null,
+      subtitle: stripHtml(a.veredicto) || null,
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/descobertas/${a.slug}`,

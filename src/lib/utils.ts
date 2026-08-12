@@ -97,6 +97,20 @@ export function normalizeTitle(title: string) {
  * for reconhecido, para nunca partir a página por causa de um link mal
  * colado no admin.
  */
+/**
+ * Tira as tags HTML de um texto vindo do editor de texto rico (ex:
+ * "<p>Isto</p>" vira "Isto"). Usado sempre que um campo de rich text é
+ * mostrado como resumo/excerto simples, para não aparecerem tags à vista.
+ */
+export function stripHtml(html: string | null | undefined): string {
+  if (!html) return "";
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function getYoutubeEmbedUrl(url: string | null): string | null {
   if (!url) return null;
   const match = url.match(

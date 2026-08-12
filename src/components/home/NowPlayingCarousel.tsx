@@ -78,7 +78,7 @@ export function NowPlayingCarousel({ items, games }: NowPlayingCarouselProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
 
-                <span className="absolute left-2 top-2 rounded-sm border border-primary/40 bg-primary/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-light backdrop-blur-sm">
+                <span className="absolute left-2 top-2 rounded-sm bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow-sm">
                   Estamos a jogar
                 </span>
                 <span className="absolute right-2 top-2 font-mono text-xs font-bold text-white">

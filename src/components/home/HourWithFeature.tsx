@@ -5,6 +5,7 @@ import { HourWithArticle } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { stripHtml } from "@/lib/utils";
 
 interface HourWithFeatureProps {
   article: HourWithArticle | null;
@@ -54,7 +55,11 @@ export function HourWithFeature({ article }: HourWithFeatureProps) {
       </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <p className="line-clamp-3 flex-1 text-sm text-ink-muted">{article.firstImpression}</p>
+        {stripHtml(article.firstImpression) && (
+          <p className="line-clamp-3 flex-1 text-sm text-ink-muted">
+            {stripHtml(article.firstImpression)}
+          </p>
+        )}
         <Button href={`/uma-hora-com/${article.slug}`} variant="secondary" className="w-full">
           Ver Análise
         </Button>
