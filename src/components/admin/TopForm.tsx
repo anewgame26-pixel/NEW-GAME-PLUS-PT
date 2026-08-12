@@ -7,6 +7,7 @@ import { slugify } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { TopArticleItem } from "@/types";
 
 interface TopFormProps {
@@ -249,24 +250,21 @@ export function TopForm({ articleId }: TopFormProps) {
               className={inputClass}
             />
           </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da capa (miniatura)</span>
-            <input
-              type="text"
-              value={form.coverUrl}
-              onChange={(e) => setForm((f) => ({ ...f, coverUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da imagem larga (topo da página)</span>
-            <input
-              type="text"
-              value={form.heroImageUrl}
-              onChange={(e) => setForm((f) => ({ ...f, heroImageUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ImageUploader
+            label="Capa (miniatura)"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            folder="top"
+          />
+          <ImageUploader
+            label="Imagem larga (topo da página)"
+            value={form.heroImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
+            folder="top"
+          />
         </div>
 
         <label className="flex flex-col gap-1.5">
