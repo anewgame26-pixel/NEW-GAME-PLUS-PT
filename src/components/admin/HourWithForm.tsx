@@ -31,6 +31,7 @@ const defaultForm = {
   contras: [] as string[],
   veredicto: "",
   continuarAJogar: null as boolean | null,
+  isHeroFeatured: false,
   isPublished: false,
 };
 
@@ -74,6 +75,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
           contras: data.contras ?? [],
           veredicto: data.veredicto ?? "",
           continuarAJogar: data.continuar_a_jogar ?? null,
+          isHeroFeatured: data.is_hero_featured ?? false,
           isPublished: data.is_published ?? false,
         });
         setWasPublished(data.is_published ?? false);
@@ -133,6 +135,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
       contras: form.contras.map((c) => c.trim()).filter(Boolean),
       veredicto: form.veredicto.trim(),
       continuar_a_jogar: form.continuarAJogar,
+      is_hero_featured: form.isHeroFeatured,
       is_published: form.isPublished,
     };
 
@@ -227,6 +230,23 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
             }`}
           >
             {form.isPublished ? "Publicado — visível no site" : "Oculto — só visível aqui no admin"}
+          </span>
+        </span>
+      </label>
+
+      <label className="mb-6 flex items-center gap-3 rounded-sm border border-primary/30 bg-primary/5 px-4 py-3">
+        <input
+          type="checkbox"
+          checked={form.isHeroFeatured}
+          onChange={(e) => setForm((f) => ({ ...f, isHeroFeatured: e.target.checked }))}
+          className="h-5 w-5 accent-primary"
+        />
+        <span className="flex-1">
+          <span className="block text-sm font-bold uppercase tracking-wide text-primary-light">
+            Destacar no Hero da homepage
+          </span>
+          <span className="block text-xs text-ink-dim">
+            Aparece no carrossel principal do topo do site (só se também estiver publicado).
           </span>
         </span>
       </label>

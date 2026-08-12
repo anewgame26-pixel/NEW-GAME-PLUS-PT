@@ -4,11 +4,12 @@ import { useCallback, useEffect, useRef, useState, type ReactNode, type TouchEve
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Game } from "@/types";
+import { HeroSlide } from "@/types";
 import { FeaturedGameStats } from "@/components/home/FeaturedGameStats";
+import { HeroFactsCard } from "@/components/home/HeroFactsCard";
 
 interface FeaturedGameCarouselProps {
-  games: Game[];
+  slides: HeroSlide[];
   /** Conteúdo estático (logo, sugestões) sobreposto ao topo da imagem. */
   children?: ReactNode;
   /** Barra de pesquisa, sobreposta ao fundo da imagem, junto ao título. */
@@ -22,13 +23,20 @@ const SWIPE_THRESHOLD_PX = 40;
 // imagem centrada — o ajuste de enquadramento só se aplica abaixo disto.
 const MOBILE_BREAKPOINT_QUERY = "(max-width: 639px)";
 
+const CATEGORY_LABEL_STYLES: Record<HeroSlide["category"], string> = {
+  "Antes da Platina": "text-primary-light",
+  "Uma Hora Com": "text-accent-light",
+  "Retro+": "text-gold",
+  "Top+": "text-emerald-400",
+};
+
 export function FeaturedGameCarousel({
-  games,
+  slides,
   children,
   search,
   intervalMs = 10000,
 }: FeaturedGameCarouselProps) {
-  const count = games.length;
+  const count = slides.length;
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -96,7 +104,7 @@ export function FeaturedGameCarousel({
 
   if (count === 0) return null;
 
-  const game = games[index];
+  const slide = slides[index];
 
   return (
     <section
@@ -105,14 +113,14 @@ export function FeaturedGameCarousel({
       onTouchEnd={handleTouchEnd}
     >
       {/* Imagem de fundo, a ocupar toda a largura da secção. */}
-      <div className="animate-carousel-fade absolute inset-0" key={game.id}>
+      <div className="animate-carousel-fade absolute inset-0" key={slide.id}>
         <Image
-          src={game.heroImageUrl ?? game.coverUrl}
-          alt={`Imagem de destaque de ${game.title}`}
+          src={slide.imageUrl}
+          alt={`Imagem de destaque: ${slide.title}`}
           fill
           sizes="100vw"
           className="object-cover"
-          style={{ objectPosition: `${isMobile ? (game.heroFocusX ?? 50) : 50}% 50%` }}
+          style={{ objectPosition: `${isMobile ? (slide.heroFocusX ?? 50) : 50}% 50%` }}
           priority={index === 0}
         />
         {/* Camada escura sobre a imagem, para o texto por cima ficar legível. */}
@@ -130,17 +138,19 @@ export function FeaturedGameCarousel({
               <div className="w-1 shrink-0 rounded-full bg-primary" aria-hidden />
 
               <div>
-                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-light">
-                  Seleção NG+
+                <p
+                  className={`mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] ${CATEGORY_LABEL_STYLES[slide.category]}`}
+                >
+                  {slide.category}
                 </p>
 
                 {count > 1 && (
                   <div className="mb-3 flex items-center gap-1.5">
-                    {games.map((g, i) => (
+                    {slides.map((s, i) => (
                       <button
-                        key={g.id}
+                        key={s.id}
                         type="button"
-                        aria-label={`Ver ${g.title}`}
+                        aria-label={`Ver ${s.title}`}
                         aria-current={i === index}
                         onClick={() => goTo(i)}
                         className={
@@ -153,11 +163,13 @@ export function FeaturedGameCarousel({
                   </div>
                 )}
 
-                <Link key={game.id} href={`/guias/${game.slug}`} className="group block w-fit">
+                <Link key={slide.id} href={slide.href} className="group block w-fit">
                   <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
-                    {game.title}
+                    {slide.title}
                   </p>
-                  <p className="mt-1 text-sm text-ink-muted">{game.developer}</p>
+                  {slide.subtitle && (
+                    <p className="mt-1 line-clamp-1 max-w-md text-sm text-ink-muted">{slide.subtitle}</p>
+                  )}
                 </Link>
 
                 {search && (
@@ -166,8 +178,12 @@ export function FeaturedGameCarousel({
               </div>
             </div>
 
-            <div key={`stats-${game.id}`} className="animate-carousel-fade hidden lg:block">
-              <FeaturedGameStats game={game} />
+            <div key={`stats-${slide.id}`} className="animate-carousel-fade hidden lg:block">
+              {slide.game ? (
+                <FeaturedGameStats game={slide.game} />
+              ) : slide.facts ? (
+                <HeroFactsCard facts={slide.facts} />
+              ) : null}
             </div>
           </div>
         </div>
@@ -177,7 +193,7 @@ export function FeaturedGameCarousel({
         <>
           <button
             type="button"
-            aria-label="Jogo anterior"
+            aria-label="Anterior"
             onClick={prev}
             className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
           >
@@ -185,7 +201,7 @@ export function FeaturedGameCarousel({
           </button>
           <button
             type="button"
-            aria-label="Próximo jogo"
+            aria-label="Seguinte"
             onClick={next}
             className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/60"
           >

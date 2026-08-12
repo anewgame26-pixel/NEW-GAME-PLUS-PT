@@ -23,6 +23,7 @@ import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { getTopArticles } from "@/lib/data/top";
+import { buildHeroSlides } from "@/lib/data/hero";
 import { stripHtml } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +39,6 @@ export default async function HomePage() {
     featuredGames = games.slice(0, 3);
   }
 
-  const suggestions = games.slice(0, 5);
   const latestBeforePlatinum = await getLatestBeforePlatinum();
   await getUpcomingVideos(); // mantido a carregar para não afetar outras páginas (ex: /antes-da-platina/episodios); não é usado nesta página
   const rankingCategories = await getRankingCategories();
@@ -51,6 +51,8 @@ export default async function HomePage() {
   const retroArticles = await getRetroArticles();
   const discoveryArticles = await getDiscoveryArticles();
   const topArticles = await getTopArticles();
+
+  const heroSlides = buildHeroSlides({ featuredGames, hourWithArticles, retroArticles, topArticles });
 
   if (featuredGames.length === 0) {
     return null;
@@ -166,7 +168,7 @@ export default async function HomePage() {
       <Header />
       <main>
         {/* 1. HERO — carrossel de destaques, já com pesquisa embutida. */}
-        <HeroSection featuredGames={featuredGames} suggestions={suggestions} />
+        <HeroSection slides={heroSlides} />
         <QuickFilters />
 
         {/* 2. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}

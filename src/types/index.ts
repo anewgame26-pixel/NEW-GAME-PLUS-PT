@@ -63,6 +63,32 @@ export interface Game {
   isPublished: boolean;
 }
 
+export interface HeroSlideFact {
+  label: string;
+  value: string;
+  warn?: boolean;
+}
+
+/**
+ * Um "slide" do carrossel do Hero da homepage — pode vir de um jogo
+ * (Antes da Platina) ou de um artigo (Uma Hora Com, Retro+, Top+),
+ * conforme o que a equipa marcar como destaque no admin. Cada tipo de
+ * conteúdo é convertido para esta forma comum antes de chegar ao Hero.
+ */
+export interface HeroSlide {
+  id: string;
+  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Top+";
+  title: string;
+  subtitle: string | null;
+  imageUrl: string;
+  heroFocusX: number | null;
+  href: string;
+  /** Presente só para slides "Antes da Platina" — mostra o cartão de estatísticas completo do jogo. */
+  game?: Game;
+  /** Presente para os restantes tipos — pequena lista de factos (sem o detalhe todo de um jogo). */
+  facts?: HeroSlideFact[];
+}
+
 export interface CommunityMember {
   id: string;
   name: string;
@@ -301,6 +327,8 @@ export interface HourWithArticle {
   veredicto: string;
   /** Resposta a "depois de uma hora, queremos continuar a jogar?". null = ainda por decidir. */
   continuarAJogar: boolean | null;
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
 }
@@ -323,6 +351,8 @@ export interface RetroArticle {
   veredicto: string;
   /** Resposta a "ainda vale a pena jogar isto hoje?". null = ainda por decidir. */
   valeAPenaHoje: boolean | null;
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
 }
@@ -360,6 +390,8 @@ export interface TopArticle {
   youtubeUrl: string | null;
   intro: string;
   items: TopArticleItem[];
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
 }

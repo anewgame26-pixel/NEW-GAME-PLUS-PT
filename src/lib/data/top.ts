@@ -11,6 +11,7 @@ function mapRowToArticle(row: Record<string, unknown>): TopArticle {
     youtubeUrl: (row.youtube_url as string | null) ?? null,
     intro: (row.intro as string) ?? "",
     items: (row.items as TopArticle["items"]) ?? [],
+    isHeroFeatured: (row.is_hero_featured as boolean) ?? false,
     isPublished: (row.is_published as boolean) ?? false,
     createdAt: row.created_at as string,
   };
