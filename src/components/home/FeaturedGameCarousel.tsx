@@ -128,65 +128,68 @@ export function FeaturedGameCarousel({
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/40" />
       </div>
 
-      {/* Conteúdo por cima da imagem. */}
-      <div className="relative mx-auto flex min-h-[320px] max-w-[1440px] flex-col justify-between gap-6 px-4 pb-6 pt-6 sm:min-h-[360px] lg:min-h-[400px] lg:px-8 lg:pt-8">
+      {/* Conteúdo por cima da imagem. A altura é fixa de propósito — o
+          cartão de estatísticas (à direita, em baixo) está posicionado
+          "flutuante" por cima da imagem em vez de empurrar este bloco,
+          para o Hero nunca mudar de tamanho ao trocar de slide, mesmo
+          quando um jogo tem mais estatísticas do que um artigo. */}
+      <div className="relative mx-auto flex h-[320px] max-w-[1440px] flex-col justify-between gap-6 px-4 pb-6 pt-6 sm:h-[360px] lg:h-[400px] lg:px-8 lg:pt-8">
         <div>{children}</div>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="flex max-w-xl gap-3.5">
-              <div className="w-1 shrink-0 rounded-full bg-primary" aria-hidden />
+        <div className="flex max-w-xl gap-3.5">
+          <div className="w-1 shrink-0 rounded-full bg-primary" aria-hidden />
 
-              <div>
-                <p
-                  className={`mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] ${CATEGORY_LABEL_STYLES[slide.category]}`}
-                >
-                  {slide.category}
-                </p>
+          <div>
+            <p
+              className={`mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] ${CATEGORY_LABEL_STYLES[slide.category]}`}
+            >
+              {slide.category}
+            </p>
 
-                {count > 1 && (
-                  <div className="mb-3 flex items-center gap-1.5">
-                    {slides.map((s, i) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        aria-label={`Ver ${s.title}`}
-                        aria-current={i === index}
-                        onClick={() => goTo(i)}
-                        className={
-                          i === index
-                            ? "h-1.5 w-4 rounded-full bg-white transition-all"
-                            : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
-                        }
-                      />
-                    ))}
-                  </div>
-                )}
-
-                <Link key={slide.id} href={slide.href} className="group block w-fit">
-                  <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
-                    {slide.title}
-                  </p>
-                  {slide.subtitle && (
-                    <p className="mt-1 line-clamp-1 max-w-md text-sm text-ink-muted">{slide.subtitle}</p>
-                  )}
-                </Link>
-
-                {search && (
-                  <div className="mt-4 w-full max-w-md rounded-sm shadow-glow">{search}</div>
-                )}
+            {count > 1 && (
+              <div className="mb-3 flex items-center gap-1.5">
+                {slides.map((s, i) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    aria-label={`Ver ${s.title}`}
+                    aria-current={i === index}
+                    onClick={() => goTo(i)}
+                    className={
+                      i === index
+                        ? "h-1.5 w-4 rounded-full bg-white transition-all"
+                        : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
+                    }
+                  />
+                ))}
               </div>
-            </div>
+            )}
 
-            <div key={`stats-${slide.id}`} className="animate-carousel-fade hidden lg:block">
-              {slide.game ? (
-                <FeaturedGameStats game={slide.game} />
-              ) : slide.facts ? (
-                <HeroFactsCard facts={slide.facts} />
-              ) : null}
-            </div>
+            <Link key={slide.id} href={slide.href} className="group block w-fit">
+              <p className="font-display text-3xl font-bold uppercase tracking-wide text-ink group-hover:text-primary-light sm:text-4xl">
+                {slide.title}
+              </p>
+              {slide.subtitle && (
+                <p className="mt-1 line-clamp-1 max-w-md text-sm text-ink-muted">{slide.subtitle}</p>
+              )}
+            </Link>
+
+            {search && <div className="mt-4 w-full max-w-md rounded-sm shadow-glow">{search}</div>}
           </div>
         </div>
+      </div>
+
+      {/* Cartão de estatísticas/factos — posicionado por cima da imagem,
+          sem afetar a altura da secção (ver nota acima). */}
+      <div
+        key={`stats-${slide.id}`}
+        className="animate-carousel-fade absolute bottom-6 right-4 z-[1] hidden lg:right-8 lg:block"
+      >
+        {slide.game ? (
+          <FeaturedGameStats game={slide.game} />
+        ) : slide.facts ? (
+          <HeroFactsCard facts={slide.facts} />
+        ) : null}
       </div>
 
       {count > 1 && (
