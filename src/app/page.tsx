@@ -52,7 +52,13 @@ export default async function HomePage() {
   const discoveryArticles = await getDiscoveryArticles();
   const topArticles = await getTopArticles();
 
-  const heroSlides = buildHeroSlides({ featuredGames, hourWithArticles, retroArticles, topArticles });
+  const heroSlides = buildHeroSlides({
+    featuredGames,
+    hourWithArticles,
+    retroArticles,
+    discoveryArticles,
+    topArticles,
+  });
 
   if (featuredGames.length === 0) {
     return null;

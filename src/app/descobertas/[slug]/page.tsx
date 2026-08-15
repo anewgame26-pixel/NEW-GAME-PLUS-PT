@@ -11,7 +11,7 @@ import { getDiscoveryArticleBySlug } from "@/lib/data/discovery";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getGames } from "@/lib/data/games";
-import { normalizeTitle } from "@/lib/utils";
+import { normalizeTitle, getYoutubeEmbedUrl } from "@/lib/utils";
 import { DISCOVERY_TAGS } from "@/types";
 
 interface ArtigoPageProps {
@@ -58,6 +58,7 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
   if (!article) notFound();
 
   const heroImage = article.heroImageUrl ?? article.coverUrl;
+  const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
 
   const [hourWithArticles, retroArticles, games] = await Promise.all([
     getHourWithArticles(),
@@ -123,6 +124,18 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
                   </span>
                 );
               })}
+            </div>
+          )}
+
+          {embedUrl && (
+            <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
+              <iframe
+                src={embedUrl}
+                title={`Vídeo: ${article.title}`}
+                className="absolute inset-0 h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
           )}
 

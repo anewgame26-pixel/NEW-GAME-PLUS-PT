@@ -1,4 +1,4 @@
-import type { Game, HeroSlide, HourWithArticle, RetroArticle, TopArticle } from "@/types";
+import type { DiscoveryArticle, Game, HeroSlide, HourWithArticle, RetroArticle, TopArticle } from "@/types";
 import { difficultyLabel, formatPlatinumTime, grindLabel, stripHtml } from "@/lib/utils";
 
 function gameToSlide(game: Game): HeroSlide {
@@ -68,6 +68,38 @@ function retroToSlide(article: RetroArticle): HeroSlide | null {
   };
 }
 
+function discoveryToSlide(article: DiscoveryArticle): HeroSlide | null {
+  const imageUrl = article.heroImageUrl ?? article.coverUrl;
+  if (!imageUrl) return null;
+  return {
+    id: `discovery-${article.id}`,
+    category: "Descobertas+",
+    title: article.title,
+    subtitle: stripHtml(article.veredicto) || article.platform,
+    imageUrl,
+    heroFocusX: null,
+    href: `/descobertas/${article.slug}`,
+    facts: [
+      ...(article.platform || article.releaseYear
+        ? [
+            {
+              label: "Plataforma",
+              value:
+                article.platform && article.releaseYear
+                  ? `${article.platform} · ${article.releaseYear}`
+                  : (article.platform ?? String(article.releaseYear)),
+            },
+          ]
+        : []),
+      {
+        label: "Recomendamos?",
+        value: article.recomendamos === null ? "Por decidir" : article.recomendamos ? "Sim" : "Não",
+        warn: article.recomendamos === false,
+      },
+    ],
+  };
+}
+
 function topToSlide(article: TopArticle): HeroSlide | null {
   const imageUrl = article.heroImageUrl ?? article.coverUrl;
   if (!imageUrl) return null;
@@ -97,11 +129,13 @@ export function buildHeroSlides({
   featuredGames,
   hourWithArticles,
   retroArticles,
+  discoveryArticles,
   topArticles,
 }: {
   featuredGames: Game[];
   hourWithArticles: HourWithArticle[];
   retroArticles: RetroArticle[];
+  discoveryArticles: DiscoveryArticle[];
   topArticles: TopArticle[];
 }): HeroSlide[] {
   const gameSlides = featuredGames.map(gameToSlide);
@@ -113,12 +147,16 @@ export function buildHeroSlides({
     .filter((a) => a.isHeroFeatured)
     .map(retroToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
+  const discoverySlides = discoveryArticles
+    .filter((a) => a.isHeroFeatured)
+    .map(discoveryToSlide)
+    .filter((s): s is HeroSlide => Boolean(s));
   const topSlides = topArticles
     .filter((a) => a.isHeroFeatured)
     .map(topToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
 
-  const editorPicks = [...gameSlides, ...hourWithSlides, ...retroSlides, ...topSlides];
+  const editorPicks = [...gameSlides, ...hourWithSlides, ...retroSlides, ...discoverySlides, ...topSlides];
 
   return editorPicks;
 }

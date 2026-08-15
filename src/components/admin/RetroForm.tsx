@@ -20,6 +20,7 @@ const defaultForm = {
   releaseYear: "",
   coverUrl: "",
   heroImageUrl: "",
+  youtubeUrl: "",
   body: "",
   pros: [] as string[],
   contras: [] as string[],
@@ -58,6 +59,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           releaseYear: data.release_year ? String(data.release_year) : "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          youtubeUrl: data.youtube_url ?? "",
           body: data.body ?? "",
           pros: data.pros ?? [],
           contras: data.contras ?? [],
@@ -111,6 +113,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
       release_year: form.releaseYear ? Number(form.releaseYear) : null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      youtube_url: form.youtubeUrl.trim() || null,
       body: form.body.trim(),
       pros: form.pros.map((p) => p.trim()).filter(Boolean),
       contras: form.contras.map((c) => c.trim()).filter(Boolean),
@@ -298,6 +301,16 @@ export function RetroForm({ articleId }: RetroFormProps) {
               type="text"
               value={form.heroImageUrl}
               onChange={(e) => setForm((f) => ({ ...f, heroImageUrl: e.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className={labelClass}>Link do vídeo (YouTube)</span>
+            <input
+              type="text"
+              value={form.youtubeUrl}
+              onChange={(e) => setForm((f) => ({ ...f, youtubeUrl: e.target.value }))}
+              placeholder="https://www.youtube.com/watch?v=..."
               className={inputClass}
             />
           </label>

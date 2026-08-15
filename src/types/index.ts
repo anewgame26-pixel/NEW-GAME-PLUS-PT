@@ -77,7 +77,7 @@ export interface HeroSlideFact {
  */
 export interface HeroSlide {
   id: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Top+";
+  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Top+";
   title: string;
   subtitle: string | null;
   imageUrl: string;
@@ -345,6 +345,7 @@ export interface RetroArticle {
   releaseYear: number | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  youtubeUrl: string | null;
   body: string;
   pros: string[];
   contras: string[];
@@ -409,6 +410,7 @@ export interface DiscoveryArticle {
   releaseYear: number | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  youtubeUrl: string | null;
   tags: string[];
   body: string;
   pros: string[];
@@ -416,6 +418,8 @@ export interface DiscoveryArticle {
   veredicto: string;
   /** Resposta a "recomendamos?". null = ainda por decidir. */
   recomendamos: boolean | null;
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
 }

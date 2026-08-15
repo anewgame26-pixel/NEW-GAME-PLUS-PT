@@ -11,7 +11,7 @@ import { getRetroArticleBySlug } from "@/lib/data/retro";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getGames } from "@/lib/data/games";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
-import { normalizeTitle } from "@/lib/utils";
+import { normalizeTitle, getYoutubeEmbedUrl } from "@/lib/utils";
 
 interface ArtigoPageProps {
   params: Promise<{ slug: string }>;
@@ -57,6 +57,7 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
   if (!article) notFound();
 
   const heroImage = article.heroImageUrl ?? article.coverUrl;
+  const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
 
   // Liga automaticamente a artigos "Uma Hora Com" e a jogos de "Antes da
   // Platina" sobre o mesmo título, tal como já acontece nesses dois.
@@ -105,6 +106,18 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
             {article.platform}
             {article.releaseYear ? ` · ${article.releaseYear}` : ""}
           </p>
+
+          {embedUrl && (
+            <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
+              <iframe
+                src={embedUrl}
+                title={`Vídeo: ${article.title}`}
+                className="absolute inset-0 h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
 
           <div className="mt-4 flex flex-col gap-2">
             {matchingGame && (

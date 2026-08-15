@@ -21,12 +21,14 @@ const defaultForm = {
   releaseYear: "",
   coverUrl: "",
   heroImageUrl: "",
+  youtubeUrl: "",
   tags: [] as string[],
   body: "",
   pros: [] as string[],
   contras: [] as string[],
   veredicto: "",
   recomendamos: null as boolean | null,
+  isHeroFeatured: false,
   isPublished: false,
 };
 
@@ -59,12 +61,14 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
           releaseYear: data.release_year ? String(data.release_year) : "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          youtubeUrl: data.youtube_url ?? "",
           tags: data.tags ?? [],
           body: data.body ?? "",
           pros: data.pros ?? [],
           contras: data.contras ?? [],
           veredicto: data.veredicto ?? "",
           recomendamos: data.recomendamos ?? null,
+          isHeroFeatured: data.is_hero_featured ?? false,
           isPublished: data.is_published ?? false,
         });
         setWasPublished(data.is_published ?? false);
@@ -119,12 +123,14 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
       release_year: form.releaseYear ? Number(form.releaseYear) : null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      youtube_url: form.youtubeUrl.trim() || null,
       tags: form.tags,
       body: form.body.trim(),
       pros: form.pros.map((p) => p.trim()).filter(Boolean),
       contras: form.contras.map((c) => c.trim()).filter(Boolean),
       veredicto: form.veredicto.trim(),
       recomendamos: form.recomendamos,
+      is_hero_featured: form.isHeroFeatured,
       is_published: form.isPublished,
     };
 
@@ -223,6 +229,23 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
         </span>
       </label>
 
+      <label className="mb-6 flex items-center gap-3 rounded-sm border border-primary/30 bg-primary/5 px-4 py-3">
+        <input
+          type="checkbox"
+          checked={form.isHeroFeatured}
+          onChange={(e) => setForm((f) => ({ ...f, isHeroFeatured: e.target.checked }))}
+          className="h-5 w-5 accent-primary"
+        />
+        <span className="flex-1">
+          <span className="block text-sm font-bold uppercase tracking-wide text-primary-light">
+            Destacar no Hero da homepage
+          </span>
+          <span className="block text-xs text-ink-dim">
+            Aparece no carrossel principal do topo do site (só se também estiver publicado).
+          </span>
+        </span>
+      </label>
+
       {error && (
         <p className="mb-4 rounded-sm border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary-light">
           {error}
@@ -288,6 +311,16 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
               type="text"
               value={form.heroImageUrl}
               onChange={(e) => setForm((f) => ({ ...f, heroImageUrl: e.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className={labelClass}>Link do vídeo (YouTube)</span>
+            <input
+              type="text"
+              value={form.youtubeUrl}
+              onChange={(e) => setForm((f) => ({ ...f, youtubeUrl: e.target.value }))}
+              placeholder="https://www.youtube.com/watch?v=..."
               className={inputClass}
             />
           </label>
