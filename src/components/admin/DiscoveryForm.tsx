@@ -9,6 +9,7 @@ import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImp
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 import { DISCOVERY_TAGS } from "@/types";
 
 interface DiscoveryFormProps {
@@ -22,6 +23,7 @@ const defaultForm = {
   releaseYear: "",
   coverUrl: "",
   heroImageUrl: "",
+  heroFocusX: 50,
   youtubeUrl: "",
   tags: [] as string[],
   body: "",
@@ -62,6 +64,7 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
           releaseYear: data.release_year ? String(data.release_year) : "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
           youtubeUrl: data.youtube_url ?? "",
           tags: data.tags ?? [],
           body: data.body ?? "",
@@ -124,6 +127,7 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
       release_year: form.releaseYear ? Number(form.releaseYear) : null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      hero_focus_x: form.heroFocusX,
       youtube_url: form.youtubeUrl.trim() || null,
       tags: form.tags,
       body: form.body.trim(),
@@ -341,6 +345,14 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
             folder="descobertas"
           />
         </div>
+
+        {form.heroImageUrl && (
+          <HeroFocusSlider
+            imageUrl={form.heroImageUrl}
+            value={form.heroFocusX}
+            onChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+          />
+        )}
 
         <div className="flex flex-col gap-2">
           <span className={labelClass}>Categorias</span>

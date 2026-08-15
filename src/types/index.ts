@@ -314,6 +314,8 @@ export interface HourWithArticle {
   platform: string | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
+  heroFocusX: number;
   datePlayed: string | null;
   youtubeUrl: string | null;
   firstImpression: string;
@@ -345,6 +347,8 @@ export interface RetroArticle {
   releaseYear: number | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
+  heroFocusX: number;
   youtubeUrl: string | null;
   body: string;
   pros: string[];
@@ -388,6 +392,8 @@ export interface TopArticle {
   title: string;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
+  heroFocusX: number;
   youtubeUrl: string | null;
   intro: string;
   items: TopArticleItem[];
@@ -410,6 +416,8 @@ export interface DiscoveryArticle {
   releaseYear: number | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
+  /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
+  heroFocusX: number;
   youtubeUrl: string | null;
   tags: string[];
   body: string;

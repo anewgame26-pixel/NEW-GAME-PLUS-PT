@@ -110,7 +110,14 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
       <main>
         {heroImage && (
           <div className="relative h-[260px] w-full sm:h-[360px]">
-            <Image src={heroImage} alt={article.title} fill priority className="object-cover" />
+            <Image
+              src={heroImage}
+              alt={article.title}
+              fill
+              priority
+              className="object-cover"
+              style={{ objectPosition: `${article.heroFocusX}% 50%` }}
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent" />
           </div>
         )}

@@ -23,7 +23,7 @@ function hourWithToSlide(article: HourWithArticle): HeroSlide | null {
     title: article.title,
     subtitle: stripHtml(article.firstImpression) || article.platform,
     imageUrl,
-    heroFocusX: null,
+    heroFocusX: article.heroFocusX,
     href: `/uma-hora-com/${article.slug}`,
     facts: [
       ...(article.platform ? [{ label: "Plataforma", value: article.platform }] : []),
@@ -45,7 +45,7 @@ function retroToSlide(article: RetroArticle): HeroSlide | null {
     title: article.title,
     subtitle: stripHtml(article.veredicto) || article.platform,
     imageUrl,
-    heroFocusX: null,
+    heroFocusX: article.heroFocusX,
     href: `/retro/${article.slug}`,
     facts: [
       ...(article.platform || article.releaseYear
@@ -77,7 +77,7 @@ function discoveryToSlide(article: DiscoveryArticle): HeroSlide | null {
     title: article.title,
     subtitle: stripHtml(article.veredicto) || article.platform,
     imageUrl,
-    heroFocusX: null,
+    heroFocusX: article.heroFocusX,
     href: `/descobertas/${article.slug}`,
     facts: [
       ...(article.platform || article.releaseYear
@@ -109,7 +109,7 @@ function topToSlide(article: TopArticle): HeroSlide | null {
     title: article.title,
     subtitle: stripHtml(article.intro) || null,
     imageUrl,
-    heroFocusX: null,
+    heroFocusX: article.heroFocusX,
     href: `/top/${article.slug}`,
     facts: [
       { label: "Jogos na lista", value: String(article.items.length) },

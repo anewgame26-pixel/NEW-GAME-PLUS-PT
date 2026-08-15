@@ -8,6 +8,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
+import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 
 interface HourWithFormProps {
   articleId?: string;
@@ -19,6 +20,7 @@ const defaultForm = {
   platform: "",
   coverUrl: "",
   heroImageUrl: "",
+  heroFocusX: 50,
   datePlayed: "",
   youtubeUrl: "",
   firstImpression: "",
@@ -63,6 +65,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
           platform: data.platform ?? "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
           datePlayed: data.date_played ?? "",
           youtubeUrl: data.youtube_url ?? "",
           firstImpression: data.first_impression ?? "",
@@ -123,6 +126,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
       platform: form.platform.trim() || null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      hero_focus_x: form.heroFocusX,
       date_played: form.datePlayed || null,
       youtube_url: form.youtubeUrl.trim() || null,
       first_impression: form.firstImpression.trim(),
@@ -320,6 +324,14 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
             />
           </label>
         </div>
+
+        {form.heroImageUrl && (
+          <HeroFocusSlider
+            imageUrl={form.heroImageUrl}
+            value={form.heroFocusX}
+            onChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+          />
+        )}
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Link do vídeo do YouTube (opcional)</span>

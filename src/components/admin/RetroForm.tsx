@@ -9,6 +9,7 @@ import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImp
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 
 interface RetroFormProps {
   articleId?: string;
@@ -21,6 +22,7 @@ const defaultForm = {
   releaseYear: "",
   coverUrl: "",
   heroImageUrl: "",
+  heroFocusX: 50,
   youtubeUrl: "",
   body: "",
   pros: [] as string[],
@@ -60,6 +62,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           releaseYear: data.release_year ? String(data.release_year) : "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
           youtubeUrl: data.youtube_url ?? "",
           body: data.body ?? "",
           pros: data.pros ?? [],
@@ -114,6 +117,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
       release_year: form.releaseYear ? Number(form.releaseYear) : null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      hero_focus_x: form.heroFocusX,
       youtube_url: form.youtubeUrl.trim() || null,
       body: form.body.trim(),
       pros: form.pros.map((p) => p.trim()).filter(Boolean),
@@ -313,6 +317,14 @@ export function RetroForm({ articleId }: RetroFormProps) {
             folder="retro"
           />
         </div>
+
+        {form.heroImageUrl && (
+          <HeroFocusSlider
+            imageUrl={form.heroImageUrl}
+            value={form.heroFocusX}
+            onChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+          />
+        )}
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Artigo</span>

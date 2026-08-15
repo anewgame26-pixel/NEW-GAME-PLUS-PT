@@ -9,6 +9,7 @@ function mapRowToArticle(row: Record<string, unknown>): HourWithArticle {
     platform: (row.platform as string | null) ?? null,
     coverUrl: (row.cover_url as string | null) ?? null,
     heroImageUrl: (row.hero_image_url as string | null) ?? null,
+    heroFocusX: typeof row.hero_focus_x === "number" ? row.hero_focus_x : 50,
     datePlayed: (row.date_played as string | null) ?? null,
     youtubeUrl: (row.youtube_url as string | null) ?? null,
     firstImpression: (row.first_impression as string) ?? "",

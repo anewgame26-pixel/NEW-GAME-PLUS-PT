@@ -8,6 +8,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 import type { TopArticleItem } from "@/types";
 
 interface TopFormProps {
@@ -19,6 +20,7 @@ const defaultForm = {
   slug: "",
   coverUrl: "",
   heroImageUrl: "",
+  heroFocusX: 50,
   youtubeUrl: "",
   intro: "",
   items: [] as TopArticleItem[],
@@ -53,6 +55,7 @@ export function TopForm({ articleId }: TopFormProps) {
           slug: data.slug ?? "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
+          heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
           youtubeUrl: data.youtube_url ?? "",
           intro: data.intro ?? "",
           items: data.items ?? [],
@@ -89,6 +92,7 @@ export function TopForm({ articleId }: TopFormProps) {
       slug: form.slug.trim(),
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
+      hero_focus_x: form.heroFocusX,
       youtube_url: form.youtubeUrl.trim() || null,
       intro: form.intro.trim(),
       items: form.items
@@ -266,6 +270,14 @@ export function TopForm({ articleId }: TopFormProps) {
             folder="top"
           />
         </div>
+
+        {form.heroImageUrl && (
+          <HeroFocusSlider
+            imageUrl={form.heroImageUrl}
+            value={form.heroFocusX}
+            onChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+          />
+        )}
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Introdução</span>
