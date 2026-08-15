@@ -8,6 +8,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface RetroFormProps {
   articleId?: string;
@@ -286,24 +287,6 @@ export function RetroForm({ articleId }: RetroFormProps) {
               className={inputClass}
             />
           </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da capa</span>
-            <input
-              type="text"
-              value={form.coverUrl}
-              onChange={(e) => setForm((f) => ({ ...f, coverUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da imagem larga (topo do artigo)</span>
-            <input
-              type="text"
-              value={form.heroImageUrl}
-              onChange={(e) => setForm((f) => ({ ...f, heroImageUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
           <label className="flex flex-col gap-1.5 sm:col-span-2">
             <span className={labelClass}>Link do vídeo (YouTube)</span>
             <input
@@ -314,6 +297,21 @@ export function RetroForm({ articleId }: RetroFormProps) {
               className={inputClass}
             />
           </label>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ImageUploader
+            label="Capa"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            folder="retro"
+          />
+          <ImageUploader
+            label="Imagem larga (topo do artigo)"
+            value={form.heroImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
+            folder="retro"
+          />
         </div>
 
         <label className="flex flex-col gap-1.5">

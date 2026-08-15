@@ -8,6 +8,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { DISCOVERY_TAGS } from "@/types";
 
 interface DiscoveryFormProps {
@@ -324,6 +325,21 @@ export function DiscoveryForm({ articleId }: DiscoveryFormProps) {
               className={inputClass}
             />
           </label>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ImageUploader
+            label="Capa"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            folder="descobertas"
+          />
+          <ImageUploader
+            label="Imagem larga (topo do artigo)"
+            value={form.heroImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
+            folder="descobertas"
+          />
         </div>
 
         <div className="flex flex-col gap-2">
