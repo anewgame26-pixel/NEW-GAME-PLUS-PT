@@ -5,6 +5,9 @@ interface HeroFocusSliderProps {
   /** Posição horizontal do enquadramento (0 = esquerda, 50 = centro, 100 = direita). */
   focusX: number;
   onFocusXChange: (value: number) => void;
+  /** Posição vertical do enquadramento (0 = topo, 50 = centro, 100 = base). */
+  focusY: number;
+  onFocusYChange: (value: number) => void;
   /** Nível de zoom (100 = tamanho normal, até 200 = ampliada 2x). */
   zoom: number;
   onZoomChange: (value: number) => void;
@@ -13,7 +16,7 @@ interface HeroFocusSliderProps {
 /**
  * Deixa o editor escolher como a imagem larga fica enquadrada quando o
  * layout a corta (carrossel do Hero, banner do topo do artigo):
- * - Enquadramento: que parte horizontal fica visível.
+ * - Enquadramento horizontal e vertical: que parte da imagem fica visível.
  * - Zoom: aproxima a imagem, útil quando o assunto principal é pequeno
  *   ou está longe do centro.
  */
@@ -21,6 +24,8 @@ export function HeroFocusSlider({
   imageUrl,
   focusX,
   onFocusXChange,
+  focusY,
+  onFocusYChange,
   zoom,
   onZoomChange,
 }: HeroFocusSliderProps) {
@@ -51,6 +56,29 @@ export function HeroFocusSlider({
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
+          <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+            Enquadramento (cima / baixo)
+          </span>
+          <span className="text-xs text-ink-dim">{focusY}%</span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={focusY}
+          onChange={(e) => onFocusYChange(Number(e.target.value))}
+          className="w-full max-w-[280px] accent-primary"
+        />
+        <div className="flex w-full max-w-[280px] justify-between text-[10px] text-ink-dim">
+          <span>Topo</span>
+          <span>Centro</span>
+          <span>Base</span>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
           <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Zoom</span>
           <span className="text-xs text-ink-dim">{zoom}%</span>
         </div>
@@ -75,13 +103,14 @@ export function HeroFocusSlider({
           src={imageUrl}
           alt="Pré-visualização do enquadramento"
           className="h-full w-full object-cover"
-          style={{ objectPosition: `${focusX}% 50%`, transform: `scale(${zoom / 100})` }}
+          style={{ objectPosition: `${focusX}% ${focusY}%`, transform: `scale(${zoom / 100})` }}
         />
       </div>
       <span className="text-xs text-ink-dim">
         Esta imagem aparece cortada em faixas largas (banner do artigo e carrossel da
         homepage) — ajusta o enquadramento e o zoom até ficares satisfeito. A
-        pré-visualização acima é aproximada.
+        pré-visualização acima é aproximada. Nota: o zoom só amplia (não é possível
+        "afastar" — a imagem já preenche a caixa toda, não há mais para mostrar).
       </span>
     </div>
   );

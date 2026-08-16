@@ -48,6 +48,7 @@ const defaultGameForm = {
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
+  heroFocusY: 50,
   heroZoom: 100,
   platforms: [] as Platform[],
   genres: [] as Genre[],
@@ -200,6 +201,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         coverUrl: g.cover_url ?? "",
         heroImageUrl: g.hero_image_url ?? "",
         heroFocusX: typeof g.hero_focus_x === "number" ? g.hero_focus_x : 50,
+        heroFocusY: typeof g.hero_focus_y === "number" ? g.hero_focus_y : 50,
         heroZoom: typeof g.hero_zoom === "number" ? g.hero_zoom : 100,
         platforms: g.platforms ?? [],
         genres: g.genres ?? [],
@@ -308,6 +310,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       coverUrl: result.coverUrl ?? f.coverUrl,
       heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
       heroFocusX: result.heroImageUrl ? 50 : f.heroFocusX,
+      heroFocusY: result.heroImageUrl ? 50 : f.heroFocusY,
       heroZoom: result.heroImageUrl ? 100 : f.heroZoom,
       developer: result.developer ?? f.developer,
       releaseYear: result.releaseYear ?? f.releaseYear,
@@ -379,6 +382,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       cover_url: game.coverUrl.trim(),
       hero_image_url: game.heroImageUrl.trim() || null,
       hero_focus_x: game.heroFocusX,
+      hero_focus_y: game.heroFocusY,
       hero_zoom: game.heroZoom,
       platforms: game.platforms,
       genres: game.genres,
@@ -749,6 +753,8 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
               imageUrl={game.heroImageUrl}
               focusX={game.heroFocusX}
               onFocusXChange={(heroFocusX) => setGame((f) => ({ ...f, heroFocusX }))}
+              focusY={game.heroFocusY}
+              onFocusYChange={(heroFocusY) => setGame((f) => ({ ...f, heroFocusY }))}
               zoom={game.heroZoom}
               onZoomChange={(heroZoom) => setGame((f) => ({ ...f, heroZoom }))}
             />

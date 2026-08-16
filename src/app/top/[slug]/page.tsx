@@ -85,7 +85,7 @@ export default async function TopArtigoPage({ params }: TopArtigoPageProps) {
               priority
               className="object-cover"
               style={{
-                objectPosition: `${article.heroFocusX}% 50%`,
+                objectPosition: `${article.heroFocusX}% ${article.heroFocusY}%`,
                 transform: `scale(${article.heroZoom / 100})`,
               }}
             />

@@ -122,7 +122,7 @@ export function FeaturedGameCarousel({
           sizes="100vw"
           className="object-cover"
           style={{
-            objectPosition: `${isMobile ? (slide.heroFocusX ?? 50) : 50}% 50%`,
+            objectPosition: `${isMobile ? (slide.heroFocusX ?? 50) : 50}% ${isMobile ? (slide.heroFocusY ?? 50) : 50}%`,
             transform: `scale(${(isMobile ? (slide.heroZoom ?? 100) : 100) / 100})`,
           }}
           priority={index === 0}

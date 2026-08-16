@@ -21,6 +21,7 @@ const defaultForm = {
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
+  heroFocusY: 50,
   heroZoom: 100,
   youtubeUrl: "",
   intro: "",
@@ -57,6 +58,7 @@ export function TopForm({ articleId }: TopFormProps) {
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
           heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
+          heroFocusY: typeof data.hero_focus_y === "number" ? data.hero_focus_y : 50,
           heroZoom: typeof data.hero_zoom === "number" ? data.hero_zoom : 100,
           youtubeUrl: data.youtube_url ?? "",
           intro: data.intro ?? "",
@@ -95,6 +97,7 @@ export function TopForm({ articleId }: TopFormProps) {
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
       hero_focus_x: form.heroFocusX,
+      hero_focus_y: form.heroFocusY,
       hero_zoom: form.heroZoom,
       youtube_url: form.youtubeUrl.trim() || null,
       intro: form.intro.trim(),
@@ -279,6 +282,8 @@ export function TopForm({ articleId }: TopFormProps) {
             imageUrl={form.heroImageUrl}
             focusX={form.heroFocusX}
             onFocusXChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+            focusY={form.heroFocusY}
+            onFocusYChange={(heroFocusY) => setForm((f) => ({ ...f, heroFocusY }))}
             zoom={form.heroZoom}
             onZoomChange={(heroZoom) => setForm((f) => ({ ...f, heroZoom }))}
           />
