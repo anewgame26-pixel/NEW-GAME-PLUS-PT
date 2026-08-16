@@ -110,7 +110,7 @@ export function HeroFocusSlider({
         Esta imagem aparece cortada em faixas largas (banner do artigo e carrossel da
         homepage) — ajusta o enquadramento e o zoom até ficares satisfeito. A
         pré-visualização acima é aproximada. Nota: o zoom só amplia (não é possível
-        "afastar" — a imagem já preenche a caixa toda, não há mais para mostrar).
+        &quot;afastar&quot; — a imagem já preenche a caixa toda, não há mais para mostrar).
       </span>
     </div>
   );
