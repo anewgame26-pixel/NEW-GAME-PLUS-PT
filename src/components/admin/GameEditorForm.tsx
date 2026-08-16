@@ -14,6 +14,7 @@ import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
 import { RoadmapChapterEditor } from "@/components/admin/RoadmapChapterEditor";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
+import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 import type {
   Genre,
   GrindLevel,
@@ -47,6 +48,7 @@ const defaultGameForm = {
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
+  heroZoom: 100,
   platforms: [] as Platform[],
   genres: [] as Genre[],
   releaseYear: new Date().getFullYear(),
@@ -198,6 +200,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         coverUrl: g.cover_url ?? "",
         heroImageUrl: g.hero_image_url ?? "",
         heroFocusX: typeof g.hero_focus_x === "number" ? g.hero_focus_x : 50,
+        heroZoom: typeof g.hero_zoom === "number" ? g.hero_zoom : 100,
         platforms: g.platforms ?? [],
         genres: g.genres ?? [],
         releaseYear: g.release_year ?? new Date().getFullYear(),
@@ -305,6 +308,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       coverUrl: result.coverUrl ?? f.coverUrl,
       heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
       heroFocusX: result.heroImageUrl ? 50 : f.heroFocusX,
+      heroZoom: result.heroImageUrl ? 100 : f.heroZoom,
       developer: result.developer ?? f.developer,
       releaseYear: result.releaseYear ?? f.releaseYear,
       releaseDate: result.releaseDate ?? f.releaseDate,
@@ -375,6 +379,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       cover_url: game.coverUrl.trim(),
       hero_image_url: game.heroImageUrl.trim() || null,
       hero_focus_x: game.heroFocusX,
+      hero_zoom: game.heroZoom,
       platforms: game.platforms,
       genres: game.genres,
       release_year: game.releaseYear,
@@ -740,43 +745,13 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
           </label>
 
           {game.heroImageUrl && (
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
-                  Enquadramento no telemóvel
-                </span>
-                <span className="text-xs text-ink-dim">{game.heroFocusX}%</span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={1}
-                value={game.heroFocusX}
-                onChange={(e) => setGame((f) => ({ ...f, heroFocusX: Number(e.target.value) }))}
-                className="w-full max-w-[220px] accent-primary"
-              />
-              <div className="flex w-full max-w-[220px] justify-between text-[10px] text-ink-dim">
-                <span>Esquerda</span>
-                <span>Centro</span>
-                <span>Direita</span>
-              </div>
-              <div className="relative h-44 w-36 overflow-hidden rounded-sm border border-border">
-                <Image
-                  src={game.heroImageUrl}
-                  alt="Pré-visualização do enquadramento no telemóvel"
-                  fill
-                  className="object-cover"
-                  style={{ objectPosition: `${game.heroFocusX}% 50%` }}
-                />
-              </div>
-              <span className="text-xs text-ink-dim">
-                Ecrã do telemóvel é estreito e corta os lados da imagem — arrasta para
-                escolheres exatamente qual a parte que fica visível. No computador a imagem
-                mantém-se sempre centrada, como já está — isto só muda o telemóvel. A
-                pré-visualização acima mostra aproximadamente o recorte do telemóvel.
-              </span>
-            </div>
+            <HeroFocusSlider
+              imageUrl={game.heroImageUrl}
+              focusX={game.heroFocusX}
+              onFocusXChange={(heroFocusX) => setGame((f) => ({ ...f, heroFocusX }))}
+              zoom={game.heroZoom}
+              onZoomChange={(heroZoom) => setGame((f) => ({ ...f, heroZoom }))}
+            />
           )}
 
           <div className="grid gap-4 sm:grid-cols-2">

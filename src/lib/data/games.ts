@@ -15,6 +15,7 @@ function mapRowToGame(row: Record<string, unknown>): Game {
     coverUrl: row.cover_url as string,
     heroImageUrl: (row.hero_image_url as string | null) ?? null,
     heroFocusX: typeof row.hero_focus_x === "number" ? row.hero_focus_x : 50,
+    heroZoom: typeof row.hero_zoom === "number" ? row.hero_zoom : 100,
     platforms: row.platforms as Game["platforms"],
     genres: row.genres as Game["genres"],
     releaseYear: row.release_year as number,

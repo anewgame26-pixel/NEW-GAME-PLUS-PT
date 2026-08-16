@@ -9,6 +9,7 @@ function mapRowToArticle(row: Record<string, unknown>): TopArticle {
     coverUrl: (row.cover_url as string | null) ?? null,
     heroImageUrl: (row.hero_image_url as string | null) ?? null,
     heroFocusX: typeof row.hero_focus_x === "number" ? row.hero_focus_x : 50,
+    heroZoom: typeof row.hero_zoom === "number" ? row.hero_zoom : 100,
     youtubeUrl: (row.youtube_url as string | null) ?? null,
     intro: (row.intro as string) ?? "",
     items: (row.items as TopArticle["items"]) ?? [],

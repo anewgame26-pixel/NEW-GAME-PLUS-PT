@@ -31,6 +31,8 @@ export interface Game {
    * (direita), 50 = centro. Ajusta o que fica visível no recorte estreito
    * do telemóvel. */
   heroFocusX: number;
+  /** Nível de zoom da imagem larga (100 = normal, até 200 = ampliada 2x). */
+  heroZoom: number;
   platforms: Platform[];
   genres: Genre[];
   releaseYear: number;
@@ -82,6 +84,7 @@ export interface HeroSlide {
   subtitle: string | null;
   imageUrl: string;
   heroFocusX: number | null;
+  heroZoom: number | null;
   href: string;
   /** Presente só para slides "Antes da Platina" — mostra o cartão de estatísticas completo do jogo. */
   game?: Game;
@@ -316,6 +319,7 @@ export interface HourWithArticle {
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
   heroFocusX: number;
+  heroZoom: number;
   datePlayed: string | null;
   youtubeUrl: string | null;
   firstImpression: string;
@@ -349,6 +353,7 @@ export interface RetroArticle {
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
   heroFocusX: number;
+  heroZoom: number;
   youtubeUrl: string | null;
   body: string;
   pros: string[];
@@ -394,6 +399,7 @@ export interface TopArticle {
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
   heroFocusX: number;
+  heroZoom: number;
   youtubeUrl: string | null;
   intro: string;
   items: TopArticleItem[];
@@ -418,6 +424,7 @@ export interface DiscoveryArticle {
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
   heroFocusX: number;
+  heroZoom: number;
   youtubeUrl: string | null;
   tags: string[];
   body: string;

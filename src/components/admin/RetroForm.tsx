@@ -23,6 +23,7 @@ const defaultForm = {
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
+  heroZoom: 100,
   youtubeUrl: "",
   body: "",
   pros: [] as string[],
@@ -63,6 +64,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
           heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
+          heroZoom: typeof data.hero_zoom === "number" ? data.hero_zoom : 100,
           youtubeUrl: data.youtube_url ?? "",
           body: data.body ?? "",
           pros: data.pros ?? [],
@@ -118,6 +120,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
       hero_focus_x: form.heroFocusX,
+      hero_zoom: form.heroZoom,
       youtube_url: form.youtubeUrl.trim() || null,
       body: form.body.trim(),
       pros: form.pros.map((p) => p.trim()).filter(Boolean),
@@ -321,8 +324,10 @@ export function RetroForm({ articleId }: RetroFormProps) {
         {form.heroImageUrl && (
           <HeroFocusSlider
             imageUrl={form.heroImageUrl}
-            value={form.heroFocusX}
-            onChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+            focusX={form.heroFocusX}
+            onFocusXChange={(heroFocusX) => setForm((f) => ({ ...f, heroFocusX }))}
+            zoom={form.heroZoom}
+            onZoomChange={(heroZoom) => setForm((f) => ({ ...f, heroZoom }))}
           />
         )}
 

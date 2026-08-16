@@ -10,6 +10,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.igdb.com",
       },
+      {
+        // Fotos anexadas pelo admin, guardadas no Supabase Storage
+        // (ex: https://<projeto>.supabase.co/storage/v1/object/public/...)
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
     ],
   },
 };

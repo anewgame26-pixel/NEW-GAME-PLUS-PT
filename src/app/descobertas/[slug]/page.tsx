@@ -93,14 +93,17 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
       <GameBreadcrumb items={[{ label: "Descobertas+", href: "/descobertas" }, { label: article.title }]} />
       <main>
         {heroImage && (
-          <div className="relative h-[260px] w-full sm:h-[360px]">
+          <div className="relative h-[260px] w-full overflow-hidden sm:h-[360px]">
             <Image
               src={heroImage}
               alt={article.title}
               fill
               priority
               className="object-cover"
-              style={{ objectPosition: `${article.heroFocusX}% 50%` }}
+              style={{
+                objectPosition: `${article.heroFocusX}% 50%`,
+                transform: `scale(${article.heroZoom / 100})`,
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent" />
           </div>
