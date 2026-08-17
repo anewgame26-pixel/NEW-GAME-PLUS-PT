@@ -114,7 +114,7 @@ export function Header() {
             className="mb-3"
           >
             <SearchInput
-              placeholder="Pesquisa um jogo, guia ou artigo..."
+              placeholder="Pesquisar..."
               value={mobileQuery}
               onChange={(e) => setMobileQuery(e.target.value)}
             />
