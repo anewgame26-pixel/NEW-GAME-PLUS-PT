@@ -25,7 +25,7 @@ export function HeroSearchForm() {
     <form onSubmit={handleSubmit}>
       <SearchInput
         size="lg"
-        placeholder="Que jogo queres conhecer?"
+        placeholder="Pesquisa um jogo, guia ou artigo..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
