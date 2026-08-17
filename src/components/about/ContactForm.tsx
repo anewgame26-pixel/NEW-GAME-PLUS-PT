@@ -1,16 +1,47 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Check, Mail } from "lucide-react";
+import { Check, Loader2, Mail } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      subject: String(formData.get("subject") ?? "").trim(),
+      message: String(formData.get("message") ?? "").trim(),
+    };
+
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setError(data?.error ?? "Não foi possível enviar a mensagem. Tenta novamente.");
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("Não foi possível enviar a mensagem. Verifica a tua ligação e tenta novamente.");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -35,6 +66,7 @@ export function ContactForm() {
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Nome</span>
             <input
               required
+              name="name"
               type="text"
               placeholder="O teu nome"
               className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
@@ -44,6 +76,7 @@ export function ContactForm() {
             <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Email</span>
             <input
               required
+              name="email"
               type="email"
               placeholder="o-teu-email@exemplo.com"
               className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
@@ -55,6 +88,7 @@ export function ContactForm() {
           <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Assunto</span>
           <input
             required
+            name="subject"
             type="text"
             placeholder="Sobre o que é o teu contacto?"
             className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
@@ -65,15 +99,26 @@ export function ContactForm() {
           <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">Mensagem</span>
           <textarea
             required
+            name="message"
             rows={5}
             placeholder="Escreve a tua mensagem..."
             className="resize-none rounded-sm border border-border bg-bg-surface2 px-3 py-2.5 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
           />
         </label>
 
-        <Button type="submit" className="self-start">
-          <Mail width={15} height={15} />
-          Enviar Mensagem
+        {error && (
+          <p className="rounded-sm border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary-light">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" disabled={sending} className="self-start">
+          {sending ? (
+            <Loader2 width={15} height={15} className="animate-spin" />
+          ) : (
+            <Mail width={15} height={15} />
+          )}
+          {sending ? "A enviar..." : "Enviar Mensagem"}
         </Button>
       </form>
     </Card>
