@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -49,7 +50,20 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center px-4 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-[1440px] items-center gap-6 px-4 lg:px-8">
+        <Link href="/" className="flex shrink-0 items-center" aria-label="NewGame+ PT">
+          <span className="relative block h-9 w-[46px] sm:h-10 sm:w-[51px] lg:h-12 lg:w-[61px]">
+            <Image
+              src="/logo-hero.png"
+              alt="NewGame+ PT"
+              fill
+              priority
+              sizes="61px"
+              className="object-contain"
+            />
+          </span>
+        </Link>
+
         <nav className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
