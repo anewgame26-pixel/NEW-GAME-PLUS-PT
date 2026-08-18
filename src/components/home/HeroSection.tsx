@@ -13,8 +13,8 @@ export function HeroSection({ slides }: HeroSectionProps) {
     <FeaturedGameCarousel slides={slides} search={<HeroSearchForm />}>
       <Link
         href="/"
-        className="relative block w-full max-w-[250px] overflow-hidden sm:max-w-[290px]"
-        style={{ aspectRatio: "917 / 721" }}
+        className="relative block w-full max-w-[210px] overflow-hidden sm:max-w-[250px]"
+        style={{ aspectRatio: "514 / 406" }}
         aria-label="NewGame+ PT"
       >
         <Image
@@ -22,7 +22,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
           alt="NewGame+ PT"
           fill
           priority
-          sizes="290px"
+          sizes="250px"
           className="object-contain"
         />
       </Link>
