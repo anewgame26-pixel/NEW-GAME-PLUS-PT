@@ -19,7 +19,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
       >
         <Image
           src="/logo-hero.png"
-          alt="NewGame+ PT — Nós sofremos. Tu escolhes melhor."
+          alt="NewGame+ PT"
           fill
           priority
           sizes="260px"
