@@ -90,7 +90,11 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
             </p>
           </div>
           <div>
-            <Button variant="secondary" className="mt-4 w-full border-accent/40 text-accent hover:bg-accent/10">
+            <Button
+              href="#"
+              variant="secondary"
+              className="mt-4 w-full border-accent/40 text-accent hover:bg-accent/10"
+            >
               Entrar no Discord
             </Button>
             <p className="mt-3 flex items-center gap-1.5 text-xs text-ink-dim">

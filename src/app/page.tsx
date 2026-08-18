@@ -11,6 +11,7 @@ import { BeforePlatinumCarousel } from "@/components/home/BeforePlatinumCarousel
 import { HourWithFeature } from "@/components/home/HourWithFeature";
 import { ArticleTeaserPanel, ArticleTeaserItem } from "@/components/home/ArticleTeaserPanel";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
+import { CommunityPanel } from "@/components/home/CommunityPanel";
 import { StatsBar } from "@/components/home/StatsBar";
 import { getGames, getFeaturedGames } from "@/lib/data/games";
 import { getLatestBeforePlatinum, getUpcomingVideos } from "@/lib/data/videos";
@@ -19,6 +20,7 @@ import { getNowPlaying, resolveNowPlaying } from "@/lib/data/now-playing";
 import { getTeamMembers } from "@/lib/data/team";
 import { getPlatformStats } from "@/lib/data/stats";
 import { getVotingCandidates } from "@/lib/data/voting";
+import { getCommunityHighlights } from "@/lib/data/community";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
@@ -46,6 +48,7 @@ export default async function HomePage() {
   const nowPlayingRows = await getNowPlaying();
   const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
   const votingCandidates = await getVotingCandidates();
+  const { posts: communityPosts, onlineCount } = await getCommunityHighlights();
 
   const hourWithArticles = await getHourWithArticles();
   const retroArticles = await getRetroArticles();
@@ -248,6 +251,11 @@ export default async function HomePage() {
 
         {/* 7. ESTATÍSTICAS */}
         <StatsBar stats={platformStats} />
+
+        {/* 8. COMUNIDADE — tópicos recentes, Discord e newsletter. */}
+        <div className="border-t border-border">
+          <CommunityPanel posts={communityPosts} onlineCount={onlineCount} />
+        </div>
       </main>
       <Footer />
     </>
