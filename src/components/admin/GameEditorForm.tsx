@@ -7,7 +7,7 @@ import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { revalidatePaths } from "@/lib/admin/revalidate";
 import { rankingConfigs } from "@/data/mock/rankings-config";
-import { cn, genreLabel, platformLabel, slugify } from "@/lib/utils";
+import { cn, genreLabel, platformLabel, slugify, extractYoutubeId } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
@@ -458,7 +458,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         .map((c) => ({
           title: c.title.trim(),
           description: c.description.trim(),
-          youtubeId: c.youtubeId?.trim() || undefined,
+          youtubeId: extractYoutubeId(c.youtubeId ?? "") || undefined,
           missables: (c.missables ?? []).filter(
             (m) => m.title.trim() !== "" || m.description.trim() !== ""
           ),
@@ -466,7 +466,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       hardest_trophies: detail.hardestTrophies,
       trophy_list: detail.trophyList,
       prep_tips: detail.prepTips.filter((t) => t.trim() !== ""),
-      video_id: detail.videoId.trim() || null,
+      video_id: extractYoutubeId(detail.videoId) || null,
       guide_href: `/guias/${game.slug.trim()}`,
       roadmap_href: `/guias/${game.slug.trim()}#roadmap`,
       overall_score: detail.overallScore,
@@ -1273,13 +1273,13 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             <input
               type="text"
               value={detail.videoId}
-              onChange={(e) => setDetail((f) => ({ ...f, videoId: e.target.value }))}
-              placeholder="Ex: dQw4w9WgXcQ"
+              onChange={(e) => setDetail((f) => ({ ...f, videoId: extractYoutubeId(e.target.value) }))}
+              placeholder="Cola o link do YouTube ou o código do vídeo"
               className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
             />
             <span className="text-xs text-ink-dim">
-              É este vídeo que aparece embutido na página do jogo. Cola só o código
-              que vem a seguir a &quot;v=&quot; no URL do YouTube.
+              É este vídeo que aparece embutido na página do jogo. Podes colar o
+              link inteiro do YouTube — o código é extraído automaticamente.
             </span>
           </label>
         </div>

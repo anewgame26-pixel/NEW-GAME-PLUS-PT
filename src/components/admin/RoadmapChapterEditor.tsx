@@ -6,6 +6,7 @@ import type { RoadmapChapter, RoadmapChapterMissable } from "@/types";
 import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { extractYoutubeId } from "@/lib/utils";
 
 interface RoadmapChapterEditorProps {
   chapters: RoadmapChapter[];
@@ -122,8 +123,8 @@ export function RoadmapChapterEditor({ chapters, onChange }: RoadmapChapterEdito
                   <input
                     type="text"
                     value={chapter.youtubeId ?? ""}
-                    onChange={(e) => updateChapter(i, { youtubeId: e.target.value })}
-                    placeholder="Ex: dQw4w9WgXcQ"
+                    onChange={(e) => updateChapter(i, { youtubeId: extractYoutubeId(e.target.value) })}
+                    placeholder="Cola o link do YouTube ou o código do vídeo"
                     className="h-10 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
                   />
                 </label>

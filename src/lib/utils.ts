@@ -118,3 +118,27 @@ export function getYoutubeEmbedUrl(url: string | null): string | null {
   );
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
+
+/**
+ * Extrai só o código do vídeo (11 carateres) de qualquer coisa que a
+ * pessoa cole no campo "ID do vídeo do YouTube" — link completo, link
+ * curto (youtu.be), link em formato markdown, ou já só o código. Serve
+ * para esses campos nunca partirem só porque alguém colou o link inteiro
+ * em vez do código.
+ */
+export function extractYoutubeId(input: string): string {
+  const trimmed = input.trim();
+  if (!trimmed) return "";
+
+  const urlMatch = trimmed.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  if (urlMatch) return urlMatch[1];
+
+  // Já parece ser só o código (11 carateres válidos) — mantém como está.
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+
+  // Não reconhecido (ex: ainda a escrever) — devolve tal e qual para não
+  // atrapalhar enquanto a pessoa está a colar/editar.
+  return trimmed;
+}
