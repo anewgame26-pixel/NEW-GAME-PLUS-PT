@@ -21,6 +21,7 @@ import { VideoEmbed } from "@/components/game/VideoEmbed";
 import { GameEngagementBar } from "@/components/game/GameEngagementBar";
 import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games";
 import { getGameDetail } from "@/lib/data/game-details";
+import { getTeamMembers } from "@/lib/data/team";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
@@ -80,6 +81,10 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   }
 
   const similarGames = await getGamesByIds(game.similarGameIds);
+
+  const reviewAuthor = detail.reviewAuthorId
+    ? (await getTeamMembers()).find((m) => m.id === detail.reviewAuthorId) ?? null
+    : null;
 
   // Se existir um artigo "Uma Hora Com" sobre o mesmo jogo, ligamos as
   // duas páginas uma à outra (comparação por título, ignorando
@@ -188,7 +193,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
         </section>
 
         <div className="border-t border-border">
-          <ReviewSection review={detail.review} />
+          <ReviewSection review={detail.review} author={reviewAuthor} />
         </div>
 
         <DifficultyExplanation game={game} explanation={detail.difficultyExplanation} />

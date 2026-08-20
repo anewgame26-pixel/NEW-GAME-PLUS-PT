@@ -85,6 +85,7 @@ const defaultDetailForm = {
     verdict: "",
     sufferingBadge: null as SufferingBadge | null,
   },
+  reviewAuthorId: null as string | null,
   roadmapChapters: [] as RoadmapChapter[],
   hardestTrophies: [] as HardestTrophy[],
   trophyList: [] as TrophyListItem[],
@@ -154,6 +155,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
   const [game, setGame] = useState(defaultGameForm);
   const [detail, setDetail] = useState(defaultDetailForm);
   const [otherGames, setOtherGames] = useState<GameOption[]>([]);
+  const [teamMembers, setTeamMembers] = useState<{ id: string; name: string; role: string }[]>([]);
 
   // REDE DE SEGURANÇA PARA OS DADOS — guarda o texto exato tal como
   // veio da Supabase, logo que a página abre, para o podermos comparar
@@ -177,6 +179,12 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
         .select("id, title")
         .order("title", { ascending: true });
       setOtherGames((gamesRes.data ?? []).filter((g) => g.id !== gameId));
+
+      const teamRes = await supabase
+        .from("team_members")
+        .select("id, name, role")
+        .order("sort_order", { ascending: true });
+      setTeamMembers(teamRes.data ?? []);
 
       if (!gameId) {
         setLoading(false);
@@ -241,6 +249,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
             verdict: d.review_verdict ?? "",
             sufferingBadge: d.suffering_badge ?? null,
           },
+          reviewAuthorId: d.review_author_id ?? null,
           roadmapChapters: d.roadmap_chapters?.length ? d.roadmap_chapters : [],
           hardestTrophies: d.hardest_trophies ?? [],
           trophyList: d.trophy_list ?? [],
@@ -453,6 +462,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       review_cons: detail.review.cons.filter((c) => c.trim() !== ""),
       review_verdict: detail.review.verdict.trim(),
       suffering_badge: detail.review.sufferingBadge,
+      review_author_id: detail.reviewAuthorId,
       roadmap_chapters: detail.roadmapChapters
         .filter((c) => c.title.trim() !== "" || c.description.trim() !== "")
         .map((c) => ({
@@ -1103,6 +1113,30 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
                     }))
                   }
                 />
+              </label>
+
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+                  Escrito por (opcional)
+                </span>
+                <select
+                  value={detail.reviewAuthorId ?? ""}
+                  onChange={(e) =>
+                    setDetail((f) => ({ ...f, reviewAuthorId: e.target.value || null }))
+                  }
+                  className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink outline-none focus:border-primary"
+                >
+                  <option value="">— Sem autor definido —</option>
+                  {teamMembers.map((member) => (
+                    <option key={member.id} value={member.id}>
+                      {member.name} — {member.role}
+                    </option>
+                  ))}
+                </select>
+                <span className="text-xs text-ink-dim">
+                  Aparece junto à review, na página do jogo. A lista vem da equipa em{" "}
+                  /admin/equipa.
+                </span>
               </label>
 
               <div>

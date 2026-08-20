@@ -194,6 +194,8 @@ export interface GameDetail {
   minPlaythroughs: number;
   difficultyExplanation: string;
   review: ReviewContent;
+  /** Membro da equipa que escreveu esta review (opcional). */
+  reviewAuthorId: string | null;
   roadmapChapters: RoadmapChapter[];
   hardestTrophies: HardestTrophy[];
   /** Lista completa de troféus do jogo (substitui a antiga sinopse na página) */

@@ -1,23 +1,49 @@
-import { Check, X, Play } from "lucide-react";
+import { Check, X, Play, PenLine } from "lucide-react";
 import Image from "next/image";
 import { ReviewContent } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { RichText } from "@/components/ui/RichText";
 import { SUFFERING_BADGES } from "@/lib/suffering-badges";
 
-interface ReviewSectionProps {
-  review: ReviewContent;
+interface ReviewAuthor {
+  name: string;
+  role: string;
+  avatarInitials: string;
 }
 
-export function ReviewSection({ review }: ReviewSectionProps) {
+interface ReviewSectionProps {
+  review: ReviewContent;
+  author?: ReviewAuthor | null;
+}
+
+export function ReviewSection({ review, author }: ReviewSectionProps) {
   return (
     <section id="review" className="scroll-mt-20 py-10">
       <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
-        <div className="mb-5 flex items-center gap-2">
-          <Play width={18} height={18} className="text-primary" />
-          <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
-            Antes da Platina
-          </h2>
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Play width={18} height={18} className="text-primary" />
+            <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
+              Antes da Platina
+            </h2>
+          </div>
+
+          {author && (
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                {author.avatarInitials}
+              </span>
+              <div className="min-w-0 leading-tight">
+                <p className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-ink-dim">
+                  <PenLine width={10} height={10} />
+                  Escrito por
+                </p>
+                <p className="truncate text-sm font-semibold text-ink">
+                  {author.name} <span className="font-normal text-ink-dim">— {author.role}</span>
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <Card className="p-6">
