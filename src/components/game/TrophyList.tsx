@@ -36,6 +36,10 @@ const TIER_STYLES: Record<TrophyTier, string> = {
   bronze: "border-border-light hover:border-ink-dim",
 };
 
+// Quantos troféus mostrar em pré-visualização antes de a lista estar
+// completamente expandida.
+const PREVIEW_COUNT = 3;
+
 interface Mention {
   location: "review" | "roadmap";
   /** Só definido quando location === "roadmap" */
@@ -120,6 +124,46 @@ function goToMention(trophy: TrophyListItem) {
   }
 }
 
+function TrophyCard({
+  trophy,
+  tier,
+  mentionLocation,
+}: {
+  trophy: TrophyListItem;
+  tier: TrophyTier;
+  mentionLocation: "review" | "roadmap" | undefined;
+}) {
+  const isClickable = Boolean(mentionLocation);
+  return (
+    <Card
+      className={cn("overflow-hidden border transition-colors", TIER_STYLES[tier])}
+    >
+      <button
+        type="button"
+        disabled={!isClickable}
+        onClick={() => goToMention(trophy)}
+        className={cn(
+          "flex w-full items-start gap-3 p-4 text-left",
+          isClickable ? "cursor-pointer hover:bg-bg-surface2" : "cursor-default"
+        )}
+      >
+        <span className="text-lg leading-none">{TIER_EMOJI[tier]}</span>
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-sm font-semibold text-ink">{trophy.name}</p>
+          {trophy.description && (
+            <p className="mt-1 text-xs text-ink-muted">{trophy.description}</p>
+          )}
+          {isClickable && (
+            <span className="mt-1.5 inline-block text-[10px] font-medium text-gold">
+              {mentionLocation === "roadmap" ? "→ ver no roadmap" : "→ ver na review"}
+            </span>
+          )}
+        </div>
+      </button>
+    </Card>
+  );
+}
+
 export function TrophyList({ trophies }: TrophyListProps) {
   const [mentions, setMentions] = useState<Map<string, "review" | "roadmap">>(new Map());
   const [isOpen, setIsOpen] = useState(false);
@@ -139,6 +183,14 @@ export function TrophyList({ trophies }: TrophyListProps) {
     tier,
     count: trophies.filter((t) => t.tier === tier).length,
   })).filter((c) => c.count > 0);
+
+  // Troféus ordenados por tier (Platina primeiro) — usados na
+  // pré-visualização, para mostrar sempre os mais importantes primeiro.
+  const orderedTrophies = TIER_ORDER.flatMap((tier) =>
+    trophies.filter((t) => t.tier === tier).map((t) => ({ trophy: t, tier }))
+  );
+  const previewItems = orderedTrophies.slice(0, PREVIEW_COUNT);
+  const remainingCount = trophies.length - previewItems.length;
 
   return (
     <div>
@@ -169,60 +221,65 @@ export function TrophyList({ trophies }: TrophyListProps) {
         </div>
       </button>
 
+      {!isOpen && (
+        <div className="mt-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {previewItems.map(({ trophy, tier }) => (
+              <TrophyCard
+                key={trophy.name}
+                trophy={trophy}
+                tier={tier}
+                mentionLocation={mentions.get(trophy.name)}
+              />
+            ))}
+          </div>
+
+          {remainingCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="mt-3 flex items-center gap-1.5 text-sm font-semibold text-gold hover:underline"
+            >
+              Ver mais {remainingCount} troféus
+              <ChevronDown width={14} height={14} />
+            </button>
+          )}
+        </div>
+      )}
+
       {isOpen && (
         <div className="mt-4 flex flex-col gap-6">
           {TIER_ORDER.map((tier) => {
-          const items = trophies.filter((t) => t.tier === tier);
-          if (items.length === 0) return null;
+            const items = trophies.filter((t) => t.tier === tier);
+            if (items.length === 0) return null;
 
-          return (
-            <div key={tier}>
-              <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">
-                {TIER_EMOJI[tier]} {TIER_LABEL[tier]} · {items.length}
-              </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {items.map((trophy) => {
-                  const mentionLocation = mentions.get(trophy.name);
-                  const isClickable = Boolean(mentionLocation);
-                  return (
-                    <Card
+            return (
+              <div key={tier}>
+                <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">
+                  {TIER_EMOJI[tier]} {TIER_LABEL[tier]} · {items.length}
+                </p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((trophy) => (
+                    <TrophyCard
                       key={trophy.name}
-                      className={cn(
-                        "overflow-hidden border transition-colors",
-                        TIER_STYLES[tier]
-                      )}
-                    >
-                      <button
-                        type="button"
-                        disabled={!isClickable}
-                        onClick={() => goToMention(trophy)}
-                        className={cn(
-                          "flex w-full items-start gap-3 p-4 text-left",
-                          isClickable ? "cursor-pointer hover:bg-bg-surface2" : "cursor-default"
-                        )}
-                      >
-                        <span className="text-lg leading-none">{TIER_EMOJI[tier]}</span>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-display text-sm font-semibold text-ink">
-                            {trophy.name}
-                          </p>
-                          {trophy.description && (
-                            <p className="mt-1 text-xs text-ink-muted">{trophy.description}</p>
-                          )}
-                          {isClickable && (
-                            <span className="mt-1.5 inline-block text-[10px] font-medium text-gold">
-                              {mentionLocation === "roadmap" ? "→ ver no roadmap" : "→ ver na review"}
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    </Card>
-                  );
-                })}
+                      trophy={trophy}
+                      tier={tier}
+                      mentionLocation={mentions.get(trophy.name)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center gap-1.5 self-start text-sm font-semibold text-ink-muted hover:text-ink"
+          >
+            <ChevronDown width={14} height={14} className="rotate-180" />
+            Mostrar menos
+          </button>
         </div>
       )}
     </div>
