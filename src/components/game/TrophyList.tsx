@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Trophy } from "lucide-react";
+import { ChevronDown, Trophy } from "lucide-react";
 import { TrophyListItem, TrophyTier } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
@@ -122,6 +122,7 @@ function goToMention(trophy: TrophyListItem) {
 
 export function TrophyList({ trophies }: TrophyListProps) {
   const [mentions, setMentions] = useState<Map<string, "review" | "roadmap">>(new Map());
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const found = new Map<string, "review" | "roadmap">();
@@ -141,10 +142,18 @@ export function TrophyList({ trophies }: TrophyListProps) {
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <button
+        type="button"
+        onClick={() => setIsOpen((v) => !v)}
+        aria-expanded={isOpen}
+        className="flex w-full flex-wrap items-center justify-between gap-3 text-left"
+      >
         <h2 className="flex items-center gap-2 font-display text-lg font-bold uppercase tracking-wide text-ink">
           <Trophy width={18} height={18} className="text-gold" />
           Lista de Troféus
+          <span className="text-sm font-normal normal-case text-ink-dim">
+            ({trophies.length})
+          </span>
         </h2>
         <div className="flex items-center gap-3 text-sm text-ink-muted">
           {counts.map((c) => (
@@ -152,11 +161,17 @@ export function TrophyList({ trophies }: TrophyListProps) {
               {TIER_EMOJI[c.tier]} {c.count}
             </span>
           ))}
+          <ChevronDown
+            width={18}
+            height={18}
+            className={cn("text-ink-dim transition-transform", isOpen && "rotate-180")}
+          />
         </div>
-      </div>
+      </button>
 
-      <div className="flex flex-col gap-6">
-        {TIER_ORDER.map((tier) => {
+      {isOpen && (
+        <div className="mt-4 flex flex-col gap-6">
+          {TIER_ORDER.map((tier) => {
           const items = trophies.filter((t) => t.tier === tier);
           if (items.length === 0) return null;
 
@@ -208,7 +223,8 @@ export function TrophyList({ trophies }: TrophyListProps) {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
