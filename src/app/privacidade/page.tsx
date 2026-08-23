@@ -16,7 +16,7 @@ export default function PrivacidadePage() {
       <main>
         <PageHeader
           title="Política de Privacidade"
-          description="Última atualização: 8 de agosto de 2026"
+          description="Última atualização: 22 de agosto de 2026"
         />
 
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
@@ -90,13 +90,30 @@ export default function PrivacidadePage() {
 
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">
-                5. Cookies
+                5. Cookies e publicidade
               </h2>
               <p>
-                Usamos apenas cookies essenciais, necessários para manteres a sessão
-                iniciada em segurança. Não usamos cookies de publicidade nem de
-                rastreio entre sites. As estatísticas de visitas (Vercel Analytics) não
-                usam cookies.
+                Usamos cookies essenciais, necessários para manteres a sessão iniciada em
+                segurança. Se ativarmos publicidade no site através do Google AdSense,
+                a Google e os seus parceiros de publicidade poderão usar cookies e
+                identificadores semelhantes para mostrar anúncios, incluindo anúncios
+                personalizados com base nos teus interesses. Se és visitante no Espaço
+                Económico Europeu, Reino Unido ou Suíça, vamos pedir-te o teu
+                consentimento antes de qualquer cookie de publicidade ser colocado,
+                através de um aviso próprio para esse efeito. Podes alterar essa escolha
+                a qualquer momento nas definições de privacidade que esse aviso
+                disponibiliza. Para saber mais sobre como a Google usa dados neste
+                contexto, consulta a{" "}
+                <a
+                  href="https://policies.google.com/technologies/partner-sites"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                >
+                  página da Google sobre publicidade e parceiros
+                </a>
+                . As estatísticas de visitas (Vercel Analytics) continuam a não usar
+                cookies.
               </p>
             </section>
 
