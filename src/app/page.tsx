@@ -48,7 +48,7 @@ export default async function HomePage() {
   const nowPlayingRows = await getNowPlaying();
   const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
   const votingCandidates = await getVotingCandidates();
-  const { posts: communityPosts, onlineCount } = await getCommunityHighlights();
+  const { posts: communityPosts } = await getCommunityHighlights();
 
   const hourWithArticles = await getHourWithArticles();
   const retroArticles = await getRetroArticles();
@@ -252,9 +252,9 @@ export default async function HomePage() {
         {/* 7. ESTATÍSTICAS */}
         <StatsBar stats={platformStats} />
 
-        {/* 8. COMUNIDADE — tópicos recentes, Discord e newsletter. */}
+        {/* 8. COMUNIDADE — tópicos recentes e newsletter. */}
         <div className="border-t border-border">
-          <CommunityPanel posts={communityPosts} onlineCount={onlineCount} />
+          <CommunityPanel posts={communityPosts} />
         </div>
       </main>
       <Footer />

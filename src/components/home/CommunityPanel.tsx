@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { CommunityPost } from "@/types";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -11,10 +11,9 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 interface CommunityPanelProps {
   posts: CommunityPost[];
-  onlineCount: number;
 }
 
-export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
+export function CommunityPanel({ posts }: CommunityPanelProps) {
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeError, setSubscribeError] = useState<string | null>(null);
@@ -52,7 +51,7 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
 
   return (
     <section className="py-10">
-      <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-3 lg:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
         <Card className="p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-display text-base font-bold uppercase tracking-wide text-ink">
@@ -74,34 +73,6 @@ export function CommunityPanel({ posts, onlineCount }: CommunityPanelProps) {
               </li>
             ))}
           </ul>
-        </Card>
-
-        <Card className="flex flex-col justify-between p-5">
-          <div>
-            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-sm bg-accent/10 text-accent">
-              <MessageCircle width={18} height={18} />
-            </div>
-            <h3 className="font-display text-base font-bold uppercase tracking-wide text-ink">
-              Entra no nosso Discord!
-            </h3>
-            <p className="mt-2 text-sm text-ink-muted">
-              Junta-te a milhares de jogadores, partilha dicas, ajuda a comunidade
-              e encontra parceiros para conquistas online.
-            </p>
-          </div>
-          <div>
-            <Button
-              href="#"
-              variant="secondary"
-              className="mt-4 w-full border-accent/40 text-accent hover:bg-accent/10"
-            >
-              Entrar no Discord
-            </Button>
-            <p className="mt-3 flex items-center gap-1.5 text-xs text-ink-dim">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              {onlineCount} membros online
-            </p>
-          </div>
         </Card>
 
         <Card className="p-5">

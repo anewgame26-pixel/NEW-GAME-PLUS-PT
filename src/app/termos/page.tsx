@@ -60,7 +60,7 @@ export default function TermosPage() {
                 4. Conduta da comunidade
               </h2>
               <p>
-                Ao comentares ou interagires na plataforma e no Discord, comprometes-te
+                Ao comentares ou interagires na plataforma, comprometes-te
                 a manter uma conduta respeitosa. Reservamo-nos o direito de remover
                 conteúdo ou suspender acessos em caso de comportamento abusivo, spam ou
                 conteúdo ilegal.
