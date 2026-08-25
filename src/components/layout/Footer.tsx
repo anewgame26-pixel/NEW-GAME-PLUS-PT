@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Youtube, Instagram } from "lucide-react";
+import { Youtube, Instagram, MessageCircle } from "lucide-react";
 
 const COLUMNS = [
   {
@@ -93,6 +93,13 @@ export function Footer() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M16.5 2h-3.2v14.1c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .6.05.9.14V10.3a6 6 0 0 0-.9-.07 5.9 5.9 0 0 0-5.9 5.9A5.9 5.9 0 0 0 10.6 22a5.9 5.9 0 0 0 5.9-5.9V8.4a8.1 8.1 0 0 0 4.7 1.5V6.7a4.8 4.8 0 0 1-4.7-4.7Z" />
                 </svg>
+              </a>
+              <a
+                href="#"
+                aria-label="Discord"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-border text-ink-muted hover:border-accent hover:text-accent"
+              >
+                <MessageCircle width={16} height={16} />
               </a>
             </div>
           </div>

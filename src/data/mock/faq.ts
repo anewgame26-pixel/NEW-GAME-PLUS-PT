@@ -22,7 +22,7 @@ export const faqItems: FAQItem[] = [
   {
     question: "Posso sugerir um jogo para analisarem?",
     answer:
-      "Sim! Podes sugerir através da página de Contactos. Não garantimos prazo, mas todas as sugestões são lidas.",
+      "Sim! Podes sugerir através do Discord ou da página de Contactos. Não garantimos prazo, mas todas as sugestões são lidas.",
   },
   {
     question: "Têm guias para todos os jogos do catálogo?",
@@ -42,6 +42,6 @@ export const faqItems: FAQItem[] = [
   {
     question: "Como faço parte da comunidade?",
     answer:
-      "Comenta nas reviews e guias, participa no fórum da comunidade e vota nas platinas — é lá que organizamos discussões, partilhamos dicas e encontramos parceiros para troféus online.",
+      "Entra no nosso Discord — é lá que organizamos grupos para troféus online, discutimos platinas e partilhamos dicas em tempo real.",
   },
 ];

@@ -35,9 +35,9 @@ export const teamMembers: TeamMember[] = [
   {
     id: "t4",
     name: "Beatriz Nunes",
-    role: "Comunidade",
+    role: "Comunidade & Discord",
     avatarInitials: "BN",
-    bio: "Mantém a comunidade viva, organiza grupos para troféus online e sabe sempre quem está desesperado por um quarto jogador.",
+    bio: "Mantém o Discord vivo, organiza grupos para troféus online e sabe sempre quem está desesperado por um quarto jogador.",
     favoriteGame: "Last Convoy",
   },
 ];

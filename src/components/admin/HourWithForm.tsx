@@ -9,6 +9,7 @@ import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImp
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface HourWithFormProps {
   articleId?: string;
@@ -311,24 +312,18 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
               className={inputClass}
             />
           </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da capa</span>
-            <input
-              type="text"
-              value={form.coverUrl}
-              onChange={(e) => setForm((f) => ({ ...f, coverUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>URL da imagem larga (topo do artigo)</span>
-            <input
-              type="text"
-              value={form.heroImageUrl}
-              onChange={(e) => setForm((f) => ({ ...f, heroImageUrl: e.target.value }))}
-              className={inputClass}
-            />
-          </label>
+          <ImageUploader
+            label="Capa"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            folder="uma-hora-com"
+          />
+          <ImageUploader
+            label="Imagem larga (topo do artigo)"
+            value={form.heroImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
+            folder="uma-hora-com"
+          />
         </div>
 
         {form.heroImageUrl && (

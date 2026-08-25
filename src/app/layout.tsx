@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Chakra_Petch, Inter, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { FavoritesProvider } from "@/components/providers/FavoritesProvider";
 import "./globals.css";
@@ -30,9 +29,6 @@ export const metadata: Metadata = {
   title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
   description:
     "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
-  other: {
-    "google-adsense-account": "ca-pub-3168082452712504",
-  },
   openGraph: {
     type: "website",
     locale: "pt_PT",
@@ -99,12 +95,6 @@ export default function RootLayout({
     <html lang="pt-PT" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3168082452712504"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
       </head>
       <body className="font-body antialiased">
         <script
