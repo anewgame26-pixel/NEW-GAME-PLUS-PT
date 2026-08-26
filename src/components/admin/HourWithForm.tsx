@@ -10,6 +10,7 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { GameLinkSelect } from "@/components/admin/GameLinkSelect";
 
 interface HourWithFormProps {
   articleId?: string;
@@ -19,6 +20,7 @@ const defaultForm = {
   title: "",
   slug: "",
   platform: "",
+  gameId: null as string | null,
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
@@ -66,6 +68,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
           title: data.title ?? "",
           slug: data.slug ?? "",
           platform: data.platform ?? "",
+          gameId: data.game_id ?? null,
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
           heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
@@ -129,6 +132,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
       title: form.title.trim(),
       slug: form.slug.trim(),
       platform: form.platform.trim() || null,
+      game_id: form.gameId,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
       hero_focus_x: form.heroFocusX,
@@ -312,6 +316,10 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
               className={inputClass}
             />
           </label>
+          <GameLinkSelect
+            value={form.gameId}
+            onChange={(gameId) => setForm((f) => ({ ...f, gameId }))}
+          />
           <ImageUploader
             label="Capa"
             value={form.coverUrl}

@@ -8,6 +8,7 @@ function mapRowToArticle(row: Record<string, unknown>): DiscoveryArticle {
     title: row.title as string,
     platform: (row.platform as string | null) ?? null,
     releaseYear: (row.release_year as number | null) ?? null,
+    gameId: (row.game_id as string | null) ?? null,
     coverUrl: (row.cover_url as string | null) ?? null,
     heroImageUrl: (row.hero_image_url as string | null) ?? null,
     heroFocusX: typeof row.hero_focus_x === "number" ? row.hero_focus_x : 50,
@@ -48,6 +49,19 @@ export async function getDiscoveryArticleBySlug(slug: string): Promise<Discovery
     .from("discovery_articles")
     .select("*")
     .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return mapRowToArticle(data);
+}
+
+/** O artigo publicado ligado a este jogo (se existir) — usado na página do jogo. */
+export async function getDiscoveryArticleByGameId(gameId: string): Promise<DiscoveryArticle | null> {
+  const { data, error } = await supabase
+    .from("discovery_articles")
+    .select("*")
+    .eq("game_id", gameId)
     .eq("is_published", true)
     .maybeSingle();
 

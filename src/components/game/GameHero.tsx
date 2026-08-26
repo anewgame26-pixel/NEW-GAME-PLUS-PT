@@ -7,7 +7,7 @@ import { formatDate, genreLabel } from "@/lib/utils";
 
 interface GameHeroProps {
   game: Game;
-  roadmapHref: string;
+  roadmapHref?: string;
 }
 
 export function GameHero({ game, roadmapHref }: GameHeroProps) {
@@ -47,10 +47,7 @@ export function GameHero({ game, roadmapHref }: GameHeroProps) {
             <PlatformIcons platforms={game.platforms} showLabel />
           </div>
 
-          <GameCTAButtons
-            roadmapHref={roadmapHref}
-            className="mt-6"
-          />
+          {roadmapHref && <GameCTAButtons roadmapHref={roadmapHref} className="mt-6" />}
         </div>
       </div>
     </section>

@@ -10,6 +10,7 @@ import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
+import { GameLinkSelect } from "@/components/admin/GameLinkSelect";
 
 interface RetroFormProps {
   articleId?: string;
@@ -19,6 +20,7 @@ const defaultForm = {
   title: "",
   slug: "",
   platform: "",
+  gameId: null as string | null,
   releaseYear: "",
   coverUrl: "",
   heroImageUrl: "",
@@ -61,6 +63,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           title: data.title ?? "",
           slug: data.slug ?? "",
           platform: data.platform ?? "",
+          gameId: data.game_id ?? null,
           releaseYear: data.release_year ? String(data.release_year) : "",
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
@@ -118,6 +121,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
       title: form.title.trim(),
       slug: form.slug.trim(),
       platform: form.platform.trim() || null,
+      game_id: form.gameId,
       release_year: form.releaseYear ? Number(form.releaseYear) : null,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
@@ -310,6 +314,10 @@ export function RetroForm({ articleId }: RetroFormProps) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
+          <GameLinkSelect
+            value={form.gameId}
+            onChange={(gameId) => setForm((f) => ({ ...f, gameId }))}
+          />
           <ImageUploader
             label="Capa"
             value={form.coverUrl}

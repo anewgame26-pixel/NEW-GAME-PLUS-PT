@@ -42,41 +42,62 @@ function mapRowToGame(row: Record<string, unknown>): Game {
 /**
  * Vai buscar todos os jogos à base de dados (tabela games).
  *
- * Por omissão, só devolve jogos publicados (is_published = true) — é o
- * que as páginas públicas do site (homepage, /jogos, rankings, etc.)
- * devem sempre usar. O painel /admin passa includeUnpublished: true
- * para também ver rascunhos e jogos ainda sem análise (ex.: os
- * adicionados rapidamente via IGDB só para entrarem em votação).
+ * Por omissão, devolve os jogos com a análise "Antes da Platina" publicada
+ * (is_published = true), MAS também os jogos que ainda não têm essa
+ * análise pronta, desde que tenham pelo menos um outro pilar publicado
+ * (Uma Hora Com, Retro+ ou Descobertas+) — assim um jogo não fica
+ * escondido do site só porque a review completa ainda não está feita.
+ * O painel /admin passa includeUnpublished: true para ver mesmo tudo,
+ * incluindo rascunhos sem nenhum pilar publicado (ex.: os adicionados
+ * rapidamente via IGDB só para entrarem em votação).
  */
 export async function getGames(options?: { includeUnpublished?: boolean }): Promise<Game[]> {
-  let query = supabase.from("games").select("*").order("title", { ascending: true });
-  if (!options?.includeUnpublished) {
-    query = query.eq("is_published", true);
+  if (options?.includeUnpublished) {
+    const { data, error } = await supabase.from("games").select("*").order("title", { ascending: true });
+
+    if (error) {
+      console.error("Erro ao carregar jogos do Supabase:", error);
+      return [];
+    }
+
+    return (data ?? []).map(mapRowToGame);
   }
 
-  const { data, error } = await query;
+  const [gamesRes, hourWithRes, retroRes, discoveryRes] = await Promise.all([
+    supabase.from("games").select("*").order("title", { ascending: true }),
+    supabase.from("hour_with_articles").select("game_id").eq("is_published", true).not("game_id", "is", null),
+    supabase.from("retro_articles").select("game_id").eq("is_published", true).not("game_id", "is", null),
+    supabase.from("discovery_articles").select("game_id").eq("is_published", true).not("game_id", "is", null),
+  ]);
 
-  if (error) {
-    console.error("Erro ao carregar jogos do Supabase:", error);
+  if (gamesRes.error) {
+    console.error("Erro ao carregar jogos do Supabase:", gamesRes.error);
     return [];
   }
 
-  return (data ?? []).map(mapRowToGame);
+  const linkedGameIds = new Set<string>([
+    ...(hourWithRes.data ?? []).map((r) => r.game_id as string),
+    ...(retroRes.data ?? []).map((r) => r.game_id as string),
+    ...(discoveryRes.data ?? []).map((r) => r.game_id as string),
+  ]);
+
+  const rows = (gamesRes.data ?? []).filter(
+    (row) => (row.is_published as boolean) === true || linkedGameIds.has(row.id as string)
+  );
+
+  return rows.map(mapRowToGame);
 }
 
 /**
- * Vai buscar um único jogo pelo "slug" (usado nas páginas /guias/[slug]).
- * Só devolve jogos publicados — um jogo ainda em rascunho (ex.: criado
- * rapidamente via IGDB só para votação) não tem página pública própria
- * ainda, mesmo que alguém tente aceder ao link diretamente.
+ * Vai buscar um único jogo pelo "slug" (usado na página /guias/[slug]).
+ * De propósito SEM filtro de publicação: essa página passou a funcionar
+ * como o "hub" do jogo — mostra a análise Antes da Platina se existir,
+ * ou outro pilar (Uma Hora Com, Retro+, Descobertas+) caso contrário. É a
+ * própria página, já depois de saber o que existe, que decide se há
+ * conteúdo suficiente para mostrar algo ou se deve devolver 404.
  */
 export async function getGameBySlug(slug: string): Promise<Game | null> {
-  const { data, error } = await supabase
-    .from("games")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_published", true)
-    .maybeSingle();
+  const { data, error } = await supabase.from("games").select("*").eq("slug", slug).maybeSingle();
 
   if (error) {
     console.error("Erro ao carregar o jogo do Supabase:", error);
@@ -128,14 +149,8 @@ export async function getGamesByIds(ids: string[]): Promise<Game[]> {
   return (data ?? []).map(mapRowToGame);
 }
 
-/** Todos os "slugs" publicados — usado para gerar as páginas estáticas de cada jogo. */
+/** Todos os "slugs" que devem ter página pública — mesmo critério do getGames(). */
 export async function getAllGameSlugs(): Promise<string[]> {
-  const { data, error } = await supabase.from("games").select("slug").eq("is_published", true);
-
-  if (error) {
-    console.error("Erro ao carregar a lista de slugs do Supabase:", error);
-    return [];
-  }
-
-  return (data ?? []).map((row) => row.slug as string);
+  const games = await getGames();
+  return games.map((g) => g.slug);
 }

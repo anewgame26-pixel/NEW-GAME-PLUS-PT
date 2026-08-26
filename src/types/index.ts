@@ -319,6 +319,8 @@ export interface HourWithArticle {
   slug: string;
   title: string;
   platform: string | null;
+  /** Jogo da lista (Antes da Platina) a que este artigo pertence, se aplicável. */
+  gameId: string | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
@@ -354,6 +356,8 @@ export interface RetroArticle {
   title: string;
   platform: string | null;
   releaseYear: number | null;
+  /** Jogo da lista (Antes da Platina) a que este artigo pertence, se aplicável. */
+  gameId: string | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
@@ -421,12 +425,13 @@ export interface TopArticle {
  * os outros dois pilares novos, é independente da tabela "games".
  */
 export interface DiscoveryArticle {
-
   id: string;
   slug: string;
   title: string;
   platform: string | null;
   releaseYear: number | null;
+  /** Jogo da lista (Antes da Platina) a que este artigo pertence, se aplicável. */
+  gameId: string | null;
   coverUrl: string | null;
   heroImageUrl: string | null;
   /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
