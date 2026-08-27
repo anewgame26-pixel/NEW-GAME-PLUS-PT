@@ -180,11 +180,11 @@ export default async function HomePage() {
         <HeroSection slides={heroSlides} />
         <QuickFilters />
 
-        {/* 2. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
-        <NowPlayingCarousel items={playingNow} games={games} />
-
-        {/* 3. CONTEÚDO NOVO — grelha, propositadamente sem carrossel. */}
+        {/* 2. CONTEÚDO NOVO — grelha, propositadamente sem carrossel. */}
         <RecentContentGrid items={recentItems} />
+
+        {/* 3. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
+        <NowPlayingCarousel items={playingNow} games={games} />
 
         {/* 4. FERRAMENTAS — Escolhe a tua Próxima Platina + Vota na Próxima Platina lado a lado. */}
         <section className="border-t border-border py-10">
@@ -254,7 +254,7 @@ export default async function HomePage() {
 
         {/* 8. COMUNIDADE — tópicos recentes, Discord e newsletter. */}
         <div className="border-t border-border">
-          <CommunityPanel posts={communityPosts} onlineCount={onlineCount} />
+          <CommunityPanel posts={communityPosts} onlineCount={onlineCount} showDiscord={false} />
         </div>
       </main>
       <Footer />
