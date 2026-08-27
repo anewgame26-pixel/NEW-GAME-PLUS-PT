@@ -7,7 +7,7 @@ import { Check, Loader2, Wand2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { revalidatePaths } from "@/lib/admin/revalidate";
 import { rankingConfigs } from "@/data/mock/rankings-config";
-import { cn, genreLabel, platformLabel, slugify, extractYoutubeId } from "@/lib/utils";
+import { cn, genreLabel, platformLabel, slugify, extractYoutubeId, friendlySaveError } from "@/lib/utils";
 import { StringListEditor } from "@/components/admin/StringListEditor";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { BulkTrophyImport } from "@/components/admin/BulkTrophyImport";
@@ -460,7 +460,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
       if (error || !data || data.length === 0) {
         setError(
           error
-            ? `Não foi possível guardar a informação geral do jogo: ${error.message}`
+            ? `Não foi possível guardar a informação geral do jogo: ${friendlySaveError(error.message)}`
             : "Não foi possível guardar a informação geral do jogo — a gravação não afetou nenhuma linha (verifica as permissões no Supabase)."
         );
         setSaving(false);
@@ -521,9 +521,7 @@ export function GameEditorForm({ gameId }: GameEditorFormProps) {
     if (detailError) {
       console.error("Erro ao guardar game_details:", detailError);
       setError(
-        `O jogo foi guardado, mas houve um erro a guardar a Análise: ${detailError.message}` +
-          (detailError.details ? ` (${detailError.details})` : "") +
-          " — tira uma fotografia a esta mensagem e envia-a para conseguirmos perceber a causa."
+        `O jogo foi guardado, mas houve um erro a guardar a Análise: ${friendlySaveError(detailError.message)}`
       );
       return;
     }

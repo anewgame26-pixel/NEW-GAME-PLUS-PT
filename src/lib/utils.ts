@@ -164,3 +164,24 @@ export function extractYoutubeId(input: string): string {
   // atrapalhar enquanto a pessoa está a colar/editar.
   return trimmed;
 }
+
+/**
+ * Traduz os erros mais comuns do Supabase/Postgres para uma frase clara em
+ * português — em vez de mostrarmos o texto técnico em inglês diretamente
+ * no ecrã dos editores do admin.
+ */
+export function friendlySaveError(message: string): string {
+  if (message.includes("duplicate key") && message.includes("_slug_key")) {
+    return "Já existe outro artigo/jogo com este mesmo \"slug\" (o pedacinho do link). Muda ligeiramente o título, ou edita o campo do slug diretamente, para ficar único.";
+  }
+  if (message.includes("duplicate key")) {
+    return "Já existe um registo igual a este — verifica se não estás a tentar criar algo duplicado.";
+  }
+  if (message.includes("violates row-level security") || message.includes("permission denied")) {
+    return "Sem permissão para gravar isto — confirma que a tua sessão de editor ainda está iniciada (tenta sair e voltar a entrar).";
+  }
+  if (message.includes("violates foreign key")) {
+    return "Isto está ligado a algo que já não existe (por exemplo, um jogo que foi apagado). Verifica as ligações deste registo.";
+  }
+  return message;
+}

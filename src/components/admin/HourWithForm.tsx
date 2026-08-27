@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, Trash2 } from "lucide-react";
-import { slugify, platformLabel } from "@/lib/utils";
+import { slugify, platformLabel, friendlySaveError } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
@@ -163,7 +163,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
     setSaving(false);
 
     if (result.error) {
-      setError(`Não foi possível guardar: ${result.error.message}`);
+      setError(`Não foi possível guardar: ${friendlySaveError(result.error.message)}`);
       return;
     }
     if (articleId && (!result.data || (Array.isArray(result.data) && result.data.length === 0))) {
