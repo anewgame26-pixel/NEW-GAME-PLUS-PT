@@ -32,6 +32,10 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const games = await getGames();
+  // "Estamos a Jogar" é só um sinal de atividade da equipa — não deve
+  // depender de o jogo já estar publicado (com review ou outro pilar
+  // pronto). Por isso usa a lista completa, não a lista pública.
+  const allGamesForNowPlaying = await getGames({ includeUnpublished: true });
   const platformStats = await getPlatformStats();
   let featuredGames = await getFeaturedGames();
 
@@ -184,7 +188,7 @@ export default async function HomePage() {
         <RecentContentGrid items={recentItems} />
 
         {/* 3. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
-        <NowPlayingCarousel items={playingNow} games={games} />
+        <NowPlayingCarousel items={playingNow} games={allGamesForNowPlaying} />
 
         {/* 4. FERRAMENTAS — Escolhe a tua Próxima Platina + Vota na Próxima Platina lado a lado. */}
         <section className="border-t border-border py-10">
