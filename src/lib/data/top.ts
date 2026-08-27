@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { TopArticle } from "@/types";
 
 function mapRowToArticle(row: Record<string, unknown>): TopArticle {
@@ -51,7 +52,8 @@ export async function getTopArticleBySlug(slug: string): Promise<TopArticle | nu
 
 /** Todos os artigos, incluindo rascunhos — só para o admin. */
 export async function getAllTopArticlesAdmin(): Promise<TopArticle[]> {
-  const { data, error } = await supabase
+  const supabaseServer = await createServerSupabaseClient();
+  const { data, error } = await supabaseServer
     .from("top_articles")
     .select("*")
     .order("created_at", { ascending: false });

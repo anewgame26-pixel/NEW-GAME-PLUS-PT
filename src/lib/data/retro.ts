@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { RetroArticle } from "@/types";
 
 function mapRowToArticle(row: Record<string, unknown>): RetroArticle {
@@ -70,7 +71,8 @@ export async function getRetroArticleByGameId(gameId: string): Promise<RetroArti
 
 /** Todos os artigos, incluindo rascunhos — só para o admin. */
 export async function getAllRetroArticlesAdmin(): Promise<RetroArticle[]> {
-  const { data, error } = await supabase
+  const supabaseServer = await createServerSupabaseClient();
+  const { data, error } = await supabaseServer
     .from("retro_articles")
     .select("*")
     .order("created_at", { ascending: false });

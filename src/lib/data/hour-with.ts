@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { HourWithArticle } from "@/types";
 
 function mapRowToArticle(row: Record<string, unknown>): HourWithArticle {
@@ -73,9 +74,19 @@ export async function getHourWithArticleByGameId(gameId: string): Promise<HourWi
   return mapRowToArticle(data);
 }
 
-/** Todos os artigos, incluindo rascunhos — só para o admin. */
+/**
+ * Todos os artigos, incluindo rascunhos — só para o admin.
+ *
+ * Usa o cliente do SERVIDOR (com a sessão do editor, lida dos cookies) em
+ * vez do cliente público — os rascunhos (is_published = false) só são
+ * visíveis para quem estiver autenticado como editor. Com o cliente
+ * público, esta função "via" só os artigos já publicados, fazendo
+ * rascunhos parecerem ter desaparecido mesmo tendo sido guardados com
+ * sucesso.
+ */
 export async function getAllHourWithArticlesAdmin(): Promise<HourWithArticle[]> {
-  const { data, error } = await supabase
+  const supabaseServer = await createServerSupabaseClient();
+  const { data, error } = await supabaseServer
     .from("hour_with_articles")
     .select("*")
     .order("created_at", { ascending: false });
