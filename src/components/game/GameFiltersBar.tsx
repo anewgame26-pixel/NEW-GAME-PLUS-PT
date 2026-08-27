@@ -46,9 +46,37 @@ const GENRE_OPTIONS: Genre[] = [
   "coop",
   "plataformas",
   "mundo-aberto",
+  "estrategia",
+  "puzzle",
+  "corrida",
+  "luta",
+  "simulacao",
+  "musical",
+  "desporto",
+  "visual-novel",
+  "metroidvania",
+  "tatico",
+  "sobrevivencia",
+  "party",
 ];
 
-const PLATFORM_OPTIONS: Platform[] = ["ps5", "ps4", "xbox", "switch", "pc"];
+const PLATFORM_OPTIONS: Platform[] = [
+  "ps5",
+  "ps4",
+  "ps3",
+  "ps2",
+  "ps1",
+  "xbox",
+  "switch",
+  "switch2",
+  "pc",
+  "gamecube",
+  "snes",
+  "nes",
+  "mega-drive",
+  "dreamcast",
+  "saturn",
+];
 
 interface GameFiltersBarProps {
   filters: GameFilters;

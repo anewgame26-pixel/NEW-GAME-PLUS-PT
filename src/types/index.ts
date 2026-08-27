@@ -1,4 +1,19 @@
-export type Platform = "ps5" | "ps4" | "xbox" | "switch" | "pc";
+export type Platform =
+  | "ps5"
+  | "ps4"
+  | "ps3"
+  | "ps2"
+  | "ps1"
+  | "xbox"
+  | "switch"
+  | "switch2"
+  | "pc"
+  | "gamecube"
+  | "snes"
+  | "nes"
+  | "mega-drive"
+  | "dreamcast"
+  | "saturn";
 
 export type Genre =
   | "acao"
@@ -8,7 +23,19 @@ export type Genre =
   | "aventura"
   | "coop"
   | "plataformas"
-  | "mundo-aberto";
+  | "mundo-aberto"
+  | "estrategia"
+  | "puzzle"
+  | "corrida"
+  | "luta"
+  | "simulacao"
+  | "musical"
+  | "desporto"
+  | "visual-novel"
+  | "metroidvania"
+  | "tatico"
+  | "sobrevivencia"
+  | "party";
 
 export type GrindLevel = "baixo" | "medio" | "alto";
 

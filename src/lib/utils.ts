@@ -62,6 +62,18 @@ export function genreLabel(genre: string) {
     coop: "Coop",
     plataformas: "Plataformas",
     "mundo-aberto": "Mundo Aberto",
+    estrategia: "Estratégia",
+    puzzle: "Puzzle",
+    corrida: "Corrida",
+    luta: "Luta",
+    simulacao: "Simulação",
+    musical: "Musical",
+    desporto: "Desporto",
+    "visual-novel": "Visual Novel",
+    metroidvania: "Metroidvania",
+    tatico: "Tático",
+    sobrevivencia: "Sobrevivência",
+    party: "Party",
   };
   return map[genre] ?? genre;
 }
@@ -70,9 +82,19 @@ export function platformLabel(platform: string) {
   const map: Record<string, string> = {
     ps5: "PS5",
     ps4: "PS4",
+    ps3: "PS3",
+    ps2: "PS2",
+    ps1: "PS1",
     xbox: "Xbox",
     switch: "Switch",
+    switch2: "Switch 2",
     pc: "PC",
+    gamecube: "GameCube",
+    snes: "SNES",
+    nes: "NES",
+    "mega-drive": "Mega Drive",
+    dreamcast: "Dreamcast",
+    saturn: "Saturn",
   };
   return map[platform] ?? platform.toUpperCase();
 }

@@ -29,7 +29,23 @@ import { SUFFERING_BADGES } from "@/lib/suffering-badges";
 
 const TROPHY_TIERS = ["bronze", "prata", "ouro", "platina"] as const;
 
-const PLATFORM_OPTIONS: Platform[] = ["ps5", "ps4", "xbox", "switch", "pc"];
+const PLATFORM_OPTIONS: Platform[] = [
+  "ps5",
+  "ps4",
+  "ps3",
+  "ps2",
+  "ps1",
+  "xbox",
+  "switch",
+  "switch2",
+  "pc",
+  "gamecube",
+  "snes",
+  "nes",
+  "mega-drive",
+  "dreamcast",
+  "saturn",
+];
 const GENRE_OPTIONS: Genre[] = [
   "acao",
   "rpg",
@@ -39,6 +55,18 @@ const GENRE_OPTIONS: Genre[] = [
   "coop",
   "plataformas",
   "mundo-aberto",
+  "estrategia",
+  "puzzle",
+  "corrida",
+  "luta",
+  "simulacao",
+  "musical",
+  "desporto",
+  "visual-novel",
+  "metroidvania",
+  "tatico",
+  "sobrevivencia",
+  "party",
 ];
 const GRIND_OPTIONS: GrindLevel[] = ["baixo", "medio", "alto"];
 
