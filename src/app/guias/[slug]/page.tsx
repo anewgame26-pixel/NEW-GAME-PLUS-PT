@@ -80,6 +80,21 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
   const detail = await getGameDetail(game.id);
 
+  // Guardar um jogo no editor cria sempre uma linha em "game_details"
+  // (mesmo que a Review ainda não tenha sido escrita — é assim que o
+  // formulário funciona). Por isso não basta "detail existir": só
+  // consideramos que há mesmo uma análise Antes da Platina quando tem
+  // conteúdo real escrito lá dentro.
+  const hasReview = Boolean(
+    detail &&
+      (detail.review.intro.trim() ||
+        detail.review.whatToExpect.trim() ||
+        detail.review.verdict.trim() ||
+        detail.review.pros.length > 0 ||
+        detail.review.cons.length > 0 ||
+        detail.roadmapChapters.length > 0)
+  );
+
   // Vai buscar o artigo de cada outro pilar ligado a este jogo — pelo
   // campo "Jogo" do editor (game_id), com o antigo método de comparar
   // títulos como recurso, para artigos mais antigos ainda sem essa
@@ -103,11 +118,11 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
     null;
 
   // Nada para mostrar de todo — nem review, nem nenhum outro pilar.
-  if (!detail && !matchingHourWith && !matchingRetro && !matchingDiscovery) {
+  if (!hasReview && !matchingHourWith && !matchingRetro && !matchingDiscovery) {
     notFound();
   }
 
-  const similarGames = detail ? await getGamesByIds(game.similarGameIds) : [];
+  const similarGames = hasReview && detail ? await getGamesByIds(game.similarGameIds) : [];
 
   const reviewAuthor = detail?.reviewAuthorId
     ? (await getTeamMembers()).find((m) => m.id === detail.reviewAuthorId) ?? null
@@ -116,8 +131,9 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   // Dados estruturados (JSON-LD) — só faz sentido como "Review" quando
   // existe mesmo uma análise Antes da Platina; caso contrário fica como
   // um jogo genérico, para não inventar uma nota que não existe.
-  const reviewSchema = detail
-    ? {
+  const reviewSchema =
+    hasReview && detail
+      ? {
         "@context": "https://schema.org",
         "@type": "Review",
         itemReviewed: {
@@ -145,7 +161,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
 
   const panels: GameContentTabPanel[] = [];
 
-  if (detail) {
+  if (hasReview && detail) {
     panels.push({
       id: "platina",
       label: "Antes da Platina",
@@ -230,7 +246,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
         ]}
       />
       <main>
-        <GameHero game={game} roadmapHref={detail?.roadmapHref} />
+        <GameHero game={game} roadmapHref={hasReview ? detail?.roadmapHref : undefined} />
         <GameContentTabs panels={panels} defaultTabId={defaultTabId} />
         <GameEngagementBar gameId={game.id} gameTitle={game.title} />
       </main>
