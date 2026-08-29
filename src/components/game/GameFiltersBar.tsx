@@ -1,6 +1,6 @@
 "use client";
 
-import { Genre, Platform } from "@/types";
+import { Genre, Platform, Game } from "@/types";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Chip } from "@/components/ui/Chip";
 import { genreLabel, platformLabel } from "@/lib/utils";
@@ -82,9 +82,24 @@ interface GameFiltersBarProps {
   filters: GameFilters;
   onChange: (filters: GameFilters) => void;
   resultCount: number;
+  /** Lista completa de jogos — usada só para contar quantos há por opção de filtro. */
+  games: Game[];
 }
 
-export function GameFiltersBar({ filters, onChange, resultCount }: GameFiltersBarProps) {
+export function GameFiltersBar({ filters, onChange, resultCount, games }: GameFiltersBarProps) {
+  const genreCounts = new Map<Genre, number>();
+  const platformCounts = new Map<Platform, number>();
+  games.forEach((game) => {
+    game.genres.forEach((g) => genreCounts.set(g, (genreCounts.get(g) ?? 0) + 1));
+    game.platforms.forEach((p) => platformCounts.set(p, (platformCounts.get(p) ?? 0) + 1));
+  });
+
+  // Só mostra os filtros que têm pelo menos um jogo — evita clicares numa
+  // opção "morta" (ex: uma plataforma retro ainda sem nenhum jogo
+  // catalogado) sem saberes de antemão que não vai dar resultado nenhum.
+  const availableGenres = GENRE_OPTIONS.filter((g) => (genreCounts.get(g) ?? 0) > 0);
+  const availablePlatforms = PLATFORM_OPTIONS.filter((p) => (platformCounts.get(p) ?? 0) > 0);
+
   const toggleGenre = (g: Genre) => {
     onChange({
       ...filters,
@@ -123,9 +138,9 @@ export function GameFiltersBar({ filters, onChange, resultCount }: GameFiltersBa
       <div>
         <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-dim">Género</p>
         <div className="flex flex-wrap gap-2">
-          {GENRE_OPTIONS.map((g) => (
+          {availableGenres.map((g) => (
             <Chip key={g} active={filters.genres.includes(g)} onClick={() => toggleGenre(g)}>
-              {genreLabel(g)}
+              {genreLabel(g)} <span className="text-ink-dim">({genreCounts.get(g)})</span>
             </Chip>
           ))}
         </div>
@@ -134,9 +149,9 @@ export function GameFiltersBar({ filters, onChange, resultCount }: GameFiltersBa
       <div>
         <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-dim">Plataforma</p>
         <div className="flex flex-wrap gap-2">
-          {PLATFORM_OPTIONS.map((p) => (
+          {availablePlatforms.map((p) => (
             <Chip key={p} active={filters.platforms.includes(p)} onClick={() => togglePlatform(p)}>
-              {platformLabel(p)}
+              {platformLabel(p)} <span className="text-ink-dim">({platformCounts.get(p)})</span>
             </Chip>
           ))}
         </div>

@@ -67,6 +67,7 @@ export function JogosListingClient({ games, initialFilters }: JogosListingClient
             filters={filters}
             onChange={setFilters}
             resultCount={filteredGames.length}
+            games={games}
           />
         </aside>
 

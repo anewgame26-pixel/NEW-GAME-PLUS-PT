@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Mail, Download, Newspaper, Users, ShieldCheck } from "lucide-react";
+import { Mail, Download, Newspaper, Users, ShieldCheck, BadgeCheck } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
@@ -86,6 +86,25 @@ export default async function ImprensaPage() {
             <p className="mt-3 text-xs text-ink-dim">
               Números atualizados automaticamente a partir do conteúdo publicado no
               site.
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold uppercase tracking-wide text-ink">
+              <BadgeCheck width={18} height={18} className="text-primary" />
+              Reconhecidos como imprensa por
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              <span className="rounded-sm border border-border bg-bg-surface px-4 py-2 text-sm font-semibold text-ink">
+                Capcom
+              </span>
+              <span className="rounded-sm border border-border bg-bg-surface px-4 py-2 text-sm font-semibold text-ink">
+                Sega
+              </span>
+            </div>
+            <p className="mt-3 text-xs text-ink-dim">
+              Acreditados nos respetivos portais de imprensa, com acesso a material de
+              divulgação e códigos de review.
             </p>
           </section>
 

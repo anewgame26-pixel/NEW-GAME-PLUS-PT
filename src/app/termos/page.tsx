@@ -16,7 +16,7 @@ export default function TermosPage() {
       <main>
         <PageHeader
           title="Termos de Utilização"
-          description="Última atualização: 8 de agosto de 2026"
+          description="Última atualização: 29 de agosto de 2026"
         />
 
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
@@ -57,7 +57,19 @@ export default function TermosPage() {
 
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">
-                4. Conduta da comunidade
+                4. Idade mínima e contas de utilizador
+              </h2>
+              <p>
+                A NewGame+ destina-se a maiores de 13 anos. Se criares conta na
+                plataforma (para comentar, votar ou participar na comunidade), és
+                responsável por manteres os teus dados de acesso em segurança e por
+                toda a atividade realizada através da tua conta.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 font-display text-base font-bold text-ink">
+                5. Conduta da comunidade
               </h2>
               <p>
                 Ao comentares ou interagires na plataforma e no Discord, comprometes-te
@@ -69,7 +81,7 @@ export default function TermosPage() {
 
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">
-                5. Limitação de responsabilidade
+                6. Limitação de responsabilidade
               </h2>
               <p>
                 A NewGame+ é fornecida &quot;tal como está&quot;. Não nos
@@ -81,7 +93,27 @@ export default function TermosPage() {
 
             <section>
               <h2 className="mb-2 font-display text-base font-bold text-ink">
-                6. Alterações aos termos
+                7. Lei aplicável e resolução de litígios
+              </h2>
+              <p>
+                Estes termos regem-se pela lei portuguesa. Em caso de litígio de
+                consumo que não consigamos resolver diretamente contigo, podes recorrer
+                à Plataforma Europeia de Resolução de Litígios em Linha:{" "}
+                <a
+                  href="https://ec.europa.eu/consumers/odr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline"
+                >
+                  ec.europa.eu/consumers/odr
+                </a>
+                .
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 font-display text-base font-bold text-ink">
+                8. Alterações aos termos
               </h2>
               <p>
                 Podemos atualizar estes termos periodicamente. A utilização continuada
@@ -90,10 +122,13 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="mb-2 font-display text-base font-bold text-ink">7. Contacto</h2>
+              <h2 className="mb-2 font-display text-base font-bold text-ink">9. Contacto</h2>
               <p>
-                Para qualquer questão sobre estes termos, usa a nossa página de
-                Contactos.
+                Para qualquer questão sobre estes termos, usa a nossa página de{" "}
+                <a href="/contactos" className="text-primary underline">
+                  Contactos
+                </a>
+                .
               </p>
             </section>
           </div>

@@ -55,7 +55,7 @@ export default function PoliticaEditorialPage() {
                 3. Como avaliamos (Antes da Platina)
               </h2>
               <p>
-                Cada análise "Antes da Platina" inclui uma nota geral, prós e contras
+                Cada análise &quot;Antes da Platina&quot; inclui uma nota geral, prós e contras
                 explícitos, uma explicação da dificuldade de completar o jogo a 100%
                 (troféus/conquistas) e, sempre que aplicável, um roadmap capítulo a
                 capítulo. Jogamos até à conclusão (ou até um ponto que consideramos
@@ -69,8 +69,8 @@ export default function PoliticaEditorialPage() {
               </h2>
               <p>
                 Para jogos com data de lançamento definida, procuramos publicar as
-                primeiras impressões ("Uma Hora Com...") o mais próximo possível do
-                lançamento. Análises completas ("Antes da Platina") podem demorar mais
+                primeiras impressões (&quot;Uma Hora Com...&quot;) o mais próximo possível do
+                lançamento. Análises completas (&quot;Antes da Platina&quot;) podem demorar mais
                 tempo, dependendo da duração do jogo e da dificuldade de completar
                 todos os troféus/conquistas — preferimos rigor a velocidade.
               </p>
