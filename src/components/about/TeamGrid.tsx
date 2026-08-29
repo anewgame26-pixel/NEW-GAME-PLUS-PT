@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { TeamMember } from "@/data/mock/team";
+import { TeamMember } from "@/lib/data/team";
 import { Card } from "@/components/ui/Card";
 import { Trophy } from "lucide-react";
 
