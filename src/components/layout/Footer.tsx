@@ -7,7 +7,9 @@ const COLUMNS = [
     title: "Navegação",
     links: [
       { label: "Sobre nós", href: "/covil" },
+      { label: "Imprensa", href: "/imprensa" },
       { label: "Contactos", href: "/contactos" },
+      { label: "Política Editorial", href: "/politica-editorial" },
       { label: "Política de Privacidade", href: "/privacidade" },
       { label: "Termos de Utilização", href: "/termos" },
     ],

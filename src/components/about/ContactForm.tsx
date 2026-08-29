@@ -5,7 +5,7 @@ import { Check, Loader2, Mail } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
-export function ContactForm() {
+export function ContactForm({ defaultSubject }: { defaultSubject?: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +90,7 @@ export function ContactForm() {
             required
             name="subject"
             type="text"
+            defaultValue={defaultSubject}
             placeholder="Sobre o que é o teu contacto?"
             className="h-11 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
           />

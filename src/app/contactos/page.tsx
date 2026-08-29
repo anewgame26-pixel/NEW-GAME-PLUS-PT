@@ -10,7 +10,13 @@ export const metadata: Metadata = {
   description: "Fala com a equipa da NewGame+ — sugestões, parcerias ou dúvidas.",
 };
 
-export default function ContactosPage() {
+interface ContactosPageProps {
+  searchParams: Promise<{ assunto?: string }>;
+}
+
+export default async function ContactosPage({ searchParams }: ContactosPageProps) {
+  const { assunto } = await searchParams;
+
   return (
     <>
       <Header />
@@ -21,7 +27,7 @@ export default function ContactosPage() {
           description="Sugestões de jogos, parcerias ou apenas uma dúvida — fala connosco."
         />
         <div className="mx-auto max-w-2xl px-4 py-10 lg:px-8">
-          <ContactForm />
+          <ContactForm defaultSubject={assunto} />
         </div>
       </main>
       <Footer />
