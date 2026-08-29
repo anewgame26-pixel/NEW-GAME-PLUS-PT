@@ -5,6 +5,7 @@ export interface TeamMember {
   name: string;
   role: string;
   avatarInitials: string;
+  photoUrl: string | null;
   bio: string;
   favoriteGame: string;
 }
@@ -16,7 +17,7 @@ export interface TeamMember {
 export async function getTeamMembers(): Promise<TeamMember[]> {
   const { data, error } = await supabase
     .from("team_members")
-    .select("id, name, role, avatar_initials, bio, favorite_game")
+    .select("id, name, role, avatar_initials, photo_url, bio, favorite_game")
     .order("sort_order", { ascending: true });
 
   if (error) {
@@ -29,6 +30,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     name: m.name,
     role: m.role,
     avatarInitials: m.avatar_initials,
+    photoUrl: m.photo_url ?? null,
     bio: m.bio,
     favoriteGame: m.favorite_game,
   }));

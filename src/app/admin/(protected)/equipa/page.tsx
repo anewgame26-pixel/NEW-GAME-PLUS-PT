@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Check, Loader2 } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { revalidatePaths } from "@/lib/admin/revalidate";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface TeamRow {
   id: string;
   name: string;
   role: string;
   avatar_initials: string;
+  photo_url: string | null;
   bio: string;
   favorite_game: string;
   sort_order: number;
@@ -19,6 +21,7 @@ const emptyForm = {
   name: "",
   role: "",
   avatar_initials: "",
+  photo_url: "" as string,
   bio: "",
   favorite_game: "",
   sort_order: 0,
@@ -41,7 +44,7 @@ export default function AdminEquipaPage() {
     setError(null);
     const { data, error } = await supabase
       .from("team_members")
-      .select("id, name, role, avatar_initials, bio, favorite_game, sort_order")
+      .select("id, name, role, avatar_initials, photo_url, bio, favorite_game, sort_order")
       .order("sort_order", { ascending: true });
 
     if (error) {
@@ -64,6 +67,7 @@ export default function AdminEquipaPage() {
       name: row.name,
       role: row.role,
       avatar_initials: row.avatar_initials,
+      photo_url: row.photo_url ?? "",
       bio: row.bio,
       favorite_game: row.favorite_game,
       sort_order: row.sort_order,
@@ -92,6 +96,7 @@ export default function AdminEquipaPage() {
       name: form.name.trim(),
       role: form.role.trim(),
       avatar_initials: form.avatar_initials.trim().toUpperCase().slice(0, 2),
+      photo_url: form.photo_url.trim() || null,
       bio: form.bio.trim(),
       favorite_game: form.favorite_game.trim(),
       sort_order: form.sort_order,
@@ -224,6 +229,13 @@ export default function AdminEquipaPage() {
               </label>
             </div>
 
+            <ImageUploader
+              label="Foto (opcional — sem foto, mostra as iniciais)"
+              value={form.photo_url}
+              onChange={(url) => setForm((f) => ({ ...f, photo_url: url }))}
+              folder="equipa"
+            />
+
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
                 Bio
@@ -286,9 +298,18 @@ export default function AdminEquipaPage() {
           {members.map((row) => (
             <div key={row.id} className="flex items-start justify-between gap-4 p-4">
               <div className="flex min-w-0 gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-primary/10 font-display text-sm font-bold text-primary">
-                  {row.avatar_initials}
-                </span>
+                {row.photo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={row.photo_url}
+                    alt={row.name}
+                    className="h-10 w-10 shrink-0 rounded-sm object-cover"
+                  />
+                ) : (
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-primary/10 font-display text-sm font-bold text-primary">
+                    {row.avatar_initials}
+                  </span>
+                )}
                 <div className="min-w-0">
                   <p className="font-display text-sm font-bold text-ink">{row.name}</p>
                   <p className="text-xs uppercase tracking-wide text-ink-dim">{row.role}</p>

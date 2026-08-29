@@ -145,6 +145,11 @@ export default async function CovilPage() {
             <p className="max-w-md text-sm text-ink-muted">
               Sugestões de jogos, parcerias, correções, ou só para dizeres que também
               sofreste com aquela platina — a página de contactos está sempre aberta.
+              Se és de uma editora ou agência de imprensa, visita a nossa{" "}
+              <a href="/imprensa" className="text-primary underline">
+                página de Imprensa
+              </a>
+              .
             </p>
             <Button
               href="/contactos"

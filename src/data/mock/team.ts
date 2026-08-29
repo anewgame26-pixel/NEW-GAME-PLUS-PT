@@ -3,6 +3,7 @@ export interface TeamMember {
   name: string;
   role: string;
   avatarInitials: string;
+  photoUrl: string | null;
   bio: string;
   favoriteGame: string;
 }
