@@ -39,6 +39,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/descobertas`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/comunidade`, changeFrequency: "daily", priority: 0.6 },
     { url: `${SITE_URL}/covil`, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${SITE_URL}/imprensa`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${SITE_URL}/politica-editorial`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/top`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/votar`, changeFrequency: "weekly", priority: 0.5 },
     { url: `${SITE_URL}/faq`, changeFrequency: "monthly", priority: 0.3 },
