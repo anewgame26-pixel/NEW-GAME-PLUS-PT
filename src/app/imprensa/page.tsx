@@ -177,9 +177,15 @@ export default async function ImprensaPage() {
               parcerias, contacta-nos diretamente — respondemos normalmente em 2 a 3
               dias úteis.
             </p>
-            <Button href="/contactos?assunto=Imprensa" className="inline-flex">
+            <a
+              href="mailto:press@newgameplus.pt"
+              className="mb-4 flex w-fit items-center gap-2 rounded-sm border border-primary/30 bg-bg-surface px-4 py-2 font-display text-sm font-semibold text-primary hover:bg-primary/10"
+            >
               <Mail width={15} height={15} />
-              Falar com a equipa
+              press@newgameplus.pt
+            </a>
+            <Button href="/contactos?assunto=Imprensa" variant="secondary" className="inline-flex">
+              Ou usar o formulário de contacto
             </Button>
           </section>
         </div>
