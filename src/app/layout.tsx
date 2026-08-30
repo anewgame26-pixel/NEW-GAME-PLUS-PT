@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
     description:
       "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
-    images: [{ url: "/logo-ngplus.png", width: 1024, height: 1024, alt: "NewGame+ PT" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "NewGame+ PT" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "NewGame+ | Vale a pena jogar? Vale a pena platinar?",
     description:
       "A plataforma que te ajuda a decidir onde investir o teu tempo e dinheiro. Reviews, tempos de platina, dificuldade, missables e guias completos — tudo num só lugar.",
-    images: ["/logo-ngplus.png"],
+    images: ["/og-image.png"],
   },
 };
 
@@ -52,7 +52,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "NewGame+ PT",
   url: "https://newgameplus.pt",
-  logo: "https://newgameplus.pt/logo-icon.png",
+  logo: "https://newgameplus.pt/logo-hero.png",
   description:
     "Plataforma portuguesa de reviews, guias e roadmaps de troféus para videojogos.",
   sameAs: [
