@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Mail, Download, Newspaper, Users, ShieldCheck, BadgeCheck } from "lucide-react";
+import { Mail, Download, Newspaper, Users, ShieldCheck, BadgeCheck, FileText } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
@@ -20,6 +20,13 @@ export const dynamic = "force-dynamic";
 
 export default async function ImprensaPage() {
   const [stats, team] = await Promise.all([getPlatformStats(), getTeamMembers()]);
+
+  const audienceStats = [
+    { label: "Visualizações TikTok", value: "25K+" },
+    { label: "Seguidores TikTok", value: "760" },
+    { label: "Visualizações YouTube", value: "7.3K+" },
+    { label: "Subscritores YouTube", value: "30" },
+  ];
 
   return (
     <>
@@ -73,7 +80,43 @@ export default async function ImprensaPage() {
 
           <section className="mb-10">
             <h2 className="mb-3 font-display text-lg font-bold uppercase tracking-wide text-ink">
-              Em números
+              Audiência
+            </h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {audienceStats.map((stat) => (
+                <Card key={stat.label} className="p-4 text-center">
+                  <p className="font-display text-2xl font-bold text-primary">{stat.value}</p>
+                  <p className="mt-1 text-xs text-ink-dim">{stat.label}</p>
+                </Card>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-ink-dim">
+              Números de agosto de 2026, em crescimento contínuo em todas as
+              plataformas. Presença em{" "}
+              <a
+                href="https://www.youtube.com/@NGPLUSPT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline"
+              >
+                YouTube
+              </a>{" "}
+              e{" "}
+              <a
+                href="https://www.tiktok.com/@ngmaispt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline"
+              >
+                TikTok
+              </a>
+              .
+            </p>
+          </section>
+
+          <section className="mb-10">
+            <h2 className="mb-3 font-display text-lg font-bold uppercase tracking-wide text-ink">
+              No site
             </h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {stats.slice(0, 6).map((stat) => (
@@ -145,24 +188,25 @@ export default async function ImprensaPage() {
               Kit de imprensa
             </h2>
             <p className="mb-3 text-sm leading-relaxed text-ink-muted">
-              Logótipos em alta resolução para uso em comunicados ou parcerias:
+              Logótipo em alta resolução e o media kit completo (2026), com audiência,
+              formatos de cobertura e informação de contacto:
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/logo-ngplus.png"
+                href="/newgameplus-media-kit-2026.pdf"
+                download
+                className="flex items-center gap-2 rounded-sm border border-primary/40 bg-primary/5 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/10"
+              >
+                <FileText width={13} height={13} />
+                Media Kit completo (PDF)
+              </a>
+              <a
+                href="/logo-hero.png"
                 download
                 className="flex items-center gap-2 rounded-sm border border-border px-3 py-2 text-xs text-ink-muted hover:border-primary hover:text-primary"
               >
                 <Download width={13} height={13} />
                 Logótipo (PNG)
-              </a>
-              <a
-                href="/logo-icon.png"
-                download
-                className="flex items-center gap-2 rounded-sm border border-border px-3 py-2 text-xs text-ink-muted hover:border-primary hover:text-primary"
-              >
-                <Download width={13} height={13} />
-                Ícone (PNG)
               </a>
             </div>
           </section>
