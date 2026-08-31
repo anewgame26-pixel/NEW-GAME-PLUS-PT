@@ -371,6 +371,8 @@ export interface HourWithArticle {
   isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
 }
 
 /**
@@ -402,6 +404,8 @@ export interface RetroArticle {
   isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
 }
 
 /** Categorias possíveis de um artigo Descobertas+, usadas como filtros. */
@@ -445,6 +449,8 @@ export interface TopArticle {
   isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
 }
 
 /**
@@ -477,4 +483,6 @@ export interface DiscoveryArticle {
   isHeroFeatured: boolean;
   isPublished: boolean;
   createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
 }
