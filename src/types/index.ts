@@ -425,6 +425,8 @@ export type DiscoveryTag = (typeof DISCOVERY_TAGS)[number]["value"];
 export interface TopArticleItem {
   label: string;
   note: string;
+  /** Imagem opcional para esta entrada (ex: screenshot do jogo). */
+  imageUrl?: string;
 }
 
 /**

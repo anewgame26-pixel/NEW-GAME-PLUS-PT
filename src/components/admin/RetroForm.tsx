@@ -35,6 +35,7 @@ const defaultForm = {
   valeAPenaHoje: null as boolean | null,
   isHeroFeatured: false,
   isPublished: false,
+  authorId: null as string | null,
 };
 
 export function RetroForm({ articleId }: RetroFormProps) {
@@ -45,6 +46,16 @@ export function RetroForm({ articleId }: RetroFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [slugTouched, setSlugTouched] = useState(Boolean(articleId));
   const [wasPublished, setWasPublished] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<{ id: string; name: string; role: string }[]>([]);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    supabase
+      .from("team_members")
+      .select("id, name, role")
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => setTeamMembers(data ?? []));
+  }, []);
 
   useEffect(() => {
     if (!articleId) return;
@@ -78,6 +89,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           valeAPenaHoje: data.vale_a_pena_hoje ?? null,
           isHeroFeatured: data.is_hero_featured ?? false,
           isPublished: data.is_published ?? false,
+          authorId: data.author_id ?? null,
         });
         setWasPublished(data.is_published ?? false);
         setLoading(false);
@@ -136,6 +148,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
       vale_a_pena_hoje: form.valeAPenaHoje,
       is_hero_featured: form.isHeroFeatured,
       is_published: form.isPublished,
+      author_id: form.authorId,
     };
 
     const supabase = createBrowserSupabaseClient();
@@ -330,6 +343,21 @@ export function RetroForm({ articleId }: RetroFormProps) {
             onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
             folder="retro"
           />
+          <label className="flex flex-col gap-1.5">
+            <span className={labelClass}>Escrito por (opcional)</span>
+            <select
+              value={form.authorId ?? ""}
+              onChange={(e) => setForm((f) => ({ ...f, authorId: e.target.value || null }))}
+              className={inputClass}
+            >
+              <option value="">— Sem autor definido —</option>
+              {teamMembers.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name} — {member.role}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {form.heroImageUrl && (
@@ -346,7 +374,11 @@ export function RetroForm({ articleId }: RetroFormProps) {
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Artigo</span>
-          <RichTextEditor value={form.body} onChange={(html) => setForm((f) => ({ ...f, body: html }))} />
+          <RichTextEditor
+            value={form.body}
+            onChange={(html) => setForm((f) => ({ ...f, body: html }))}
+            imageFolder="retro"
+          />
         </label>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -367,6 +399,7 @@ export function RetroForm({ articleId }: RetroFormProps) {
           <RichTextEditor
             value={form.veredicto}
             onChange={(html) => setForm((f) => ({ ...f, veredicto: html }))}
+            imageFolder="retro"
           />
         </label>
 

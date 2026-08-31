@@ -28,6 +28,7 @@ const defaultForm = {
   items: [] as TopArticleItem[],
   isHeroFeatured: false,
   isPublished: false,
+  authorId: null as string | null,
 };
 
 export function TopForm({ articleId }: TopFormProps) {
@@ -38,6 +39,16 @@ export function TopForm({ articleId }: TopFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [slugTouched, setSlugTouched] = useState(Boolean(articleId));
   const [wasPublished, setWasPublished] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<{ id: string; name: string; role: string }[]>([]);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    supabase
+      .from("team_members")
+      .select("id, name, role")
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => setTeamMembers(data ?? []));
+  }, []);
 
   useEffect(() => {
     if (!articleId) return;
@@ -65,6 +76,7 @@ export function TopForm({ articleId }: TopFormProps) {
           items: data.items ?? [],
           isHeroFeatured: data.is_hero_featured ?? false,
           isPublished: data.is_published ?? false,
+          authorId: data.author_id ?? null,
         });
         setWasPublished(data.is_published ?? false);
         setLoading(false);
@@ -102,10 +114,15 @@ export function TopForm({ articleId }: TopFormProps) {
       youtube_url: form.youtubeUrl.trim() || null,
       intro: form.intro.trim(),
       items: form.items
-        .map((item) => ({ label: item.label.trim(), note: (item.note ?? "").trim() }))
+        .map((item) => ({
+          label: item.label.trim(),
+          note: (item.note ?? "").trim(),
+          imageUrl: (item.imageUrl ?? "").trim() || undefined,
+        }))
         .filter((item) => item.label),
       is_hero_featured: form.isHeroFeatured,
       is_published: form.isPublished,
+      author_id: form.authorId,
     };
 
     const supabase = createBrowserSupabaseClient();
@@ -275,6 +292,21 @@ export function TopForm({ articleId }: TopFormProps) {
             onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
             folder="top"
           />
+          <label className="flex flex-col gap-1.5">
+            <span className={labelClass}>Escrito por (opcional)</span>
+            <select
+              value={form.authorId ?? ""}
+              onChange={(e) => setForm((f) => ({ ...f, authorId: e.target.value || null }))}
+              className={inputClass}
+            >
+              <option value="">— Sem autor definido —</option>
+              {teamMembers.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.name} — {member.role}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {form.heroImageUrl && (
@@ -291,7 +323,11 @@ export function TopForm({ articleId }: TopFormProps) {
 
         <label className="flex flex-col gap-1.5">
           <span className={labelClass}>Introdução</span>
-          <RichTextEditor value={form.intro} onChange={(html) => setForm((f) => ({ ...f, intro: html }))} />
+          <RichTextEditor
+          value={form.intro}
+          onChange={(html) => setForm((f) => ({ ...f, intro: html }))}
+          imageFolder="top"
+        />
         </label>
 
         <ObjectListEditor<TopArticleItem & Record<string, unknown>>
@@ -305,8 +341,9 @@ export function TopForm({ articleId }: TopFormProps) {
               type: "textarea",
               placeholder: "ex: O chefe final é uma aula de paciência",
             },
+            { key: "imageUrl", label: "Imagem (opcional)", type: "image", imageFolder: "top" },
           ]}
-          emptyItem={{ label: "", note: "" }}
+          emptyItem={{ label: "", note: "", imageUrl: "" }}
           onChange={(items) => setForm((f) => ({ ...f, items: items as TopArticleItem[] }))}
         />
       </div>

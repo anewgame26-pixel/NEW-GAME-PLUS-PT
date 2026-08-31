@@ -12,6 +12,8 @@ import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
+import ImageExtension from "@tiptap/extension-image";
+import { useRef, useState } from "react";
 import {
   Bold,
   Italic,
@@ -20,8 +22,11 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  Image as ImageIcon,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 /**
  * Versões de Negrito/Itálico sem "atalhos de escrita" automáticos (as
@@ -182,6 +187,14 @@ interface RichTextEditorProps {
   value: string;
   onChange: (html: string) => void;
   placeholder?: string;
+  /**
+   * Se definido, mostra o botão de imagem na barra de ferramentas — a
+   * pessoa pode anexar uma foto a meio do texto (ex: um screenshot no
+   * meio da secção "Gameplay"), que fica guardada no bucket
+   * "article-images", dentro desta pasta. Sem esta prop, o botão de
+   * imagem não aparece (ex: nas reviews de jogos, que não pediram isto).
+   */
+  imageFolder?: string;
 }
 
 // === DIAGNÓSTICO TEMPORÁRIO — remover depois de encontrarmos o problema ===
@@ -223,7 +236,11 @@ if (typeof window !== "undefined") {
 }
 // === FIM DO DIAGNÓSTICO TEMPORÁRIO ===
 
-export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder, imageFolder }: RichTextEditorProps) {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -244,6 +261,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
       Highlight.configure({ multicolor: true }),
       TextAlign.configure({ types: ["paragraph", "heading"] }),
       FontSize,
+      ImageExtension.configure({ HTMLAttributes: { class: "rounded-sm" } }),
       Placeholder.configure({ placeholder: placeholder ?? "" }),
     ],
     content: value,
@@ -293,12 +311,54 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
           "[&_h3]:mb-2 [&_h3]:mt-3 [&_h3]:font-display [&_h3]:text-sm [&_h3]:font-bold [&_h3]:uppercase [&_h3]:tracking-wide [&_h3]:text-ink-muted [&_h3:first-child]:mt-0 " +
           "[&_ul]:mb-2 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1 " +
           "[&_ol]:mb-2 [&_ol]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1 " +
+          "[&_img]:my-3 [&_img]:max-w-full [&_img]:rounded-sm " +
           "[&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:text-ink",
       },
     },
   });
 
   if (!editor) return null;
+
+  const MAX_IMAGE_MB = 5;
+
+  async function handleImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = ""; // permite escolher o mesmo ficheiro outra vez, se necessário
+
+    if (!file.type.startsWith("image/")) {
+      setImageError("Escolhe um ficheiro de imagem (jpg, png, webp...).");
+      return;
+    }
+    if (file.size > MAX_IMAGE_MB * 1024 * 1024) {
+      setImageError(`A imagem tem de ter menos de ${MAX_IMAGE_MB}MB.`);
+      return;
+    }
+
+    setImageError(null);
+    setUploadingImage(true);
+
+    const supabase = createBrowserSupabaseClient();
+    const extension = file.name.split(".").pop() || "jpg";
+    const path = `${imageFolder ?? "artigos"}/${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("article-images")
+      .upload(path, file, { upsert: false, cacheControl: "3600" });
+
+    setUploadingImage(false);
+
+    if (uploadError) {
+      console.error("Erro ao enviar a imagem:", uploadError);
+      setImageError("Não foi possível enviar a imagem. Tenta novamente.");
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from("article-images").getPublicUrl(path);
+    editor?.chain().focus().setImage({ src: publicUrlData.publicUrl, alt: "" }).run();
+  }
 
   return (
     <div className="flex flex-col">
@@ -467,7 +527,32 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             )}
           />
         ))}
+        {imageFolder && (
+          <>
+            <span className="mx-1 h-5 w-px bg-border" />
+            <ToolbarButton
+              active={false}
+              onClick={() => imageInputRef.current?.click()}
+              label="Inserir imagem"
+            >
+              {uploadingImage ? (
+                <Loader2 width={14} height={14} className="animate-spin" />
+              ) : (
+                <ImageIcon width={14} height={14} />
+              )}
+            </ToolbarButton>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageFileChange}
+              className="hidden"
+            />
+          </>
+        )}
       </div>
+
+      {imageError && <p className="px-1.5 pt-1 text-[11px] text-primary-light">{imageError}</p>}
 
       <div className="resize-y overflow-auto rounded-b-sm border border-t-0 border-border bg-bg-surface2 focus-within:border-primary">
         <EditorContent editor={editor} className="h-full" />

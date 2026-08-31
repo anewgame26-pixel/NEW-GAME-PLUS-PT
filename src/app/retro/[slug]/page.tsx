@@ -8,6 +8,7 @@ import { getRetroArticleBySlug } from "@/lib/data/retro";
 import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getGames } from "@/lib/data/games";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
+import { getTeamMembers } from "@/lib/data/team";
 import { normalizeTitle } from "@/lib/utils";
 import { RetroArticleBody } from "@/components/game/RetroArticleBody";
 
@@ -67,6 +68,9 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
   const matchingDiscovery = discoveryArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
   );
+  const author = article.authorId
+    ? (await getTeamMembers()).find((m) => m.id === article.authorId) ?? null
+    : null;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -119,7 +123,7 @@ export default async function RetroArtigoPage({ params }: ArtigoPageProps) {
       <Header />
       <GameBreadcrumb items={[{ label: "Retro+", href: "/retro" }, { label: article.title }]} />
       <main>
-        <RetroArticleBody article={article} extraSlot={crossLinks} />
+        <RetroArticleBody article={article} extraSlot={crossLinks} author={author} />
       </main>
       <Footer />
     </>

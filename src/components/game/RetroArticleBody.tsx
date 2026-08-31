@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ThumbsUp, ThumbsDown, Check, X } from "lucide-react";
 import { RichText } from "@/components/ui/RichText";
 import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { ArticleAuthorBadge, type ArticleAuthor } from "@/components/game/ArticleAuthorBadge";
 import type { RetroArticle } from "@/types";
 import type { ReactNode } from "react";
 
@@ -9,9 +10,16 @@ interface RetroArticleBodyProps {
   article: RetroArticle;
   showHeading?: boolean;
   extraSlot?: ReactNode;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  author?: ArticleAuthor | null;
 }
 
-export function RetroArticleBody({ article, showHeading = true, extraSlot }: RetroArticleBodyProps) {
+export function RetroArticleBody({
+  article,
+  showHeading = true,
+  extraSlot,
+  author,
+}: RetroArticleBodyProps) {
   const heroImage = article.heroImageUrl ?? article.coverUrl;
   const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
 
@@ -47,6 +55,8 @@ export function RetroArticleBody({ article, showHeading = true, extraSlot }: Ret
           {article.platform}
           {article.releaseYear ? ` · ${article.releaseYear}` : ""}
         </p>
+
+        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
 
         {embedUrl && (
           <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">

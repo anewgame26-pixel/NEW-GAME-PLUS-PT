@@ -7,6 +7,7 @@ import { getHourWithArticleBySlug } from "@/lib/data/hour-with";
 import { getGames } from "@/lib/data/games";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
+import { getTeamMembers } from "@/lib/data/team";
 import { normalizeTitle } from "@/lib/utils";
 import { CrossLinkBanner } from "@/components/game/CrossLinkBanner";
 import { HourWithArticleBody } from "@/components/game/HourWithArticleBody";
@@ -68,6 +69,9 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
   const matchingDiscovery = discoveryArticles.find(
     (a) => normalizeTitle(a.title) === normalizeTitle(article.title)
   );
+  const author = article.authorId
+    ? (await getTeamMembers()).find((m) => m.id === article.authorId) ?? null
+    : null;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -126,7 +130,7 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
         ]}
       />
       <main>
-        <HourWithArticleBody article={article} extraSlot={crossLinks} />
+        <HourWithArticleBody article={article} extraSlot={crossLinks} author={author} />
       </main>
       <Footer />
     </>

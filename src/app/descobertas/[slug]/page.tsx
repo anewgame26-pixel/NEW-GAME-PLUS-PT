@@ -9,6 +9,7 @@ import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getGames } from "@/lib/data/games";
 import { normalizeTitle } from "@/lib/utils";
+import { getTeamMembers } from "@/lib/data/team";
 import { DiscoveryArticleBody } from "@/components/game/DiscoveryArticleBody";
 
 interface ArtigoPageProps {
@@ -70,6 +71,9 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
   const matchingGame = article.gameId
     ? games.find((g) => g.id === article.gameId) ?? null
     : games.find((g) => normalizeTitle(g.title) === normalizeTitle(article.title)) ?? null;
+  const author = article.authorId
+    ? (await getTeamMembers()).find((m) => m.id === article.authorId) ?? null
+    : null;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -122,7 +126,7 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
       <Header />
       <GameBreadcrumb items={[{ label: "Descobertas+", href: "/descobertas" }, { label: article.title }]} />
       <main>
-        <DiscoveryArticleBody article={article} extraSlot={crossLinks} />
+        <DiscoveryArticleBody article={article} extraSlot={crossLinks} author={author} />
       </main>
       <Footer />
     </>

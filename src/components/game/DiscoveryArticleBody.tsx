@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ThumbsUp, ThumbsDown, Check, X } from "lucide-react";
 import { RichText } from "@/components/ui/RichText";
 import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { ArticleAuthorBadge, type ArticleAuthor } from "@/components/game/ArticleAuthorBadge";
 import { DISCOVERY_TAGS } from "@/types";
 import type { DiscoveryArticle } from "@/types";
 import type { ReactNode } from "react";
@@ -10,12 +11,15 @@ interface DiscoveryArticleBodyProps {
   article: DiscoveryArticle;
   showHeading?: boolean;
   extraSlot?: ReactNode;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  author?: ArticleAuthor | null;
 }
 
 export function DiscoveryArticleBody({
   article,
   showHeading = true,
   extraSlot,
+  author,
 }: DiscoveryArticleBodyProps) {
   const heroImage = article.heroImageUrl ?? article.coverUrl;
   const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
@@ -54,6 +58,8 @@ export function DiscoveryArticleBody({
           {article.platform}
           {article.releaseYear ? ` · ${article.releaseYear}` : ""}
         </p>
+
+        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
 
         {article.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">

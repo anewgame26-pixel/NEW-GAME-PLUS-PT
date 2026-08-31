@@ -18,6 +18,7 @@ function mapRowToArticle(row: Record<string, unknown>): TopArticle {
     isHeroFeatured: (row.is_hero_featured as boolean) ?? false,
     isPublished: (row.is_published as boolean) ?? false,
     createdAt: row.created_at as string,
+    authorId: (row.author_id as string | null) ?? null,
   };
 }
 

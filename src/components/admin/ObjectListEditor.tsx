@@ -1,16 +1,19 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 interface FieldDef {
   key: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "select";
+  type?: "text" | "textarea" | "number" | "select" | "image";
   placeholder?: string;
   /** Necessário quando type="select". Aceita strings simples ("igual para valor e texto") ou {value, label} quando o texto mostrado deve ser diferente do valor guardado. */
   options?: (string | { value: string; label: string })[];
   /** Quando true (tipicamente com type="select"), guarda o valor como número (ou "undefined" se vazio) em vez de texto. */
   numeric?: boolean;
+  /** Necessário quando type="image" — pasta dentro do bucket "article-images" onde a foto fica guardada. */
+  imageFolder?: string;
 }
 
 interface ObjectListEditorProps<T extends Record<string, unknown>> {
@@ -60,8 +63,15 @@ export function ObjectListEditor<T extends Record<string, unknown>>({
           <div className="flex flex-col gap-2">
             {fields.map((field) => (
               <label key={field.key} className="flex flex-col gap-1">
-                <span className="text-[11px] text-ink-dim">{field.label}</span>
-                {field.type === "textarea" ? (
+                {field.type !== "image" && <span className="text-[11px] text-ink-dim">{field.label}</span>}
+                {field.type === "image" ? (
+                  <ImageUploader
+                    label={field.label}
+                    value={String(item[field.key] ?? "")}
+                    onChange={(url) => updateField(i, field.key, url)}
+                    folder={field.imageFolder ?? "artigos"}
+                  />
+                ) : field.type === "textarea" ? (
                   <textarea
                     rows={2}
                     value={String(item[field.key] ?? "")}

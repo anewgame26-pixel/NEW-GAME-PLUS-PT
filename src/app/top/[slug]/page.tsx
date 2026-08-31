@@ -7,7 +7,9 @@ import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
 import { RichText } from "@/components/ui/RichText";
 import { getTopArticleBySlug } from "@/lib/data/top";
+import { getTeamMembers } from "@/lib/data/team";
 import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { ArticleAuthorBadge } from "@/components/game/ArticleAuthorBadge";
 
 interface TopArtigoPageProps {
   params: Promise<{ slug: string }>;
@@ -53,6 +55,9 @@ export default async function TopArtigoPage({ params }: TopArtigoPageProps) {
 
   const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
   const heroImage = article.heroImageUrl ?? article.coverUrl;
+  const author = article.authorId
+    ? (await getTeamMembers()).find((m) => m.id === article.authorId) ?? null
+    : null;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -102,6 +107,8 @@ export default async function TopArtigoPage({ params }: TopArtigoPageProps) {
             {article.title}
           </h1>
 
+          {author && <ArticleAuthorBadge author={author} className="mt-4" />}
+
           {embedUrl && (
             <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
               <iframe
@@ -130,6 +137,11 @@ export default async function TopArtigoPage({ params }: TopArtigoPageProps) {
                   <span className="font-display text-2xl font-bold text-primary-light">
                     {String(i + 1).padStart(2, "0")}
                   </span>
+                  {item.imageUrl && (
+                    <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-sm sm:h-24 sm:w-40">
+                      <Image src={item.imageUrl} alt={item.label} fill className="object-cover" />
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <p className="font-display text-base font-bold uppercase tracking-wide text-ink">
                       {item.label}

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ThumbsUp, ThumbsDown, Check, X } from "lucide-react";
 import { RichText } from "@/components/ui/RichText";
 import { getYoutubeEmbedUrl } from "@/lib/utils";
+import { ArticleAuthorBadge, type ArticleAuthor } from "@/components/game/ArticleAuthorBadge";
 import type { HourWithArticle } from "@/types";
 import type { ReactNode } from "react";
 
@@ -11,6 +12,8 @@ interface HourWithArticleBodyProps {
   showHeading?: boolean;
   /** Slot opcional, inserido entre o vídeo e o veredicto (usado pelas páginas próprias para os CrossLinkBanners). */
   extraSlot?: ReactNode;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  author?: ArticleAuthor | null;
 }
 
 const SECTIONS: { field: keyof HourWithArticle & string; label: string }[] = [
@@ -25,6 +28,7 @@ export function HourWithArticleBody({
   article,
   showHeading = true,
   extraSlot,
+  author,
 }: HourWithArticleBodyProps) {
   const embedUrl = getYoutubeEmbedUrl(article.youtubeUrl);
   const heroImage = article.heroImageUrl ?? article.coverUrl;
@@ -63,6 +67,8 @@ export function HourWithArticleBody({
           {article.platform}
           {article.datePlayed ? ` · ${new Date(article.datePlayed).toLocaleDateString("pt-PT")}` : ""}
         </p>
+
+        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
 
         {embedUrl && (
           <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
