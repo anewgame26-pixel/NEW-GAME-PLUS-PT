@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Map as MapIcon, AlertTriangle, ChevronDown } from "lucide-react";
 import type { RoadmapChapter } from "@/types";
 import { Card } from "@/components/ui/Card";
@@ -142,14 +143,18 @@ export function RoadmapChapters({ chapters }: RoadmapChaptersProps) {
                     {isOpen && chapter.imageUrls && chapter.imageUrls.length > 0 && (
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                         {chapter.imageUrls.map((url, ui) => (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <div
                             key={url + ui}
-                            src={url}
-                            alt={`${chapter.title} — imagem ${ui + 1}`}
-                            loading="lazy"
-                            className="aspect-video w-full rounded-sm border border-border object-cover"
-                          />
+                            className="relative aspect-video w-full overflow-hidden rounded-sm border border-border"
+                          >
+                            <Image
+                              src={url}
+                              alt={`${chapter.title} — imagem ${ui + 1}`}
+                              fill
+                              sizes="(max-width: 640px) 50vw, 33vw"
+                              className="object-cover"
+                            />
+                          </div>
                         ))}
                       </div>
                     )}

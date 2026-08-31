@@ -16,7 +16,7 @@ export default function PrivacidadePage() {
       <main>
         <PageHeader
           title="Política de Privacidade"
-          description="Última atualização: 22 de agosto de 2026"
+          description="Última atualização: 30 de agosto de 2026"
         />
 
         <div className="mx-auto max-w-3xl px-4 py-10 lg:px-8">
@@ -40,10 +40,11 @@ export default function PrivacidadePage() {
                 email/password ou através do Google; (b) conteúdo que publicas
                 voluntariamente, como comentários, pedidos à comunidade e reportes de
                 erros; (c) as tuas listas de favoritos e progresso, se estiveres com
-                sessão iniciada; (d) dados de utilização recolhidos de forma anónima e
-                agregada através do Vercel Analytics (páginas visitadas, tipo de
-                dispositivo, país de origem) — esta ferramenta não usa cookies nem
-                identifica visitantes individualmente.
+                sessão iniciada; (d) nome, email e mensagem, se usares o formulário de
+                contacto ou pedires para receber a newsletter; (e) dados de utilização
+                recolhidos de forma anónima e agregada através do Vercel Analytics
+                (páginas visitadas, tipo de dispositivo, país de origem) — esta
+                ferramenta não usa cookies nem identifica visitantes individualmente.
               </p>
             </section>
 
