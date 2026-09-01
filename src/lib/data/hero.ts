@@ -1,4 +1,12 @@
-import type { DiscoveryArticle, Game, HeroSlide, HourWithArticle, RetroArticle, TopArticle } from "@/types";
+import type {
+  DiscoveryArticle,
+  Game,
+  HeroSlide,
+  HourWithArticle,
+  RadarArticle,
+  RetroArticle,
+  TopArticle,
+} from "@/types";
 import { difficultyLabel, formatPlatinumTime, grindLabel, stripHtml } from "@/lib/utils";
 
 function gameToSlide(game: Game): HeroSlide {
@@ -128,6 +136,26 @@ function topToSlide(article: TopArticle): HeroSlide | null {
   };
 }
 
+function radarToSlide(article: RadarArticle): HeroSlide | null {
+  const imageUrl = article.heroImageUrl ?? article.coverUrl;
+  if (!imageUrl) return null;
+  return {
+    id: `radar-${article.id}`,
+    category: "Radar+",
+    title: article.title,
+    subtitle: stripHtml(article.body) || article.platform,
+    imageUrl,
+    heroFocusX: article.heroFocusX,
+    heroFocusY: article.heroFocusY,
+    heroZoom: article.heroZoom,
+    href: `/radar/${article.slug}`,
+    facts: [
+      ...(article.platform ? [{ label: "Plataforma", value: article.platform }] : []),
+      ...(article.tags[0] ? [{ label: "Categoria", value: article.tags[0] }] : []),
+    ],
+  };
+}
+
 /**
  * Junta tudo o que a equipa marcou como "Destacar no Hero" — jogos
  * (Antes da Platina), Uma Hora Com, Retro+ e Top+ — num único carrossel.
@@ -141,12 +169,14 @@ export function buildHeroSlides({
   retroArticles,
   discoveryArticles,
   topArticles,
+  radarArticles,
 }: {
   featuredGames: Game[];
   hourWithArticles: HourWithArticle[];
   retroArticles: RetroArticle[];
   discoveryArticles: DiscoveryArticle[];
   topArticles: TopArticle[];
+  radarArticles: RadarArticle[];
 }): HeroSlide[] {
   const gameSlides = featuredGames.map(gameToSlide);
   const hourWithSlides = hourWithArticles
@@ -165,8 +195,19 @@ export function buildHeroSlides({
     .filter((a) => a.isHeroFeatured)
     .map(topToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
+  const radarSlides = radarArticles
+    .filter((a) => a.isHeroFeatured)
+    .map(radarToSlide)
+    .filter((s): s is HeroSlide => Boolean(s));
 
-  const editorPicks = [...gameSlides, ...hourWithSlides, ...retroSlides, ...discoverySlides, ...topSlides];
+  const editorPicks = [
+    ...gameSlides,
+    ...hourWithSlides,
+    ...retroSlides,
+    ...discoverySlides,
+    ...topSlides,
+    ...radarSlides,
+  ];
 
   return editorPicks;
 }

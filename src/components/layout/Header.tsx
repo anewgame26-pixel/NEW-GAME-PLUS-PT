@@ -19,6 +19,7 @@ const NAV_LINKS = [
   { label: "Uma Hora Com...", href: "/uma-hora-com" },
   { label: "Retro+", href: "/retro" },
   { label: "Descobertas+", href: "/descobertas" },
+  { label: "Radar+", href: "/radar" },
   { label: "Top+", href: "/top" },
   { label: "Sobre Nós", href: "/covil" },
 ];

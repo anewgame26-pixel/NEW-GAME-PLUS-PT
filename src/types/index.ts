@@ -107,7 +107,7 @@ export interface HeroSlideFact {
  */
 export interface HeroSlide {
   id: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Top+";
+  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
   title: string;
   subtitle: string | null;
   imageUrl: string;
@@ -481,6 +481,47 @@ export interface DiscoveryArticle {
   veredicto: string;
   /** Resposta a "recomendamos?". null = ainda por decidir. */
   recomendamos: boolean | null;
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
+  isPublished: boolean;
+  createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
+}
+
+export const RADAR_TAGS = [
+  { value: "lancamento", label: "Lançamento" },
+  { value: "anuncio", label: "Anúncio" },
+  { value: "trailer", label: "Trailer" },
+  { value: "noticia", label: "Notícia" },
+  { value: "rumor", label: "Rumor" },
+  { value: "atualizacao", label: "Atualização" },
+] as const;
+
+export type RadarTag = (typeof RADAR_TAGS)[number]["value"];
+
+/**
+ * Radar+ — novos jogos, anúncios, lançamentos e notícias que achamos
+ * relevantes. Ao contrário do Uma Hora Com/Retro+/Descobertas+, não é
+ * uma review (sem pros/contras/veredicto) — é um texto livre, com
+ * imagens e vídeo à mistura, como uma notícia.
+ */
+export interface RadarArticle {
+  id: string;
+  slug: string;
+  title: string;
+  platform: string | null;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  heroFocusX: number;
+  heroFocusY: number;
+  heroZoom: number;
+  youtubeUrl: string | null;
+  /** Categoria(s) livre(s), ex: 'lancamento', 'noticia', 'rumor'. */
+  tags: string[];
+  /** Jogo já catalogado no site a que esta notícia se refere, se aplicável. */
+  gameId: string | null;
+  body: string;
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
   isPublished: boolean;

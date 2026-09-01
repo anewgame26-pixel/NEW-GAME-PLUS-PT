@@ -1,4 +1,4 @@
-import { History, Compass, ListOrdered } from "lucide-react";
+import { History, Compass, ListOrdered, Radar as RadarIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -25,6 +25,7 @@ import { getHourWithArticles } from "@/lib/data/hour-with";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { getTopArticles } from "@/lib/data/top";
+import { getRadarArticles } from "@/lib/data/radar";
 import { buildHeroSlides } from "@/lib/data/hero";
 import { stripHtml } from "@/lib/utils";
 
@@ -58,6 +59,7 @@ export default async function HomePage() {
   const retroArticles = await getRetroArticles();
   const discoveryArticles = await getDiscoveryArticles();
   const topArticles = await getTopArticles();
+  const radarArticles = await getRadarArticles();
 
   const heroSlides = buildHeroSlides({
     featuredGames,
@@ -65,6 +67,7 @@ export default async function HomePage() {
     retroArticles,
     discoveryArticles,
     topArticles,
+    radarArticles,
   });
 
   if (featuredGames.length === 0) {
@@ -144,6 +147,16 @@ export default async function HomePage() {
       date: a.createdAt,
       href: `/top/${a.slug}`,
     })),
+    ...radarArticles.map((a) => ({
+      key: `radar-${a.id}`,
+      category: "Radar+" as const,
+      categoryTone: "purple" as const,
+      title: a.title,
+      subtitle: stripHtml(a.body) || null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/radar/${a.slug}`,
+    })),
   ]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
@@ -174,6 +187,13 @@ export default async function HomePage() {
     title: a.title,
     imageUrl: a.heroImageUrl ?? a.coverUrl,
     meta: `${a.items.length} ${a.items.length === 1 ? "entrada" : "entradas"}`,
+  }));
+
+  const radarItems: ArticleTeaserItem[] = radarArticles.slice(0, 3).map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    imageUrl: a.heroImageUrl ?? a.coverUrl,
+    meta: a.platform,
   }));
 
   return (
@@ -218,10 +238,10 @@ export default async function HomePage() {
                   Descobre
                 </h2>
                 <p className="mt-1 text-sm text-ink-muted">
-                  Retro+, Descobertas+ e Top+ — o que fica fora do circuito habitual.
+                  Retro+, Descobertas+, Radar+ e Top+ — o que fica fora do circuito habitual.
                 </p>
               </div>
-              <div className="grid flex-1 gap-4 sm:grid-cols-3">
+              <div className="grid flex-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <ArticleTeaserPanel
                   title="Retro+"
                   icon={History}
@@ -234,6 +254,13 @@ export default async function HomePage() {
                   icon={Compass}
                   basePath="/descobertas"
                   items={discoveryItems}
+                  emptyLabel="Ainda não há artigos publicados."
+                />
+                <ArticleTeaserPanel
+                  title="Radar+"
+                  icon={RadarIcon}
+                  basePath="/radar"
+                  items={radarItems}
                   emptyLabel="Ainda não há artigos publicados."
                 />
                 <ArticleTeaserPanel

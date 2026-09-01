@@ -57,6 +57,7 @@ export default async function AdminProtectedLayout({
           <AdminNavLink href="/admin/uma-hora-com">Uma Hora Com...</AdminNavLink>
           <AdminNavLink href="/admin/retro">Retro+</AdminNavLink>
           <AdminNavLink href="/admin/descobertas">Descobertas+</AdminNavLink>
+          <AdminNavLink href="/admin/radar">Radar+</AdminNavLink>
           <AdminNavLink href="/admin/top">Top+</AdminNavLink>
           <AdminNavLink href="/admin/glossario">Glossário</AdminNavLink>
           <AdminNavLink href="/admin/faq">FAQ</AdminNavLink>

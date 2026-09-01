@@ -28,6 +28,7 @@ const CATEGORY_LABEL_STYLES: Record<HeroSlide["category"], string> = {
   "Uma Hora Com": "text-accent-light",
   "Retro+": "text-gold",
   "Descobertas+": "text-sky-400",
+  "Radar+": "text-fuchsia-400",
   "Top+": "text-emerald-400",
 };
 

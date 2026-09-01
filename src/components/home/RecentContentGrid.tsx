@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export interface RecentContentItem {
   key: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Top+";
-  categoryTone: "red" | "blue" | "gold" | "green" | "neutral";
+  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
+  categoryTone: "red" | "blue" | "gold" | "green" | "purple" | "neutral";
   title: string;
   subtitle: string | null;
   imageUrl: string | null;
@@ -24,6 +24,7 @@ const CATEGORY_BADGE_STYLES: Record<RecentContentItem["categoryTone"], string> =
   blue: "bg-accent text-white",
   gold: "bg-gold text-black",
   green: "bg-emerald-500 text-white",
+  purple: "bg-fuchsia-500 text-white",
   neutral: "bg-ink text-bg",
 };
 
