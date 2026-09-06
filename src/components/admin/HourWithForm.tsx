@@ -187,7 +187,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
     setWasPublished(form.isPublished);
 
     if (!articleId && result.data && "id" in (result.data as object)) {
-      router.push(`/admin/uma-hora-com/${(result.data as { id: string }).id}`);
+      router.push(`/admin/vale-a-pena/${(result.data as { id: string }).id}`);
     } else {
       router.refresh();
     }
@@ -202,7 +202,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
       setError("Não foi possível apagar.");
       return;
     }
-    router.push("/admin/uma-hora-com");
+    router.push("/admin/vale-a-pena");
   }
 
   if (loading) {

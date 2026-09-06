@@ -16,7 +16,7 @@ const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Antes da Platina", href: "/antes-da-platina" },
   { label: "Jogos", href: "/jogos" },
-  { label: "Uma Hora Com...", href: "/uma-hora-com" },
+  { label: "Vale a pena?", href: "/vale-a-pena" },
   { label: "Retro+", href: "/retro" },
   { label: "Descobertas+", href: "/descobertas" },
   { label: "Radar+", href: "/radar" },
