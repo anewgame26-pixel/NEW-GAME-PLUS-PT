@@ -29,14 +29,14 @@ function hourWithToSlide(article: HourWithArticle): HeroSlide | null {
   if (!imageUrl) return null;
   return {
     id: `hour-with-${article.id}`,
-    category: "Uma Hora Com",
+    category: "Vale a pena?",
     title: article.title,
     subtitle: stripHtml(article.firstImpression) || article.platform,
     imageUrl,
     heroFocusX: article.heroFocusX,
     heroFocusY: article.heroFocusY,
     heroZoom: article.heroZoom,
-    href: `/uma-hora-com/${article.slug}`,
+    href: `/vale-a-pena/${article.slug}`,
     facts: [
       ...(article.platform ? [{ label: "Plataforma", value: article.platform }] : []),
       {
@@ -158,7 +158,7 @@ function radarToSlide(article: RadarArticle): HeroSlide | null {
 
 /**
  * Junta tudo o que a equipa marcou como "Destacar no Hero" — jogos
- * (Antes da Platina), Uma Hora Com, Retro+ e Top+ — num único carrossel.
+ * (Antes da Platina), Vale a pena?, Retro+ e Top+ — num único carrossel.
  * Se ninguém tiver marcado nada ainda em lado nenhum, cai de volta para
  * os jogos em destaque (o comportamento antigo), para o Hero nunca ficar
  * vazio.

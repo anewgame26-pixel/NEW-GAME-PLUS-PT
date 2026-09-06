@@ -204,7 +204,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   if (matchingHourWith) {
     panels.push({
       id: "uma-hora-com",
-      label: "Uma Hora Com",
+      label: "Vale a pena?",
       icon: <Clock width={15} height={15} />,
       content: <HourWithArticleBody article={matchingHourWith} showHeading={false} />,
     });
@@ -229,7 +229,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   }
 
   // Se não houver "Antes da Platina", entra logo no primeiro outro pilar
-  // que exista (Uma Hora Com primeiro, depois Retro+, depois Descobertas+).
+  // que exista (Vale a pena? primeiro, depois Retro+, depois Descobertas+).
   const defaultTabId = panels[0]?.id ?? "platina";
 
   return (

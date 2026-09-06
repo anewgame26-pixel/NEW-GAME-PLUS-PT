@@ -47,7 +47,7 @@ export default async function ImprensaPage() {
               A NewGame+ é uma publicação portuguesa dedicada a análises aprofundadas,
               caça de troféus/conquistas e cobertura de jogos, antigos e recentes. A
               nossa equipa escreve reviews completas (Antes da Platina), primeiras
-              impressões (Uma Hora Com...), revisitas a clássicos (Retro+) e
+              impressões (Vale a pena?), revisitas a clássicos (Retro+) e
               recomendações de jogos menos conhecidos (Descobertas+).
             </p>
           </section>
@@ -63,7 +63,7 @@ export default async function ImprensaPage() {
                 e roadmap capítulo a capítulo.
               </li>
               <li>
-                <strong className="text-ink">Uma Hora Com...</strong> — primeiras
+                <strong className="text-ink">Vale a pena?</strong> — primeiras
                 impressões, publicadas rapidamente após o lançamento ou acesso
                 antecipado.
               </li>

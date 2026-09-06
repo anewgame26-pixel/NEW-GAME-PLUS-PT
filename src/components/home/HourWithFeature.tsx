@@ -12,7 +12,7 @@ interface HourWithFeatureProps {
 }
 
 /**
- * Destaque grande para o episódio "Uma Hora Com" mais recente — parte da
+ * Destaque grande para o artigo "Vale a pena?" mais recente — parte da
  * zona editorial da homepage (ao lado de "Descobre"), com uma thumbnail
  * grande em vez de mais uma linha de lista.
  */
@@ -24,11 +24,11 @@ export function HourWithFeature({ article }: HourWithFeatureProps) {
       <div className="flex items-center gap-2 border-b border-border px-5 py-4">
         <Clock width={16} height={16} className="text-primary" />
         <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
-          Uma Hora Com...
+          Vale a pena?
         </h2>
       </div>
 
-      <Link href={`/uma-hora-com/${article.slug}`} className="group relative block aspect-video">
+      <Link href={`/vale-a-pena/${article.slug}`} className="group relative block aspect-video">
         <Image
           src={article.heroImageUrl ?? article.coverUrl ?? ""}
           alt={article.title}
@@ -60,7 +60,7 @@ export function HourWithFeature({ article }: HourWithFeatureProps) {
             {stripHtml(article.firstImpression)}
           </p>
         )}
-        <Button href={`/uma-hora-com/${article.slug}`} variant="secondary" className="w-full">
+        <Button href={`/vale-a-pena/${article.slug}`} variant="secondary" className="w-full">
           Ver Análise
         </Button>
       </div>

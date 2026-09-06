@@ -42,7 +42,7 @@ export async function getHourWithArticles(): Promise<HourWithArticle[]> {
     .order("date_played", { ascending: false, nullsFirst: false });
 
   if (error) {
-    console.error("Erro ao carregar artigos 'Uma Hora Com' do Supabase:", error);
+    console.error("Erro ao carregar artigos 'Vale a pena?' do Supabase:", error);
     return [];
   }
 
@@ -93,7 +93,7 @@ export async function getAllHourWithArticlesAdmin(): Promise<HourWithArticle[]> 
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("Erro ao carregar artigos 'Uma Hora Com' (admin) do Supabase:", error);
+    console.error("Erro ao carregar artigos 'Vale a pena?' (admin) do Supabase:", error);
     return [];
   }
 

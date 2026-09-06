@@ -14,7 +14,7 @@ interface CrossLinkBannerProps {
 
 /**
  * Chamada de atenção mostrada quando o mesmo jogo tem perfis em mais do
- * que um dos pilares do site (Antes da Platina, Uma Hora Com, Retro+,
+ * que um dos pilares do site (Antes da Platina, Vale a pena?, Retro+,
  * Descobertas+) — para as páginas se ligarem umas às outras, em vez de
  * ficarem ilhas separadas.
  */

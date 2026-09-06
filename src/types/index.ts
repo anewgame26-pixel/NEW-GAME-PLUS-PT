@@ -101,13 +101,13 @@ export interface HeroSlideFact {
 
 /**
  * Um "slide" do carrossel do Hero da homepage — pode vir de um jogo
- * (Antes da Platina) ou de um artigo (Uma Hora Com, Retro+, Top+),
+ * (Antes da Platina) ou de um artigo (Vale a pena?, Retro+, Top+),
  * conforme o que a equipa marcar como destaque no admin. Cada tipo de
  * conteúdo é convertido para esta forma comum antes de chegar ao Hero.
  */
 export interface HeroSlide {
   id: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
+  category: "Antes da Platina" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
   title: string;
   subtitle: string | null;
   imageUrl: string;
@@ -336,7 +336,7 @@ export interface VotingCandidate {
 }
 
 /**
- * Um artigo "Uma Hora Com..." — jogámos um jogo durante uma hora e demos
+ * Um artigo "Vale a pena?" — jogámos um jogo durante uma hora e demos
  * a primeira impressão. Propositadamente separado da tabela "games":
  * pode cobrir jogos que ainda não têm (ou nunca vão ter) um perfil de
  * platina completo no site.
@@ -502,7 +502,7 @@ export type RadarTag = (typeof RADAR_TAGS)[number]["value"];
 
 /**
  * Radar+ — novos jogos, anúncios, lançamentos e notícias que achamos
- * relevantes. Ao contrário do Uma Hora Com/Retro+/Descobertas+, não é
+ * relevantes. Ao contrário do Vale a pena?/Retro+/Descobertas+, não é
  * uma review (sem pros/contras/veredicto) — é um texto livre, com
  * imagens e vídeo à mistura, como uma notícia.
  */

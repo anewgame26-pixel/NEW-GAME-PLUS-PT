@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: ArtigoPageProps): Promise<Met
     return { title: "Artigo não encontrado | NewGame+" };
   }
 
-  const title = `Uma Hora Com: ${article.title} — Vale a Pena?`;
+  const title = `${article.title} — Vale a Pena?`;
   const description = stripHtml(article.firstImpression).slice(0, 155);
   const image = article.heroImageUrl ?? article.coverUrl ?? undefined;
 
@@ -76,7 +76,7 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: `Uma Hora Com: ${article.title}`,
+    headline: `${article.title} — Vale a Pena?`,
     description: stripHtml(article.firstImpression).slice(0, 200),
     ...(heroImage ? { image: [heroImage] } : {}),
     author: { "@type": "Organization", name: "NewGame+ PT" },

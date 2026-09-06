@@ -16,7 +16,7 @@ interface ArticleAuthorBadgeProps {
 /**
  * Mostra "Escrito por [foto] Nome — Cargo", tal como aparece no início
  * dos artigos em sites como a IGN. Reutilizado no topo dos artigos de
- * opinião (Uma Hora Com, Retro+, Descobertas+, Top+). Se a pessoa não
+ * opinião (Vale a pena?, Retro+, Descobertas+, Top+). Se a pessoa não
  * tiver foto no perfil (Sobre Nós), mostra as iniciais em vez disso —
  * nunca fica "partido" por falta de foto.
  */

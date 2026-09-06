@@ -11,7 +11,7 @@ import { getHourWithArticles } from "@/lib/data/hour-with";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Uma Hora Com... | NewGame+",
+  title: "Vale a pena? | NewGame+",
   description:
     "60 minutos. Uma primeira impressão. Jogamos um jogo durante uma hora e contamos-te se merece o teu tempo.",
 };
@@ -22,7 +22,7 @@ export default async function UmaHoraComPage() {
   return (
     <>
       <Header />
-      <GameBreadcrumb items={[{ label: "Uma Hora Com..." }]} />
+      <GameBreadcrumb items={[{ label: "Vale a pena?" }]} />
       <main>
         <div className="border-b border-border bg-bg-raised py-10">
           <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
@@ -33,7 +33,7 @@ export default async function UmaHoraComPage() {
               </span>
             </div>
             <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-wide text-ink">
-              Uma Hora Com...
+              Vale a pena?
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               Jogamos um jogo durante uma hora e damos-te a nossa primeira impressão sincera.

@@ -7,7 +7,7 @@ interface HeroFactsCardProps {
 
 /**
  * Versão simples de FeaturedGameStats para slides do Hero que não são
- * jogos (Uma Hora Com, Retro+, Top+) — só os factos que fazem sentido
+ * jogos (Vale a pena?, Retro+, Top+) — só os factos que fazem sentido
  * para esse tipo de conteúdo, sem inventar estatísticas de jogo que não
  * existem para um artigo.
  */

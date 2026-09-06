@@ -36,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/glossario`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/antes-da-platina`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/antes-da-platina/episodios`, changeFrequency: "weekly", priority: 0.6 },
-    { url: `${SITE_URL}/uma-hora-com`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/vale-a-pena`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/retro`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/descobertas`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/radar`, changeFrequency: "daily", priority: 0.6 },
@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const hourWithPages: MetadataRoute.Sitemap = hourWithSlugs.map((slug) => ({
-    url: `${SITE_URL}/uma-hora-com/${slug}`,
+    url: `${SITE_URL}/vale-a-pena/${slug}`,
     changeFrequency: "monthly",
     priority: 0.7,
   }));

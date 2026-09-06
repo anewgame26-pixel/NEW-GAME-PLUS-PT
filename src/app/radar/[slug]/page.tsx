@@ -102,10 +102,10 @@ export default async function RadarArtigoPage({ params }: ArtigoPageProps) {
       {matchingHourWith && (
         <CrossLinkBanner
           bare
-          href={`/uma-hora-com/${matchingHourWith.slug}`}
+          href={`/vale-a-pena/${matchingHourWith.slug}`}
           icon="clock"
           title="Também já jogámos isto durante 1 hora"
-          description="Lê a primeira impressão em Uma Hora Com..."
+          description="Lê a nossa primeira impressão em Vale a pena?"
         />
       )}
       {matchingRetro && (

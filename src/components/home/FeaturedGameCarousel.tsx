@@ -25,7 +25,7 @@ const MOBILE_BREAKPOINT_QUERY = "(max-width: 639px)";
 
 const CATEGORY_LABEL_STYLES: Record<HeroSlide["category"], string> = {
   "Antes da Platina": "text-primary-light",
-  "Uma Hora Com": "text-accent-light",
+  "Vale a pena?": "text-accent-light",
   "Retro+": "text-gold",
   "Descobertas+": "text-sky-400",
   "Radar+": "text-fuchsia-400",

@@ -69,7 +69,7 @@ export default function PoliticaEditorialPage() {
               </h2>
               <p>
                 Para jogos com data de lançamento definida, procuramos publicar as
-                primeiras impressões (&quot;Uma Hora Com...&quot;) o mais próximo possível do
+                primeiras impressões (&quot;Vale a pena?&quot;) o mais próximo possível do
                 lançamento. Análises completas (&quot;Antes da Platina&quot;) podem demorar mais
                 tempo, dependendo da duração do jogo e da dificuldade de completar
                 todos os troféus/conquistas — preferimos rigor a velocidade.

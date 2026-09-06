@@ -45,7 +45,7 @@ function mapRowToGame(row: Record<string, unknown>): Game {
  * Por omissão, devolve os jogos com a análise "Antes da Platina" publicada
  * (is_published = true), MAS também os jogos que ainda não têm essa
  * análise pronta, desde que tenham pelo menos um outro pilar publicado
- * (Uma Hora Com, Retro+ ou Descobertas+) — assim um jogo não fica
+ * (Vale a pena?, Retro+ ou Descobertas+) — assim um jogo não fica
  * escondido do site só porque a review completa ainda não está feita.
  * O painel /admin passa includeUnpublished: true para ver mesmo tudo,
  * incluindo rascunhos sem nenhum pilar publicado (ex.: os adicionados
@@ -92,7 +92,7 @@ export async function getGames(options?: { includeUnpublished?: boolean }): Prom
  * Vai buscar um único jogo pelo "slug" (usado na página /guias/[slug]).
  * De propósito SEM filtro de publicação: essa página passou a funcionar
  * como o "hub" do jogo — mostra a análise Antes da Platina se existir,
- * ou outro pilar (Uma Hora Com, Retro+, Descobertas+) caso contrário. É a
+ * ou outro pilar (Vale a pena?, Retro+, Descobertas+) caso contrário. É a
  * própria página, já depois de saber o que existe, que decide se há
  * conteúdo suficiente para mostrar algo ou se deve devolver 404.
  */

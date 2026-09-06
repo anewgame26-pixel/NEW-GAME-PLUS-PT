@@ -109,13 +109,13 @@ export default async function HomePage() {
     }),
     ...hourWithArticles.map((a) => ({
       key: `hw-${a.id}`,
-      category: "Uma Hora Com" as const,
+      category: "Vale a pena?" as const,
       categoryTone: "blue" as const,
       title: `${a.title} — Vale a pena?`,
       subtitle: stripHtml(a.firstImpression) || null,
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
-      href: `/uma-hora-com/${a.slug}`,
+      href: `/vale-a-pena/${a.slug}`,
     })),
     ...retroArticles.map((a) => ({
       key: `retro-${a.id}`,
@@ -227,7 +227,7 @@ export default async function HomePage() {
         {/* 5. ANTES DA PLATINA — carrossel (2ª e última das 3 zonas de carrossel). */}
         <BeforePlatinumCarousel games={beforePlatinumGames} />
 
-        {/* 6. ZONA EDITORIAL — Uma Hora Com em destaque + Descobre (Retro+/Descobertas+). */}
+        {/* 6. ZONA EDITORIAL — Vale a pena? em destaque + Descobre (Retro+/Descobertas+). */}
         <section className="border-t border-border py-10">
           <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
             <HourWithFeature article={hourWithArticles[0] ?? null} />

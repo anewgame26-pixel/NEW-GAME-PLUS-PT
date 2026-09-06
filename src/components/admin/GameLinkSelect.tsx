@@ -15,7 +15,7 @@ interface GameLinkSelectProps {
 
 /**
  * Menu para escolher a que jogo da lista (tabela "games") este artigo
- * pertence. Usado no Uma Hora Com, Retro+ e Descobertas+ — assim a
+ * pertence. Usado no Vale a pena?, Retro+ e Descobertas+ — assim a
  * página do jogo consegue mostrar este artigo como um dos separadores,
  * mesmo que o jogo ainda não tenha a análise "Antes da Platina" feita.
  */

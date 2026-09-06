@@ -23,7 +23,7 @@ interface ArticleTeaserPanelProps {
 
 /**
  * Painel compacto para a homepage que mostra os artigos mais recentes de uma
- * secção (Uma Hora Com..., Retro+, Descobertas+), no mesmo estilo visual do
+ * secção (Vale a pena?, Retro+, Descobertas+), no mesmo estilo visual do
  * "Últimos Antes da Platina" e "Estamos a Jogar".
  */
 export function ArticleTeaserPanel({ title, icon: Icon, basePath, items, emptyLabel }: ArticleTeaserPanelProps) {

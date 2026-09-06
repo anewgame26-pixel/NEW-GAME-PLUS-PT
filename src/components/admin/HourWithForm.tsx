@@ -217,7 +217,7 @@ export function HourWithForm({ articleId }: HourWithFormProps) {
     <div>
       <div className="mb-3 flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-ink">
-          {articleId ? `Editar: ${form.title || "..."}` : "Novo — Uma Hora Com..."}
+          {articleId ? `Editar: ${form.title || "..."}` : "Novo — Vale a pena?"}
         </h1>
         <div className="flex items-center gap-2">
           {articleId && (

@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 
 interface HourWithArticleBodyProps {
   article: HourWithArticle;
-  /** Mostra o cabeçalho "Uma Hora Com..." + título — desliga dentro do hub do jogo, onde o título já aparece no topo da página. */
+  /** Mostra o cabeçalho "Vale a pena?" + título — desliga dentro do hub do jogo, onde o título já aparece no topo da página. */
   showHeading?: boolean;
   /** Slot opcional, inserido entre o vídeo e o veredicto (usado pelas páginas próprias para os CrossLinkBanners). */
   extraSlot?: ReactNode;
@@ -56,7 +56,7 @@ export function HourWithArticleBody({
         {showHeading && (
           <>
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
-              Uma Hora Com...
+              Vale a pena?
             </p>
             <h1 className="mt-1 font-display text-3xl font-bold uppercase tracking-wide text-ink">
               {article.title}
@@ -74,7 +74,7 @@ export function HourWithArticleBody({
           <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">
             <iframe
               src={embedUrl}
-              title={`Vídeo: Uma Hora Com ${article.title}`}
+              title={`Vídeo: ${article.title}`}
               className="absolute inset-0 h-full w-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

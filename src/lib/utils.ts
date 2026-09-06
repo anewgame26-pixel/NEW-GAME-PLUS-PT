@@ -101,7 +101,7 @@ export function platformLabel(platform: string) {
 
 /**
  * Normaliza um título para comparação (usado para ligar automaticamente
- * um jogo de "Antes da Platina" a um artigo de "Uma Hora Com" com o
+ * um jogo de "Antes da Platina" a um artigo de "Vale a pena?" com o
  * mesmo nome, mesmo que a acentuação ou maiúsculas não batam certo).
  */
 export function normalizeTitle(title: string) {

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export interface RecentContentItem {
   key: string;
-  category: "Antes da Platina" | "Uma Hora Com" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
+  category: "Antes da Platina" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
   categoryTone: "red" | "blue" | "gold" | "green" | "purple" | "neutral";
   title: string;
   subtitle: string | null;
