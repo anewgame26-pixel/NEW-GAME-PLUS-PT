@@ -86,7 +86,7 @@ export default async function UmaHoraComArtigoPage({ params }: ArtigoPageProps) 
 
   const crossLinks = (
     <div className="mt-4 flex flex-col gap-2">
-      {matchingGame && (
+      {matchingGame?.isPublished && (
         <CrossLinkBanner
           bare
           href={`/guias/${matchingGame.slug}`}
