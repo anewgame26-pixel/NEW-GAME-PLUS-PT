@@ -101,7 +101,7 @@ export default async function DescobertaArtigoPage({ params }: ArtigoPageProps) 
           bare
           href={`/vale-a-pena/${matchingHourWith.slug}`}
           icon="clock"
-          title="Também já jogámos isto durante 1 hora"
+          title="Também já jogámos as primeiras horas disto"
           description="Lê a nossa primeira impressão em Vale a pena?"
         />
       )}

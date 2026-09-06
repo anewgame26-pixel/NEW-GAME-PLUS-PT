@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Vale a pena? | NewGame+",
   description:
-    "60 minutos. Uma primeira impressão. Jogamos um jogo durante uma hora e contamos-te se merece o teu tempo.",
+    "Jogamos as primeiras horas de cada jogo e dizemos-te se vale a pena continuar — antes de, mais tarde, chegar a uma análise completa ou à platina.",
 };
 
 export default async function UmaHoraComPage() {
@@ -29,16 +29,16 @@ export default async function UmaHoraComPage() {
             <div className="flex items-center gap-2 text-primary">
               <Clock width={18} height={18} />
               <span className="text-xs font-semibold uppercase tracking-[0.15em]">
-                60 minutos. Uma primeira impressão.
+                Primeiras horas. Uma decisão simples.
               </span>
             </div>
             <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-wide text-ink">
               Vale a pena?
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
-              Jogamos um jogo durante uma hora e damos-te a nossa primeira impressão sincera.
-              Não é uma análise completa — é a pergunta mais simples de todas: depois disto,
-              queremos continuar a jogar?
+              Jogamos as primeiras horas de cada jogo e damos-te a nossa impressão sincera:
+              vale a pena continuar a jogar? Não é uma análise completa — é o primeiro passo,
+              antes de eventualmente chegarmos a uma review a sério ou à platina.
             </p>
           </div>
         </div>

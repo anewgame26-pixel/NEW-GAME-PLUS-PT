@@ -15,7 +15,7 @@ export default async function AdminUmaHoraComPage() {
             Vale a pena?
           </h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Primeiras impressões — jogámos uma hora, contámos o que achámos.
+            Primeiras horas de jogo — dizemos se vale a pena continuar.
           </p>
         </div>
         <Link

@@ -336,7 +336,7 @@ export interface VotingCandidate {
 }
 
 /**
- * Um artigo "Vale a pena?" — jogámos um jogo durante uma hora e demos
+ * Um artigo "Vale a pena?" — jogámos as primeiras horas de um jogo e demos
  * a primeira impressão. Propositadamente separado da tabela "games":
  * pode cobrir jogos que ainda não têm (ou nunca vão ter) um perfil de
  * platina completo no site.
