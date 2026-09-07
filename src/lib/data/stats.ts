@@ -7,10 +7,44 @@ import type { PlatformStat } from "@/types";
  * o antigo "platformStats" de src/data/mock/homepage.ts.
  */
 export async function getPlatformStats(): Promise<PlatformStat[]> {
-  const [gamesResult, detailsResult, videosResult] = await Promise.all([
+  const [
+    gamesResult,
+    detailsResult,
+    videosResult,
+    hourWithVideosResult,
+    retroVideosResult,
+    discoveryVideosResult,
+    radarVideosResult,
+    topVideosResult,
+  ] = await Promise.all([
     supabase.from("games").select("trophy_breakdown, platinum_time_max"),
     supabase.from("game_details").select("review_verdict, roadmap_chapters"),
     supabase.from("videos").select("id", { count: "exact", head: true }).eq("status", "publicado"),
+    supabase
+      .from("hour_with_articles")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true)
+      .not("youtube_url", "is", null),
+    supabase
+      .from("retro_articles")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true)
+      .not("youtube_url", "is", null),
+    supabase
+      .from("discovery_articles")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true)
+      .not("youtube_url", "is", null),
+    supabase
+      .from("radar_articles")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true)
+      .not("youtube_url", "is", null),
+    supabase
+      .from("top_articles")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true)
+      .not("youtube_url", "is", null),
   ]);
 
   if (gamesResult.error) {
@@ -36,7 +70,18 @@ export async function getPlatformStats(): Promise<PlatformStat[]> {
     (d) => Array.isArray(d.roadmap_chapters) && d.roadmap_chapters.length > 0
   ).length;
 
-  const videosPublicados = videosResult.count ?? 0;
+  // Soma o vídeo dedicado do "Antes da Platina" (tabela videos) com o
+  // vídeo do YouTube de cada artigo já publicado nos outros pilares
+  // (Vale a pena?, Retro+, Descobertas+, Radar+, Top+) — antes disto só
+  // se contava a tabela "videos", por isso o número parecia sempre muito
+  // baixo mesmo havendo vídeo em quase todos os artigos.
+  const videosPublicados =
+    (videosResult.count ?? 0) +
+    (hourWithVideosResult.count ?? 0) +
+    (retroVideosResult.count ?? 0) +
+    (discoveryVideosResult.count ?? 0) +
+    (radarVideosResult.count ?? 0) +
+    (topVideosResult.count ?? 0);
 
   const trofeusCatalogados = games.reduce((total, g) => {
     const breakdown = g.trophy_breakdown as
