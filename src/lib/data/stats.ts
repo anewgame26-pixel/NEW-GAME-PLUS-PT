@@ -70,6 +70,17 @@ export async function getPlatformStats(): Promise<PlatformStat[]> {
     (d) => Array.isArray(d.roadmap_chapters) && d.roadmap_chapters.length > 0
   ).length;
 
+  // Cada capítulo do roadmap (Antes da Platina) pode ter o seu próprio
+  // vídeo — é o sítio onde a maioria dos vídeos do site realmente vive,
+  // e não estava a ser contado em lado nenhum até agora.
+  const roadmapChapterVideos = details.reduce((total, d) => {
+    const chapters = (d.roadmap_chapters as { youtubeId?: string }[] | null) ?? [];
+    return (
+      total +
+      chapters.filter((c) => typeof c.youtubeId === "string" && c.youtubeId.trim().length > 0).length
+    );
+  }, 0);
+
   // Soma o vídeo dedicado do "Antes da Platina" (tabela videos) com o
   // vídeo do YouTube de cada artigo já publicado nos outros pilares
   // (Vale a pena?, Retro+, Descobertas+, Radar+, Top+) — antes disto só
@@ -77,6 +88,7 @@ export async function getPlatformStats(): Promise<PlatformStat[]> {
   // baixo mesmo havendo vídeo em quase todos os artigos.
   const videosPublicados =
     (videosResult.count ?? 0) +
+    roadmapChapterVideos +
     (hourWithVideosResult.count ?? 0) +
     (retroVideosResult.count ?? 0) +
     (discoveryVideosResult.count ?? 0) +
