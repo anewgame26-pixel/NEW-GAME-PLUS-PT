@@ -59,7 +59,7 @@ export function DiscoveryArticleBody({
           {article.releaseYear ? ` · ${article.releaseYear}` : ""}
         </p>
 
-        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
+        {author && <ArticleAuthorBadge author={author} date={article.createdAt} className="mt-4" />}
 
         {article.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">

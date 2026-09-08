@@ -56,7 +56,7 @@ export function RetroArticleBody({
           {article.releaseYear ? ` · ${article.releaseYear}` : ""}
         </p>
 
-        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
+        {author && <ArticleAuthorBadge author={author} date={article.createdAt} className="mt-4" />}
 
         {embedUrl && (
           <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">

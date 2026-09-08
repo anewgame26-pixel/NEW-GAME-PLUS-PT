@@ -65,10 +65,9 @@ export function HourWithArticleBody({
         )}
         <p className={showHeading ? "mt-1 text-sm text-ink-muted" : "text-sm text-ink-muted"}>
           {article.platform}
-          {article.datePlayed ? ` · ${new Date(article.datePlayed).toLocaleDateString("pt-PT")}` : ""}
         </p>
 
-        {author && <ArticleAuthorBadge author={author} className="mt-4" />}
+        {author && <ArticleAuthorBadge author={author} date={article.datePlayed} className="mt-4" />}
 
         {embedUrl && (
           <div className="relative mt-6 aspect-video overflow-hidden rounded-sm border border-border">

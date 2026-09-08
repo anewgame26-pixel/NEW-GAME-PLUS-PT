@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { formatDateLong } from "@/lib/utils";
 
 export interface RecentContentItem {
   key: string;
@@ -27,10 +28,6 @@ export const CATEGORY_BADGE_STYLES: Record<RecentContentItem["categoryTone"], st
   neutral: "bg-ink text-bg",
 };
 
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("pt-PT", { day: "numeric", month: "short" });
-}
-
 export function Byline({ item }: { item: RecentContentItem }) {
   return (
     <div className="mt-2 flex items-center gap-2 text-xs text-ink-dim">
@@ -49,7 +46,7 @@ export function Byline({ item }: { item: RecentContentItem }) {
           <span aria-hidden>·</span>
         </>
       )}
-      <time dateTime={item.date}>{formatDate(item.date)}</time>
+      <time dateTime={item.date}>{formatDateLong(item.date)}</time>
     </div>
   );
 }

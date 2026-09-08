@@ -112,6 +112,30 @@ export function normalizeTitle(title: string) {
     .trim();
 }
 
+const MESES_PT = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
+
+/**
+ * Formata uma data por extenso, ex: "8 de Setembro 2026" — usado junto
+ * ao autor nos artigos e no "Conteúdo Novo" da homepage.
+ */
+export function formatDateLong(iso: string) {
+  const d = new Date(iso);
+  return `${d.getDate()} de ${MESES_PT[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 /**
  * Extrai o ID de um vídeo do YouTube a partir de vários formatos de link
  * possíveis (youtube.com/watch?v=..., youtu.be/..., youtube.com/embed/...)

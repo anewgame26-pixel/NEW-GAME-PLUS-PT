@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PenLine } from "lucide-react";
+import { formatDateLong } from "@/lib/utils";
 
 export interface ArticleAuthor {
   name: string;
@@ -10,17 +11,19 @@ export interface ArticleAuthor {
 
 interface ArticleAuthorBadgeProps {
   author?: ArticleAuthor | null;
+  /** Data a mostrar junto do nome (ex: quando o artigo foi escrito/jogado). */
+  date?: string | null;
   className?: string;
 }
 
 /**
- * Mostra "Escrito por [foto] Nome — Cargo", tal como aparece no início
- * dos artigos em sites como a IGN. Reutilizado no topo dos artigos de
- * opinião (Vale a pena?, Retro+, Descobertas+, Top+). Se a pessoa não
- * tiver foto no perfil (Sobre Nós), mostra as iniciais em vez disso —
- * nunca fica "partido" por falta de foto.
+ * Mostra "Escrito por [foto] Nome — Cargo · data", tal como aparece no
+ * início dos artigos em sites como a IGN. Reutilizado no topo dos
+ * artigos de opinião (Vale a pena?, Retro+, Descobertas+, Radar+, Top+).
+ * Se a pessoa não tiver foto no perfil (Sobre Nós), mostra as iniciais
+ * em vez disso — nunca fica "partido" por falta de foto.
  */
-export function ArticleAuthorBadge({ author, className = "" }: ArticleAuthorBadgeProps) {
+export function ArticleAuthorBadge({ author, date, className = "" }: ArticleAuthorBadgeProps) {
   if (!author) return null;
 
   return (
@@ -41,6 +44,7 @@ export function ArticleAuthorBadge({ author, className = "" }: ArticleAuthorBadg
         </p>
         <p className="truncate text-sm font-semibold text-ink">
           {author.name} <span className="font-normal text-ink-dim">— {author.role}</span>
+          {date && <span className="font-normal text-ink-dim"> · {formatDateLong(date)}</span>}
         </p>
       </div>
     </div>
