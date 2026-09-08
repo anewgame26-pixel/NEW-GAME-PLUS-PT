@@ -1,70 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RecentSecondaryCarousel } from "@/components/home/RecentSecondaryCarousel";
+import { CATEGORY_BADGE_STYLES, Byline, type RecentContentItem } from "@/components/home/RecentContentShared";
 
-export interface RecentContentItem {
-  key: string;
-  category: "Antes da Platina" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
-  categoryTone: "red" | "blue" | "gold" | "green" | "purple" | "neutral";
-  title: string;
-  subtitle: string | null;
-  imageUrl: string | null;
-  date: string;
-  href: string;
-  /** Nome de quem escreveu/editou, se atribuído (null = não mostra autor). */
-  authorName?: string | null;
-  authorPhotoUrl?: string | null;
-  authorInitials?: string | null;
-}
+export type { RecentContentItem };
 
 interface RecentContentGridProps {
   items: RecentContentItem[];
 }
 
-// Versão sólida/opaca, própria para cima de capas de jogos (o Badge
-// normal do site é translúcido, pensado para fundos escuros lisos — em
-// cima de uma imagem colorida fica ilegível).
-const CATEGORY_BADGE_STYLES: Record<RecentContentItem["categoryTone"], string> = {
-  red: "bg-primary text-white",
-  blue: "bg-accent text-white",
-  gold: "bg-gold text-black",
-  green: "bg-emerald-500 text-white",
-  purple: "bg-fuchsia-500 text-white",
-  neutral: "bg-ink text-bg",
-};
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("pt-PT", { day: "numeric", month: "short" });
-}
-
-function Byline({ item }: { item: RecentContentItem }) {
-  return (
-    <div className="mt-2 flex items-center gap-2 text-xs text-ink-dim">
-      {item.authorName && (
-        <>
-          {item.authorPhotoUrl ? (
-            <span className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full">
-              <Image src={item.authorPhotoUrl} alt={item.authorName} fill className="object-cover" />
-            </span>
-          ) : (
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary">
-              {item.authorInitials}
-            </span>
-          )}
-          <span className="font-medium text-ink-muted">{item.authorName}</span>
-          <span aria-hidden>·</span>
-        </>
-      )}
-      <time dateTime={item.date}>{formatDate(item.date)}</time>
-    </div>
-  );
-}
-
 /**
- * "Conteúdo Novo": só os 3 artigos mais recentes de sempre, sejam eles do
+ * "Conteúdo Novo": os artigos mais recentes de sempre, sejam eles do
  * formato que forem — mais como a manchete de um jornal do que uma
  * grelha de categorias. Os outros formatos já têm o seu próprio destaque
  * (fila do Vale a Pena, painéis do Descobre, carrossel Antes da Platina),
- * por isso esta secção não precisa de tentar mostrar tudo.
+ * por isso esta secção não precisa de tentar mostrar tudo. O primeiro
+ * item fica em destaque grande; os restantes rodam num carrossel
+ * pequeno ao lado, 2 de cada vez.
  */
 export function RecentContentGrid({ items }: RecentContentGridProps) {
   if (items.length === 0) return null;
@@ -112,39 +64,9 @@ export function RecentContentGrid({ items }: RecentContentGridProps) {
             <Byline item={lead} />
           </Link>
 
-          {/* Artigos secundários — mais pequenos, à direita. */}
-          <div className="flex flex-col gap-6 lg:col-span-5">
-            {secondary.map((item) => (
-              <Link key={item.key} href={item.href} className="group flex gap-4">
-                <div className="relative aspect-[4/3] w-[120px] shrink-0 overflow-hidden rounded-sm border border-border bg-bg-surface sm:w-[150px]">
-                  {item.imageUrl && (
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      fill
-                      sizes="150px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  )}
-                  <div className="absolute left-1.5 top-1.5">
-                    <span
-                      className={`inline-flex items-center rounded-sm px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide shadow-sm ${CATEGORY_BADGE_STYLES[item.categoryTone]}`}
-                    >
-                      {item.category}
-                    </span>
-                  </div>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 font-display text-base font-bold text-ink group-hover:text-primary-light">
-                    {item.title}
-                  </p>
-                  {item.subtitle && (
-                    <p className="mt-1 line-clamp-2 text-xs text-ink-muted">{item.subtitle}</p>
-                  )}
-                  <Byline item={item} />
-                </div>
-              </Link>
-            ))}
+          {/* Artigos secundários — carrossel pequeno, 2 de cada vez. */}
+          <div className="lg:col-span-5">
+            <RecentSecondaryCarousel items={secondary} />
           </div>
         </div>
       </div>

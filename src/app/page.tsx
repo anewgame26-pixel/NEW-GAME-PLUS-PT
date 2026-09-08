@@ -173,7 +173,7 @@ export default async function HomePage() {
     })),
   ]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 3);
+    .slice(0, 5);
 
   const retroItems: ArticleTeaserItem[] = retroArticles.slice(0, 3).map((a) => ({
     slug: a.slug,
@@ -227,21 +227,7 @@ export default async function HomePage() {
         {/* 3. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
         <NowPlayingCarousel items={playingNow} games={allGamesForNowPlaying} />
 
-        {/* 4. FERRAMENTAS — Escolhe a tua Próxima Platina + Vota na Próxima Platina lado a lado. */}
-        <section className="border-t border-border py-10">
-          <div
-            className={
-              votingCandidates.length > 0
-                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
-                : "mx-auto max-w-[1440px] px-4 lg:px-8"
-            }
-          >
-            <RecommendationWizard games={games} />
-            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
-          </div>
-        </section>
-
-        {/* 5. ANTES DA PLATINA — carrossel (2ª e última das 3 zonas de carrossel). */}
+        {/* 4. ANTES DA PLATINA — carrossel (2ª e última das 3 zonas de carrossel). */}
         <BeforePlatinumCarousel games={beforePlatinumGames} />
 
         {/* 6. DESCOBRE — Retro+, Descobertas+, Radar+ e Top+. Antes tinha o
@@ -287,6 +273,20 @@ export default async function HomePage() {
                 emptyLabel="Ainda não há listas publicadas."
               />
             </div>
+          </div>
+        </section>
+
+        {/* 7. FERRAMENTAS — Escolhe a tua Próxima Platina + Vota na Próxima Platina lado a lado. */}
+        <section className="border-t border-border py-10">
+          <div
+            className={
+              votingCandidates.length > 0
+                ? "mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8"
+                : "mx-auto max-w-[1440px] px-4 lg:px-8"
+            }
+          >
+            <RecommendationWizard games={games} />
+            {votingCandidates.length > 0 && <VotingTeaser candidates={votingCandidates} />}
           </div>
         </section>
 
