@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { QuickFilters } from "@/components/home/QuickFilters";
 import { NowPlayingCarousel } from "@/components/home/NowPlayingCarousel";
 import { RecentContentGrid, RecentContentItem } from "@/components/home/RecentContentGrid";
+import { ValePenaStrip } from "@/components/home/ValePenaStrip";
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
 import { VotingTeaser } from "@/components/home/VotingTeaser";
 import { BeforePlatinumCarousel } from "@/components/home/BeforePlatinumCarousel";
@@ -206,6 +207,9 @@ export default async function HomePage() {
 
         {/* 2. CONTEÚDO NOVO — grelha, propositadamente sem carrossel. */}
         <RecentContentGrid items={recentItems} />
+
+        {/* 2.5 VALE A PENA — fila com os 5 artigos mais recentes deste pilar. */}
+        <ValePenaStrip articles={hourWithArticles} />
 
         {/* 3. ESTAMOS A JOGAR — carrossel forte (1 das 3 zonas de carrossel da homepage). */}
         <NowPlayingCarousel items={playingNow} games={allGamesForNowPlaying} />

@@ -36,7 +36,7 @@ export function FeaturedGameCarousel({
   slides,
   children,
   search,
-  intervalMs = 10000,
+  intervalMs = 6000,
 }: FeaturedGameCarouselProps) {
   const count = slides.length;
   const [index, setIndex] = useState(0);
