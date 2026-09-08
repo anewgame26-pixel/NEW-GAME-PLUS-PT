@@ -9,7 +9,6 @@ import { ValePenaStrip } from "@/components/home/ValePenaStrip";
 import { RecommendationWizard } from "@/components/home/RecommendationWizard";
 import { VotingTeaser } from "@/components/home/VotingTeaser";
 import { BeforePlatinumCarousel } from "@/components/home/BeforePlatinumCarousel";
-import { HourWithFeature } from "@/components/home/HourWithFeature";
 import { ArticleTeaserPanel, ArticleTeaserItem } from "@/components/home/ArticleTeaserPanel";
 import { RankingsGrid } from "@/components/home/RankingsGrid";
 import { CommunityPanel } from "@/components/home/CommunityPanel";
@@ -231,50 +230,48 @@ export default async function HomePage() {
         {/* 5. ANTES DA PLATINA — carrossel (2ª e última das 3 zonas de carrossel). */}
         <BeforePlatinumCarousel games={beforePlatinumGames} />
 
-        {/* 6. ZONA EDITORIAL — Vale a pena? em destaque + Descobre (Retro+/Descobertas+). */}
+        {/* 6. DESCOBRE — Retro+, Descobertas+, Radar+ e Top+. Antes tinha o
+            Vale a pena? ao lado, mas ficou redundante depois de a homepage
+            ganhar a sua própria fila logo a seguir a "Conteúdo Novo". */}
         <section className="border-t border-border py-10">
-          <div className="mx-auto grid max-w-[1440px] gap-4 px-4 lg:grid-cols-2 lg:px-8">
-            <HourWithFeature article={hourWithArticles[0] ?? null} />
-
-            <div className="flex flex-col gap-4">
-              <div>
-                <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink">
-                  Descobre
-                </h2>
-                <p className="mt-1 text-sm text-ink-muted">
-                  Retro+, Descobertas+, Radar+ e Top+ — o que fica fora do circuito habitual.
-                </p>
-              </div>
-              <div className="grid flex-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <ArticleTeaserPanel
-                  title="Retro+"
-                  icon={History}
-                  basePath="/retro"
-                  items={retroItems}
-                  emptyLabel="Ainda não há artigos publicados."
-                />
-                <ArticleTeaserPanel
-                  title="Descobertas+"
-                  icon={Compass}
-                  basePath="/descobertas"
-                  items={discoveryItems}
-                  emptyLabel="Ainda não há artigos publicados."
-                />
-                <ArticleTeaserPanel
-                  title="Radar+"
-                  icon={RadarIcon}
-                  basePath="/radar"
-                  items={radarItems}
-                  emptyLabel="Ainda não há artigos publicados."
-                />
-                <ArticleTeaserPanel
-                  title="Top+"
-                  icon={ListOrdered}
-                  basePath="/top"
-                  items={topItems}
-                  emptyLabel="Ainda não há listas publicadas."
-                />
-              </div>
+          <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
+            <div>
+              <h2 className="font-display text-lg font-bold uppercase tracking-wide text-ink sm:text-xl">
+                Descobre
+              </h2>
+              <p className="mt-1 text-sm text-ink-muted">
+                Retro+, Descobertas+, Radar+ e Top+ — o que fica fora do circuito habitual.
+              </p>
+            </div>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <ArticleTeaserPanel
+                title="Retro+"
+                icon={History}
+                basePath="/retro"
+                items={retroItems}
+                emptyLabel="Ainda não há artigos publicados."
+              />
+              <ArticleTeaserPanel
+                title="Descobertas+"
+                icon={Compass}
+                basePath="/descobertas"
+                items={discoveryItems}
+                emptyLabel="Ainda não há artigos publicados."
+              />
+              <ArticleTeaserPanel
+                title="Radar+"
+                icon={RadarIcon}
+                basePath="/radar"
+                items={radarItems}
+                emptyLabel="Ainda não há artigos publicados."
+              />
+              <ArticleTeaserPanel
+                title="Top+"
+                icon={ListOrdered}
+                basePath="/top"
+                items={topItems}
+                emptyLabel="Ainda não há listas publicadas."
+              />
             </div>
           </div>
         </section>
