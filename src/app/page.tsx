@@ -90,6 +90,15 @@ export default async function HomePage() {
 
   // --- "Conteúdo Novo": junta os 4 formatos editoriais, ordenados por
   // data, para a homepage deixar de parecer só um site de troféus.
+  function resolveAuthor(authorId: string | null | undefined) {
+    const author = authorId ? teamMembers.find((m) => m.id === authorId) : null;
+    return {
+      authorName: author?.name ?? null,
+      authorPhotoUrl: author?.photoUrl ?? null,
+      authorInitials: author?.avatarInitials ?? null,
+    };
+  }
+
   const recentItems: RecentContentItem[] = [
     ...latestBeforePlatinum.flatMap((ep) => {
       const game = games.find((g) => g.id === ep.gameId);
@@ -116,6 +125,7 @@ export default async function HomePage() {
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/vale-a-pena/${a.slug}`,
+      ...resolveAuthor(a.authorId),
     })),
     ...retroArticles.map((a) => ({
       key: `retro-${a.id}`,
@@ -126,6 +136,7 @@ export default async function HomePage() {
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/retro/${a.slug}`,
+      ...resolveAuthor(a.authorId),
     })),
     ...discoveryArticles.map((a) => ({
       key: `disc-${a.id}`,
@@ -136,6 +147,7 @@ export default async function HomePage() {
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/descobertas/${a.slug}`,
+      ...resolveAuthor(a.authorId),
     })),
     ...topArticles.map((a) => ({
       key: `top-${a.id}`,
@@ -146,6 +158,7 @@ export default async function HomePage() {
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/top/${a.slug}`,
+      ...resolveAuthor(a.authorId),
     })),
     ...radarArticles.map((a) => ({
       key: `radar-${a.id}`,
@@ -156,10 +169,11 @@ export default async function HomePage() {
       imageUrl: a.heroImageUrl ?? a.coverUrl,
       date: a.createdAt,
       href: `/radar/${a.slug}`,
+      ...resolveAuthor(a.authorId),
     })),
   ]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 10);
+    .slice(0, 3);
 
   const retroItems: ArticleTeaserItem[] = retroArticles.slice(0, 3).map((a) => ({
     slug: a.slug,
