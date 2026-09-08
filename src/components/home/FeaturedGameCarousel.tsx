@@ -41,6 +41,7 @@ export function FeaturedGameCarousel({
   const count = slides.length;
   const [index, setIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
@@ -80,6 +81,7 @@ export function FeaturedGameCarousel({
 
     const handleVisibilityChange = () => {
       stop();
+      setTabHidden(document.hidden);
       if (!document.hidden) start();
     };
 
@@ -152,20 +154,34 @@ export function FeaturedGameCarousel({
             </p>
 
             {count > 1 && (
-              <div className="mb-3 flex items-center gap-1.5">
+              <div className="mb-3 flex items-center gap-1.5" role="tablist" aria-label="Destaques">
                 {slides.map((s, i) => (
                   <button
                     key={s.id}
                     type="button"
+                    role="tab"
                     aria-label={`Ver ${s.title}`}
-                    aria-current={i === index}
+                    aria-selected={i === index}
                     onClick={() => goTo(i)}
-                    className={
-                      i === index
-                        ? "h-1.5 w-4 rounded-full bg-white transition-all"
-                        : "h-1.5 w-1.5 rounded-full bg-white/40 transition-all hover:bg-white/70"
-                    }
-                  />
+                    className="h-1 w-10 overflow-hidden rounded-full bg-white/25 sm:w-14"
+                  >
+                    {i < index ? (
+                      // Slides já vistos ficam com a barra cheia.
+                      <span className="block h-full w-full bg-white" />
+                    ) : i === index ? (
+                      // Slide atual — a barra enche ao ritmo do autoplay;
+                      // a key reinicia a animação sempre que o slide muda
+                      // (autoplay ou navegação manual).
+                      <span
+                        key={s.id}
+                        className="animate-hero-progress block h-full bg-white"
+                        style={{
+                          animationDuration: `${intervalMs}ms`,
+                          animationPlayState: tabHidden ? "paused" : "running",
+                        }}
+                      />
+                    ) : null}
+                  </button>
                 ))}
               </div>
             )}
