@@ -24,7 +24,7 @@ export function ValePenaStrip({ articles }: ValePenaStripProps) {
             Vale a Pena?
           </h2>
           <p className="mt-1 text-sm text-ink-muted">
-            As primeiras horas mais recentes — vale a pena continuar a jogar?
+            As primeiras horas mais recentes. Vale a pena continuar a jogar?
           </p>
         </div>
 

@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Vale a pena? | NewGame+",
   description:
-    "Jogamos as primeiras horas de cada jogo e dizemos-te se vale a pena continuar — antes de, mais tarde, chegar a uma análise completa ou à platina.",
+    "Jogamos as primeiras horas de cada jogo e dizemos-te se vale a pena continuar. O primeiro passo antes de, mais tarde, chegarmos a uma análise completa ou à platina.",
 };
 
 export default async function UmaHoraComPage() {
@@ -37,7 +37,7 @@ export default async function UmaHoraComPage() {
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               Jogamos as primeiras horas de cada jogo e damos-te a nossa impressão sincera:
-              vale a pena continuar a jogar? Não é uma análise completa — é o primeiro passo,
+              vale a pena continuar a jogar? Não é uma análise completa. É o primeiro passo,
               antes de eventualmente chegarmos a uma review a sério ou à platina.
             </p>
           </div>

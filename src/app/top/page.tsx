@@ -36,7 +36,7 @@ export default async function TopPage() {
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               “5 melhores Platinas”, “jogos que já não podes jogar”, “Platinas que vão destruir a
-              tua sanidade” — listas em vídeo sobre videojogos, sem papas na língua.
+              tua sanidade”. Listas em vídeo sobre videojogos, sem papas na língua.
             </p>
           </div>
         </div>

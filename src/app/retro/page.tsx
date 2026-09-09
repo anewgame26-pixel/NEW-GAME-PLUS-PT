@@ -35,7 +35,7 @@ export default async function RetroPage() {
               Retro+
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
-              Clássicos e nem tão clássicos que continuam a merecer o teu tempo — e alguns que,
+              Clássicos e nem tão clássicos que continuam a merecer o teu tempo. E alguns que,
               sejamos honestos, não envelheceram lá muito bem.
             </p>
           </div>

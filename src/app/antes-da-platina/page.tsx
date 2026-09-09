@@ -36,7 +36,7 @@ const PILLARS = [
   {
     icon: Video,
     title: "Episódios Antes da Platina",
-    description: "A nossa série em vídeo — jogamos, sofremos, e contamos-te tudo antes de começares.",
+    description: "A nossa série em vídeo. Jogamos, sofremos, e contamos-te tudo antes de começares.",
     href: "/antes-da-platina/episodios",
   },
 ];
@@ -53,8 +53,8 @@ export default function AntesDaPlatinaPage() {
               Antes da Platina
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
-              Antes de começares, sabe no que te estás a meter. Dificuldade, tempo, troféus
-              perdíveis, grind, quantos playthroughs precisas — e se vale mesmo a pena.
+              Antes de começares, sabe no que te estás a meter: dificuldade, tempo, troféus
+              perdíveis, grind, quantos playthroughs precisas e se vale mesmo a pena.
             </p>
           </div>
         </div>

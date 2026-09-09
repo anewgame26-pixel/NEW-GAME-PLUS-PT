@@ -240,7 +240,7 @@ export default async function HomePage() {
                 Descobre
               </h2>
               <p className="mt-1 text-sm text-ink-muted">
-                Retro+, Descobertas+, Radar+ e Top+ — o que fica fora do circuito habitual.
+                Retro+, Descobertas+, Radar+ e Top+: o que fica fora do circuito habitual.
               </p>
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
