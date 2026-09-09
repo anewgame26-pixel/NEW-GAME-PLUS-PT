@@ -68,7 +68,7 @@ export default async function CovilPage() {
             </p>
             <p className="mx-auto mt-6 max-w-xl text-balance text-sm text-ink-muted">
               A NewGame+ é uma plataforma portuguesa de reviews, guias e roadmaps de
-              troféus. Escrita por jogadores, para jogadores — sem filtros.
+              troféus. Escrita por jogadores, para jogadores, sem filtros.
             </p>
           </div>
         </section>
@@ -99,7 +99,7 @@ export default async function CovilPage() {
                 Como atribuímos as notas
               </h2>
               <p className="max-w-xl text-sm text-ink-muted">
-                A nota de 1 a 10 não é uma média automática de números — é o resumo honesto de quem
+                A nota de 1 a 10 não é uma média automática de números. É o resumo honesto de quem
                 jogou até ao fim. Olhamos para o que o jogo se propõe a ser (jogabilidade, história,
                 técnica, e o tempo/esforço que pede) e perguntamos: valeu a pena? A escala serve de
                 referência para leres as notas sempre da mesma forma:
@@ -116,7 +116,7 @@ export default async function CovilPage() {
             </div>
 
             <p className="mx-auto mt-6 max-w-xl text-center text-xs text-ink-dim">
-              À parte da nota, cada review tem sempre prós, contras e um veredicto em texto — a nota
+              À parte da nota, cada review tem sempre prós, contras e um veredicto em texto. A nota
               é só o atalho para quem tem pressa.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default async function CovilPage() {
             </h2>
             <p className="max-w-md text-sm text-ink-muted">
               Sugestões de jogos, parcerias, correções, ou só para dizeres que também
-              sofreste com aquela platina — a página de contactos está sempre aberta.
+              sofreste com aquela platina: a página de contactos está sempre aberta.
               Se és de uma editora ou agência de imprensa, visita a nossa{" "}
               <a href="/imprensa" className="text-primary underline">
                 página de Imprensa

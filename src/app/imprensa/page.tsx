@@ -13,7 +13,7 @@ import { getTeamMembers } from "@/lib/data/team";
 export const metadata: Metadata = {
   title: "Imprensa | NewGame+",
   description:
-    "Informação para editoras, estúdios e agências de relações públicas — quem somos, o que cobrimos e como entrar em contacto.",
+    "Informação para editoras, estúdios e agências de relações públicas: quem somos, o que cobrimos e como entrar em contacto.",
 };
 
 export const dynamic = "force-dynamic";
@@ -58,21 +58,21 @@ export default async function ImprensaPage() {
             </h2>
             <ul className="flex flex-col gap-2 text-sm leading-relaxed text-ink-muted">
               <li>
-                <strong className="text-ink">Antes da Platina</strong> — reviews
+                <strong className="text-ink">Antes da Platina</strong>: reviews
                 completas com nota, prós/contras, dificuldade de platina/conquista 100%
                 e roadmap capítulo a capítulo.
               </li>
               <li>
-                <strong className="text-ink">Vale a pena?</strong> — primeiras
+                <strong className="text-ink">Vale a pena?</strong>: primeiras
                 impressões, publicadas rapidamente após o lançamento ou acesso
                 antecipado.
               </li>
               <li>
-                <strong className="text-ink">Retro+</strong> — se um clássico ainda
+                <strong className="text-ink">Retro+</strong>: se um clássico ainda
                 vale a pena ser jogado hoje.
               </li>
               <li>
-                <strong className="text-ink">Descobertas+</strong> — destaque a jogos
+                <strong className="text-ink">Descobertas+</strong>: destaque a jogos
                 fora do radar habitual.
               </li>
             </ul>
@@ -157,8 +157,8 @@ export default async function ImprensaPage() {
                 <Users width={18} height={18} className="text-primary" />A equipa
               </h2>
               <p className="text-sm leading-relaxed text-ink-muted">
-                Todas as reviews são assinadas por um membro identificado da equipa —
-                conhece quem escreve na nossa{" "}
+                Todas as reviews são assinadas por um membro identificado da equipa.
+                Conhece quem escreve na nossa{" "}
                 <Link href="/covil" className="text-primary underline">
                   página Sobre Nós
                 </Link>
@@ -218,7 +218,7 @@ export default async function ImprensaPage() {
             </h2>
             <p className="mb-4 text-sm leading-relaxed text-ink-muted">
               Para pedidos de código de review, acesso antecipado, entrevistas ou
-              parcerias, contacta-nos diretamente — respondemos normalmente em 2 a 3
+              parcerias, contacta-nos diretamente. Respondemos normalmente em 2 a 3
               dias úteis.
             </p>
             <a

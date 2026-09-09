@@ -43,7 +43,7 @@ export default function PoliticaEditorialPage() {
               <p>
                 Aceitamos códigos de review, acesso antecipado e material de imprensa
                 fornecido por editoras e estúdios. Isto nunca é condição para publicar
-                uma análise nem influencia a nota atribuída — um jogo recebido
+                uma análise nem influencia a nota atribuída. Um jogo recebido
                 gratuitamente é avaliado exatamente com o mesmo critério de um jogo
                 comprado pela equipa. Quando relevante, indicamos na análise que o
                 jogo foi fornecido para revisão.
@@ -72,7 +72,7 @@ export default function PoliticaEditorialPage() {
                 primeiras impressões (&quot;Vale a pena?&quot;) o mais próximo possível do
                 lançamento. Análises completas (&quot;Antes da Platina&quot;) podem demorar mais
                 tempo, dependendo da duração do jogo e da dificuldade de completar
-                todos os troféus/conquistas — preferimos rigor a velocidade.
+                todos os troféus/conquistas. Preferimos rigor a velocidade.
               </p>
             </section>
 
