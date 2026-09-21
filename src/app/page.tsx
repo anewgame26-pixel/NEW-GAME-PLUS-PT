@@ -65,10 +65,6 @@ export default async function HomePage() {
     radarArticles,
   });
 
-  if (featuredGames.length === 0) {
-    return null;
-  }
-
   // --- "Antes da Platina": prioriza os jogos com episódio publicado mais
   // recente (dados reais da tabela videos). Se ainda não há nenhum vídeo
   // publicado, mostra jogos do catálogo na mesma — a informação de
