@@ -159,12 +159,18 @@ function radarToSlide(article: RadarArticle): HeroSlide | null {
 /**
  * Junta tudo o que a equipa marcou como "Destacar no Hero" — jogos
  * (Antes da Platina), Vale a pena?, Retro+ e Top+ — num único carrossel.
- * Se ninguém tiver marcado nada ainda em lado nenhum, cai de volta para
- * os jogos em destaque (o comportamento antigo), para o Hero nunca ficar
- * vazio.
+ *
+ * Só cai de volta para os primeiros jogos do catálogo (o comportamento
+ * antigo) se NADA, em lado nenhum, estiver marcado como destaque — ou
+ * seja, se o carrossel combinado ficaria mesmo vazio. Antes isto era
+ * decidido só a olhar para os jogos, por isso um jogo antigo (ex: o
+ * "AI LIMIT") continuava a aparecer mesmo depois de o desmarcares,
+ * sempre que havia destaques marcados só através de outros formatos
+ * (Vale a Pena, Retro+, etc.) e não através de jogos.
  */
 export function buildHeroSlides({
   featuredGames,
+  allGames,
   hourWithArticles,
   retroArticles,
   discoveryArticles,
@@ -172,6 +178,7 @@ export function buildHeroSlides({
   radarArticles,
 }: {
   featuredGames: Game[];
+  allGames: Game[];
   hourWithArticles: HourWithArticle[];
   retroArticles: RetroArticle[];
   discoveryArticles: DiscoveryArticle[];
@@ -208,6 +215,12 @@ export function buildHeroSlides({
     ...topSlides,
     ...radarSlides,
   ];
+
+  // Só usa este plano B se não houver mesmo nada marcado como destaque
+  // em lado nenhum (jogos, Vale a Pena, Retro+, Descobertas+, Top+, Radar+).
+  if (editorPicks.length === 0) {
+    return allGames.slice(0, 3).map(gameToSlide);
+  }
 
   return editorPicks;
 }

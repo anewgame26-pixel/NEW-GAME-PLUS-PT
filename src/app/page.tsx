@@ -38,13 +38,7 @@ export default async function HomePage() {
   // pronto). Por isso usa a lista completa, não a lista pública.
   const allGamesForNowPlaying = await getGames({ includeUnpublished: true });
   const platformStats = await getPlatformStats();
-  let featuredGames = await getFeaturedGames();
-
-  // Salvaguarda: se ainda nenhum jogo tiver sido marcado como destaque no
-  // admin, mostra os 3 primeiros do catálogo em vez de a secção ficar vazia.
-  if (featuredGames.length === 0) {
-    featuredGames = games.slice(0, 3);
-  }
+  const featuredGames = await getFeaturedGames();
 
   const latestBeforePlatinum = await getLatestBeforePlatinum();
   await getUpcomingVideos(); // mantido a carregar para não afetar outras páginas (ex: /antes-da-platina/episodios); não é usado nesta página
@@ -63,6 +57,7 @@ export default async function HomePage() {
 
   const heroSlides = buildHeroSlides({
     featuredGames,
+    allGames: games,
     hourWithArticles,
     retroArticles,
     discoveryArticles,
