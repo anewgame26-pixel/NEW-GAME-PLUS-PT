@@ -107,7 +107,7 @@ export interface HeroSlideFact {
  */
 export interface HeroSlide {
   id: string;
-  category: "Antes da Platina" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
+  category: "Antes da Platina" | "Review" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
   title: string;
   subtitle: string | null;
   imageUrl: string;
@@ -369,6 +369,50 @@ export interface HourWithArticle {
   continuarAJogar: boolean | null;
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
+  isPublished: boolean;
+  createdAt: string;
+  /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
+  authorId: string | null;
+}
+
+/**
+ * Um artigo Review — análise completa de um jogo (ao contrário do "Vale
+ * a pena?", que é só a primeira impressão da primeira hora). Tal como os
+ * outros pilares, é independente da tabela "games", para poder cobrir
+ * jogos sem perfil de platina no site.
+ */
+export interface ReviewArticle {
+  id: string;
+  slug: string;
+  title: string;
+  platform: string | null;
+  /** Jogo da lista (Antes da Platina) a que este artigo pertence, se aplicável. */
+  gameId: string | null;
+  coverUrl: string | null;
+  heroImageUrl: string | null;
+  /** Enquadramento horizontal da imagem larga quando é cortada (0-100, 50 = centro). */
+  heroFocusX: number;
+  heroFocusY: number;
+  heroZoom: number;
+  datePlayed: string | null;
+  youtubeUrl: string | null;
+  intro: string;
+  gameplay: string;
+  historia: string;
+  graficos: string;
+  somMusica: string;
+  performance: string;
+  pros: string[];
+  contras: string[];
+  veredicto: string;
+  /** Nota final da review, de 0 a 10 (uma casa decimal). null = ainda por decidir. */
+  nota: number | null;
+  /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
+  isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
   isPublished: boolean;
   createdAt: string;
   /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
@@ -402,6 +446,8 @@ export interface RetroArticle {
   valeAPenaHoje: boolean | null;
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
   isPublished: boolean;
   createdAt: string;
   /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
@@ -449,6 +495,8 @@ export interface TopArticle {
   items: TopArticleItem[];
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
   isPublished: boolean;
   createdAt: string;
   /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
@@ -483,6 +531,8 @@ export interface DiscoveryArticle {
   recomendamos: boolean | null;
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
   isPublished: boolean;
   createdAt: string;
   /** Membro da equipa que escreveu/editou este artigo, se atribuído. */
@@ -524,6 +574,8 @@ export interface RadarArticle {
   body: string;
   /** Marca este artigo para aparecer no carrossel do Hero da homepage. */
   isHeroFeatured: boolean;
+  /** Posição no carrossel do Hero quando destacado (menor = aparece primeiro). null = sem ordem definida. */
+  heroOrder: number | null;
   isPublished: boolean;
   createdAt: string;
   /** Membro da equipa que escreveu/editou este artigo, se atribuído. */

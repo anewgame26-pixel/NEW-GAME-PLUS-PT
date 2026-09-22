@@ -30,6 +30,7 @@ const defaultForm = {
   tags: [] as string[],
   body: "",
   isHeroFeatured: false,
+  heroOrder: null as number | null,
   isPublished: false,
   authorId: null as string | null,
 };
@@ -80,6 +81,7 @@ export function RadarForm({ articleId }: RadarFormProps) {
           tags: data.tags ?? [],
           body: data.body ?? "",
           isHeroFeatured: data.is_hero_featured ?? false,
+          heroOrder: typeof data.hero_order === "number" ? data.hero_order : null,
           isPublished: data.is_published ?? false,
           authorId: data.author_id ?? null,
         });
@@ -141,6 +143,7 @@ export function RadarForm({ articleId }: RadarFormProps) {
       tags: form.tags,
       body: form.body.trim(),
       is_hero_featured: form.isHeroFeatured,
+      hero_order: form.heroOrder,
       is_published: form.isPublished,
       author_id: form.authorId,
     };
@@ -256,6 +259,26 @@ export function RadarForm({ articleId }: RadarFormProps) {
           </span>
         </span>
       </label>
+
+      {form.isHeroFeatured && (
+        <label className="mb-6 flex flex-col gap-1.5">
+          <span className="text-xs font-medium uppercase tracking-wide text-ink-dim">
+            Ordem no carrossel (opcional)
+          </span>
+          <input
+            type="number"
+            value={form.heroOrder ?? ""}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                heroOrder: e.target.value === "" ? null : Number(e.target.value),
+              }))
+            }
+            placeholder="Ex: 1"
+            className="h-10 w-28 rounded-sm border border-border bg-bg-surface2 px-3 text-sm text-ink placeholder:text-ink-dim outline-none focus:border-primary"
+          />
+        </label>
+      )}
 
       {error && (
         <p className="mb-4 rounded-sm border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary-light">

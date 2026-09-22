@@ -27,6 +27,7 @@ function mapRowToArticle(row: Record<string, unknown>): HourWithArticle {
     veredicto: (row.veredicto as string) ?? "",
     continuarAJogar: (row.continuar_a_jogar as boolean | null) ?? null,
     isHeroFeatured: (row.is_hero_featured as boolean) ?? false,
+    heroOrder: typeof row.hero_order === "number" ? row.hero_order : null,
     isPublished: (row.is_published as boolean) ?? false,
     createdAt: row.created_at as string,
     authorId: (row.author_id as string | null) ?? null,

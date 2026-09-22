@@ -3,36 +3,48 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, Trash2 } from "lucide-react";
-import { slugify, friendlySaveError } from "@/lib/utils";
+import { slugify, platformLabel, friendlySaveError } from "@/lib/utils";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { IgdbImportBox, type IgdbImportResult } from "@/components/admin/IgdbImportBox";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
-import { ObjectListEditor } from "@/components/admin/ObjectListEditor";
-import { ImageUploader } from "@/components/admin/ImageUploader";
+import { StringListEditor } from "@/components/admin/StringListEditor";
 import { HeroFocusSlider } from "@/components/admin/HeroFocusSlider";
-import type { TopArticleItem } from "@/types";
+import { ImageUploader } from "@/components/admin/ImageUploader";
+import { GameLinkSelect } from "@/components/admin/GameLinkSelect";
 
-interface TopFormProps {
+interface ReviewFormProps {
   articleId?: string;
 }
 
 const defaultForm = {
   title: "",
   slug: "",
+  platform: "",
+  gameId: null as string | null,
   coverUrl: "",
   heroImageUrl: "",
   heroFocusX: 50,
   heroFocusY: 50,
   heroZoom: 100,
+  datePlayed: "",
   youtubeUrl: "",
   intro: "",
-  items: [] as TopArticleItem[],
+  gameplay: "",
+  historia: "",
+  graficos: "",
+  somMusica: "",
+  performance: "",
+  pros: [] as string[],
+  contras: [] as string[],
+  veredicto: "",
+  nota: null as number | null,
   isHeroFeatured: false,
   heroOrder: null as number | null,
   isPublished: false,
   authorId: null as string | null,
 };
 
-export function TopForm({ articleId }: TopFormProps) {
+export function ReviewForm({ articleId }: ReviewFormProps) {
   const router = useRouter();
   const [form, setForm] = useState(defaultForm);
   const [loading, setLoading] = useState(Boolean(articleId));
@@ -55,7 +67,7 @@ export function TopForm({ articleId }: TopFormProps) {
     if (!articleId) return;
     const supabase = createBrowserSupabaseClient();
     supabase
-      .from("top_articles")
+      .from("reviews")
       .select("*")
       .eq("id", articleId)
       .maybeSingle()
@@ -67,14 +79,25 @@ export function TopForm({ articleId }: TopFormProps) {
         setForm({
           title: data.title ?? "",
           slug: data.slug ?? "",
+          platform: data.platform ?? "",
+          gameId: data.game_id ?? null,
           coverUrl: data.cover_url ?? "",
           heroImageUrl: data.hero_image_url ?? "",
           heroFocusX: typeof data.hero_focus_x === "number" ? data.hero_focus_x : 50,
           heroFocusY: typeof data.hero_focus_y === "number" ? data.hero_focus_y : 50,
           heroZoom: typeof data.hero_zoom === "number" ? data.hero_zoom : 100,
+          datePlayed: data.date_played ?? "",
           youtubeUrl: data.youtube_url ?? "",
           intro: data.intro ?? "",
-          items: data.items ?? [],
+          gameplay: data.gameplay ?? "",
+          historia: data.historia ?? "",
+          graficos: data.graficos ?? "",
+          somMusica: data.som_musica ?? "",
+          performance: data.performance ?? "",
+          pros: data.pros ?? [],
+          contras: data.contras ?? [],
+          veredicto: data.veredicto ?? "",
+          nota: typeof data.nota === "number" ? data.nota : null,
           isHeroFeatured: data.is_hero_featured ?? false,
           heroOrder: typeof data.hero_order === "number" ? data.hero_order : null,
           isPublished: data.is_published ?? false,
@@ -87,6 +110,20 @@ export function TopForm({ articleId }: TopFormProps) {
 
   function updateTitle(title: string) {
     setForm((f) => ({ ...f, title, slug: slugTouched ? f.slug : slugify(title) }));
+  }
+
+  function handleIgdbImport(result: IgdbImportResult) {
+    setForm((f) => ({
+      ...f,
+      // Num artigo já criado, não tocamos no título/slug — mudar o link
+      // partiria referências já partilhadas. Só ao criar de raiz.
+      ...(articleId
+        ? {}
+        : { title: result.title, slug: slugTouched ? f.slug : slugify(result.title) }),
+      coverUrl: result.coverUrl ?? f.coverUrl,
+      heroImageUrl: result.heroImageUrl ?? f.heroImageUrl,
+      platform: result.platforms.length ? result.platforms.map(platformLabel).join(", ") : f.platform,
+    }));
   }
 
   async function handleSave() {
@@ -108,20 +145,25 @@ export function TopForm({ articleId }: TopFormProps) {
     const payload = {
       title: form.title.trim(),
       slug: form.slug.trim(),
+      platform: form.platform.trim() || null,
+      game_id: form.gameId,
       cover_url: form.coverUrl.trim() || null,
       hero_image_url: form.heroImageUrl.trim() || null,
       hero_focus_x: form.heroFocusX,
       hero_focus_y: form.heroFocusY,
       hero_zoom: form.heroZoom,
+      date_played: form.datePlayed || null,
       youtube_url: form.youtubeUrl.trim() || null,
       intro: form.intro.trim(),
-      items: form.items
-        .map((item) => ({
-          label: item.label.trim(),
-          note: (item.note ?? "").trim(),
-          imageUrl: (item.imageUrl ?? "").trim() || undefined,
-        }))
-        .filter((item) => item.label),
+      gameplay: form.gameplay.trim(),
+      historia: form.historia.trim(),
+      graficos: form.graficos.trim(),
+      som_musica: form.somMusica.trim(),
+      performance: form.performance.trim(),
+      pros: form.pros.map((p) => p.trim()).filter(Boolean),
+      contras: form.contras.map((c) => c.trim()).filter(Boolean),
+      veredicto: form.veredicto.trim(),
+      nota: form.nota,
       is_hero_featured: form.isHeroFeatured,
       hero_order: form.heroOrder,
       is_published: form.isPublished,
@@ -131,8 +173,8 @@ export function TopForm({ articleId }: TopFormProps) {
     const supabase = createBrowserSupabaseClient();
 
     const result = articleId
-      ? await supabase.from("top_articles").update(payload).eq("id", articleId).select("id")
-      : await supabase.from("top_articles").insert(payload).select("id").single();
+      ? await supabase.from("reviews").update(payload).eq("id", articleId).select("id")
+      : await supabase.from("reviews").insert(payload).select("id").single();
 
     setSaving(false);
 
@@ -148,7 +190,7 @@ export function TopForm({ articleId }: TopFormProps) {
     setWasPublished(form.isPublished);
 
     if (!articleId && result.data && "id" in (result.data as object)) {
-      router.push(`/admin/top/${(result.data as { id: string }).id}`);
+      router.push(`/admin/reviews/${(result.data as { id: string }).id}`);
     } else {
       router.refresh();
     }
@@ -158,12 +200,12 @@ export function TopForm({ articleId }: TopFormProps) {
     if (!articleId) return;
     if (!window.confirm(`Apagar "${form.title}"? Não há forma de desfazer.`)) return;
     const supabase = createBrowserSupabaseClient();
-    const { error: delError } = await supabase.from("top_articles").delete().eq("id", articleId);
+    const { error: delError } = await supabase.from("reviews").delete().eq("id", articleId);
     if (delError) {
       setError("Não foi possível apagar.");
       return;
     }
-    router.push("/admin/top");
+    router.push("/admin/reviews");
   }
 
   if (loading) {
@@ -178,7 +220,7 @@ export function TopForm({ articleId }: TopFormProps) {
     <div>
       <div className="mb-3 flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-ink">
-          {articleId ? `Editar: ${form.title || "..."}` : "Novo — Top+"}
+          {articleId ? `Editar: ${form.title || "..."}` : "Nova — Review"}
         </h1>
         <div className="flex items-center gap-2">
           {articleId && (
@@ -267,14 +309,15 @@ export function TopForm({ articleId }: TopFormProps) {
       )}
 
       <div className="flex flex-col gap-5">
+        <IgdbImportBox onImport={handleIgdbImport} isExistingGame={Boolean(articleId)} />
+
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="flex flex-col gap-1.5 sm:col-span-2">
-            <span className={labelClass}>Título da lista</span>
+          <label className="flex flex-col gap-1.5">
+            <span className={labelClass}>Título do jogo</span>
             <input
               type="text"
               value={form.title}
               onChange={(e) => updateTitle(e.target.value)}
-              placeholder="ex: 5 Jogos Mais Difíceis de Platinar"
               className={inputClass}
             />
           </label>
@@ -291,29 +334,39 @@ export function TopForm({ articleId }: TopFormProps) {
             />
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className={labelClass}>Link do vídeo (YouTube)</span>
+            <span className={labelClass}>Plataforma</span>
             <input
               type="text"
-              value={form.youtubeUrl}
-              onChange={(e) => setForm((f) => ({ ...f, youtubeUrl: e.target.value }))}
-              placeholder="https://www.youtube.com/watch?v=..."
+              value={form.platform}
+              onChange={(e) => setForm((f) => ({ ...f, platform: e.target.value }))}
+              placeholder="ex: PS5"
               className={inputClass}
             />
           </label>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <ImageUploader
-            label="Capa (miniatura)"
-            value={form.coverUrl}
-            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
-            folder="top"
+          <label className="flex flex-col gap-1.5">
+            <span className={labelClass}>Data em que jogaste</span>
+            <input
+              type="date"
+              value={form.datePlayed}
+              onChange={(e) => setForm((f) => ({ ...f, datePlayed: e.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <GameLinkSelect
+            value={form.gameId}
+            onChange={(gameId) => setForm((f) => ({ ...f, gameId }))}
           />
           <ImageUploader
-            label="Imagem larga (topo da página)"
+            label="Capa"
+            value={form.coverUrl}
+            onChange={(url) => setForm((f) => ({ ...f, coverUrl: url }))}
+            folder="reviews"
+          />
+          <ImageUploader
+            label="Imagem larga (topo do artigo)"
             value={form.heroImageUrl}
             onChange={(url) => setForm((f) => ({ ...f, heroImageUrl: url }))}
-            folder="top"
+            folder="reviews"
           />
           <label className="flex flex-col gap-1.5">
             <span className={labelClass}>Escrito por (opcional)</span>
@@ -345,30 +398,86 @@ export function TopForm({ articleId }: TopFormProps) {
         )}
 
         <label className="flex flex-col gap-1.5">
-          <span className={labelClass}>Introdução</span>
-          <RichTextEditor
-          value={form.intro}
-          onChange={(html) => setForm((f) => ({ ...f, intro: html }))}
-          imageFolder="top"
-        />
+          <span className={labelClass}>Link do vídeo do YouTube (opcional)</span>
+          <input
+            type="text"
+            value={form.youtubeUrl}
+            onChange={(e) => setForm((f) => ({ ...f, youtubeUrl: e.target.value }))}
+            placeholder="https://www.youtube.com/watch?v=..."
+            className={inputClass}
+          />
         </label>
 
-        <ObjectListEditor<TopArticleItem & Record<string, unknown>>
-          label="Jogos da lista, por ordem"
-          items={form.items as (TopArticleItem & Record<string, unknown>)[]}
-          fields={[
-            { key: "label", label: "Jogo", type: "text", placeholder: "ex: Elden Ring" },
-            {
-              key: "note",
-              label: "Nota / razão",
-              type: "textarea",
-              placeholder: "ex: O chefe final é uma aula de paciência",
-            },
-            { key: "imageUrl", label: "Imagem (opcional)", type: "image", imageFolder: "top" },
-          ]}
-          emptyItem={{ label: "", note: "", imageUrl: "" }}
-          onChange={(items) => setForm((f) => ({ ...f, items: items as TopArticleItem[] }))}
-        />
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Introdução</span>
+          <RichTextEditor
+            value={form.intro}
+            onChange={(html) => setForm((f) => ({ ...f, intro: html }))}
+            imageFolder="reviews"
+          />
+        </label>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {(
+            [
+              ["gameplay", "Gameplay"],
+              ["historia", "História"],
+              ["graficos", "Gráficos"],
+              ["somMusica", "Som / Música"],
+              ["performance", "Performance"],
+            ] as const
+          ).map(([field, label]) => (
+            <label key={field} className="flex flex-col gap-1.5">
+              <span className={labelClass}>{label}</span>
+              <RichTextEditor
+                value={form[field]}
+                onChange={(html) => setForm((f) => ({ ...f, [field]: html }))}
+                imageFolder="reviews"
+              />
+            </label>
+          ))}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <StringListEditor
+            label="Pontos fortes"
+            values={form.pros}
+            onChange={(pros) => setForm((f) => ({ ...f, pros }))}
+          />
+          <StringListEditor
+            label="Pontos fracos"
+            values={form.contras}
+            onChange={(contras) => setForm((f) => ({ ...f, contras }))}
+          />
+        </div>
+
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Veredicto</span>
+          <RichTextEditor
+            value={form.veredicto}
+            onChange={(html) => setForm((f) => ({ ...f, veredicto: html }))}
+            imageFolder="reviews"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1.5">
+          <span className={labelClass}>Nota final (0 a 10, opcional)</span>
+          <input
+            type="number"
+            min={0}
+            max={10}
+            step={0.1}
+            value={form.nota ?? ""}
+            onChange={(e) =>
+              setForm((f) => ({
+                ...f,
+                nota: e.target.value === "" ? null : Number(e.target.value),
+              }))
+            }
+            placeholder="Ex: 8.5"
+            className={`${inputClass} w-32`}
+          />
+        </label>
       </div>
     </div>
   );

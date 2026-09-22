@@ -5,6 +5,7 @@ import type {
   HourWithArticle,
   RadarArticle,
   RetroArticle,
+  ReviewArticle,
   TopArticle,
 } from "@/types";
 import { difficultyLabel, formatPlatinumTime, grindLabel, stripHtml } from "@/lib/utils";
@@ -44,6 +45,26 @@ function hourWithToSlide(article: HourWithArticle): HeroSlide | null {
         value: article.continuarAJogar === null ? "Por decidir" : article.continuarAJogar ? "Sim" : "Não",
         warn: article.continuarAJogar === false,
       },
+    ],
+  };
+}
+
+function reviewToSlide(article: ReviewArticle): HeroSlide | null {
+  const imageUrl = article.heroImageUrl ?? article.coverUrl;
+  if (!imageUrl) return null;
+  return {
+    id: `review-${article.id}`,
+    category: "Review",
+    title: article.title,
+    subtitle: stripHtml(article.intro) || article.platform,
+    imageUrl,
+    heroFocusX: article.heroFocusX,
+    heroFocusY: article.heroFocusY,
+    heroZoom: article.heroZoom,
+    href: `/review/${article.slug}`,
+    facts: [
+      ...(article.platform ? [{ label: "Plataforma", value: article.platform }] : []),
+      ...(article.nota !== null ? [{ label: "Nota", value: `${article.nota}/10` }] : []),
     ],
   };
 }
@@ -171,6 +192,7 @@ function radarToSlide(article: RadarArticle): HeroSlide | null {
 export function buildHeroSlides({
   featuredGames,
   allGames,
+  reviewArticles,
   hourWithArticles,
   retroArticles,
   discoveryArticles,
@@ -179,6 +201,7 @@ export function buildHeroSlides({
 }: {
   featuredGames: Game[];
   allGames: Game[];
+  reviewArticles: ReviewArticle[];
   hourWithArticles: HourWithArticle[];
   retroArticles: RetroArticle[];
   discoveryArticles: DiscoveryArticle[];
@@ -186,29 +209,40 @@ export function buildHeroSlides({
   radarArticles: RadarArticle[];
 }): HeroSlide[] {
   const gameSlides = featuredGames.map(gameToSlide);
+  const reviewSlides = reviewArticles
+    .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
+    .map(reviewToSlide)
+    .filter((s): s is HeroSlide => Boolean(s));
   const hourWithSlides = hourWithArticles
     .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
     .map(hourWithToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
   const retroSlides = retroArticles
     .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
     .map(retroToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
   const discoverySlides = discoveryArticles
     .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
     .map(discoveryToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
   const topSlides = topArticles
     .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
     .map(topToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
   const radarSlides = radarArticles
     .filter((a) => a.isHeroFeatured)
+    .sort((a, b) => (a.heroOrder ?? Infinity) - (b.heroOrder ?? Infinity))
     .map(radarToSlide)
     .filter((s): s is HeroSlide => Boolean(s));
 
   const editorPicks = [
     ...gameSlides,
+    ...reviewSlides,
     ...hourWithSlides,
     ...retroSlides,
     ...discoverySlides,

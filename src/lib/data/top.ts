@@ -16,6 +16,7 @@ function mapRowToArticle(row: Record<string, unknown>): TopArticle {
     intro: (row.intro as string) ?? "",
     items: (row.items as TopArticle["items"]) ?? [],
     isHeroFeatured: (row.is_hero_featured as boolean) ?? false,
+    heroOrder: typeof row.hero_order === "number" ? row.hero_order : null,
     isPublished: (row.is_published as boolean) ?? false,
     createdAt: row.created_at as string,
     authorId: (row.author_id as string | null) ?? null,

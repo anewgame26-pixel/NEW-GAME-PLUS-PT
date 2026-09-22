@@ -15,6 +15,7 @@ import { SearchInput } from "@/components/ui/SearchInput";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Jogos", href: "/antes-da-platina" },
+  { label: "Review", href: "/review" },
   { label: "Vale a pena?", href: "/vale-a-pena" },
   { label: "Retro+", href: "/retro" },
   { label: "Descobertas+", href: "/descobertas" },

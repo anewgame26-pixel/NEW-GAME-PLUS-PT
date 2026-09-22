@@ -18,6 +18,7 @@ function mapRowToArticle(row: Record<string, unknown>): RadarArticle {
     gameId: (row.game_id as string | null) ?? null,
     body: (row.body as string) ?? "",
     isHeroFeatured: (row.is_hero_featured as boolean) ?? false,
+    heroOrder: typeof row.hero_order === "number" ? row.hero_order : null,
     isPublished: (row.is_published as boolean) ?? false,
     createdAt: row.created_at as string,
     authorId: (row.author_id as string | null) ?? null,

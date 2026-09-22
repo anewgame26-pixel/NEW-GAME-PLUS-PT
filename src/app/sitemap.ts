@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllGameSlugs } from "@/lib/data/games";
+import { getAllReviewSlugs } from "@/lib/data/reviews";
 import { getAllHourWithSlugs } from "@/lib/data/hour-with";
 import { getAllRetroSlugs } from "@/lib/data/retro";
 import { getAllDiscoverySlugs } from "@/lib/data/discovery";
@@ -23,6 +24,7 @@ const SITE_URL = "https://newgameplus.pt";
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const gameSlugs = await getAllGameSlugs();
+  const reviewSlugs = await getAllReviewSlugs();
   const hourWithSlugs = await getAllHourWithSlugs();
   const retroSlugs = await getAllRetroSlugs();
   const discoverySlugs = await getAllDiscoverySlugs();
@@ -37,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/antes-da-platina`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/antes-da-platina/episodios`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/vale-a-pena`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/review`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/retro`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/descobertas`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/radar`, changeFrequency: "daily", priority: 0.6 },
@@ -63,6 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}/rankings/${c.slug}`,
     changeFrequency: "weekly",
     priority: 0.6,
+  }));
+
+  const reviewPages: MetadataRoute.Sitemap = reviewSlugs.map((slug) => ({
+    url: `${SITE_URL}/review/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
   }));
 
   const hourWithPages: MetadataRoute.Sitemap = hourWithSlugs.map((slug) => ({
@@ -98,6 +107,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticPages,
     ...gamePages,
+    ...reviewPages,
     ...rankingPages,
     ...hourWithPages,
     ...retroPages,

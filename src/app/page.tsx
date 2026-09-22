@@ -22,6 +22,7 @@ import { getPlatformStats } from "@/lib/data/stats";
 import { getVotingCandidates } from "@/lib/data/voting";
 import { getCommunityHighlights } from "@/lib/data/community";
 import { getHourWithArticles } from "@/lib/data/hour-with";
+import { getReviews } from "@/lib/data/reviews";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { getTopArticles } from "@/lib/data/top";
@@ -50,6 +51,7 @@ export default async function HomePage() {
   const { posts: communityPosts, onlineCount } = await getCommunityHighlights();
 
   const hourWithArticles = await getHourWithArticles();
+  const reviewArticles = await getReviews();
   const retroArticles = await getRetroArticles();
   const discoveryArticles = await getDiscoveryArticles();
   const topArticles = await getTopArticles();
@@ -58,6 +60,7 @@ export default async function HomePage() {
   const heroSlides = buildHeroSlides({
     featuredGames,
     allGames: games,
+    reviewArticles,
     hourWithArticles,
     retroArticles,
     discoveryArticles,
@@ -107,6 +110,17 @@ export default async function HomePage() {
         },
       ];
     }),
+    ...reviewArticles.map((a) => ({
+      key: `review-${a.id}`,
+      category: "Review" as const,
+      categoryTone: "rose" as const,
+      title: a.title,
+      subtitle: stripHtml(a.veredicto) || null,
+      imageUrl: a.heroImageUrl ?? a.coverUrl,
+      date: a.createdAt,
+      href: `/review/${a.slug}`,
+      ...resolveAuthor(a.authorId),
+    })),
     ...hourWithArticles.map((a) => ({
       key: `hw-${a.id}`,
       category: "Vale a pena?" as const,

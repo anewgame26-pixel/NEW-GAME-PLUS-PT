@@ -3,8 +3,8 @@ import { formatDateLong } from "@/lib/utils";
 
 export interface RecentContentItem {
   key: string;
-  category: "Antes da Platina" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
-  categoryTone: "red" | "blue" | "gold" | "green" | "purple" | "neutral";
+  category: "Antes da Platina" | "Review" | "Vale a pena?" | "Retro+" | "Descobertas+" | "Radar+" | "Top+";
+  categoryTone: "red" | "rose" | "blue" | "gold" | "green" | "purple" | "neutral";
   title: string;
   subtitle: string | null;
   imageUrl: string | null;
@@ -21,6 +21,7 @@ export interface RecentContentItem {
 // cima de uma imagem colorida fica ilegível).
 export const CATEGORY_BADGE_STYLES: Record<RecentContentItem["categoryTone"], string> = {
   red: "bg-primary text-white",
+  rose: "bg-rose-500 text-white",
   blue: "bg-accent text-white",
   gold: "bg-gold text-black",
   green: "bg-emerald-500 text-white",
