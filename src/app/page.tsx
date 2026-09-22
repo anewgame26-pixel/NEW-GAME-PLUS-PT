@@ -33,29 +33,53 @@ import { stripHtml } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const games = await getGames();
-  // "Estamos a Jogar" é só um sinal de atividade da equipa — não deve
-  // depender de o jogo já estar publicado (com review ou outro pilar
-  // pronto). Por isso usa a lista completa, não a lista pública.
-  const allGamesForNowPlaying = await getGames({ includeUnpublished: true });
-  const platformStats = await getPlatformStats();
-  const featuredGames = await getFeaturedGames();
+  // Todos estes pedidos são independentes uns dos outros — nenhum precisa
+  // do resultado de outro — por isso pedem-se todos ao mesmo tempo
+  // (Promise.all) em vez de um a seguir ao outro. Isto era a principal
+  // razão de a homepage demorar tanto a abrir: o tempo total era a SOMA
+  // de todos os pedidos ao Supabase, em vez de só o tempo do mais lento.
+  const [
+    games,
+    // "Estamos a Jogar" é só um sinal de atividade da equipa — não deve
+    // depender de o jogo já estar publicado (com review ou outro pilar
+    // pronto). Por isso usa a lista completa, não a lista pública.
+    allGamesForNowPlaying,
+    platformStats,
+    featuredGames,
+    latestBeforePlatinum,
+    , // getUpcomingVideos(): mantido a carregar para não afetar outras páginas (ex: /antes-da-platina/episodios); não é usado nesta página
+    rankingCategories,
+    teamMembers,
+    nowPlayingRows,
+    votingCandidates,
+    { posts: communityPosts, onlineCount },
+    hourWithArticles,
+    reviewArticles,
+    retroArticles,
+    discoveryArticles,
+    topArticles,
+    radarArticles,
+  ] = await Promise.all([
+    getGames(),
+    getGames({ includeUnpublished: true }),
+    getPlatformStats(),
+    getFeaturedGames(),
+    getLatestBeforePlatinum(),
+    getUpcomingVideos(),
+    getRankingCategories(),
+    getTeamMembers(),
+    getNowPlaying(),
+    getVotingCandidates(),
+    getCommunityHighlights(),
+    getHourWithArticles(),
+    getReviews(),
+    getRetroArticles(),
+    getDiscoveryArticles(),
+    getTopArticles(),
+    getRadarArticles(),
+  ]);
 
-  const latestBeforePlatinum = await getLatestBeforePlatinum();
-  await getUpcomingVideos(); // mantido a carregar para não afetar outras páginas (ex: /antes-da-platina/episodios); não é usado nesta página
-  const rankingCategories = await getRankingCategories();
-  const teamMembers = await getTeamMembers();
-  const nowPlayingRows = await getNowPlaying();
   const playingNow = resolveNowPlaying(nowPlayingRows, teamMembers);
-  const votingCandidates = await getVotingCandidates();
-  const { posts: communityPosts, onlineCount } = await getCommunityHighlights();
-
-  const hourWithArticles = await getHourWithArticles();
-  const reviewArticles = await getReviews();
-  const retroArticles = await getRetroArticles();
-  const discoveryArticles = await getDiscoveryArticles();
-  const topArticles = await getTopArticles();
-  const radarArticles = await getRadarArticles();
 
   const heroSlides = buildHeroSlides({
     featuredGames,

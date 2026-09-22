@@ -8,13 +8,15 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Corre em todos os caminhos exceto:
-     * - ficheiros estáticos do Next.js (_next/static, _next/image)
-     * - o favicon
-     * - ficheiros de imagem/outros assets em /public
-     * Isto evita trabalho desnecessário em pedidos que nunca precisam
-     * de saber se alguém está autenticado.
+     * Só as zonas /admin e /perfil precisam mesmo de confirmar o login
+     * (é a própria função updateSession que decide, mais abaixo, se
+     * bloqueia ou deixa passar). Todas as outras páginas são públicas —
+     * homepage, jogos, review, vale a pena, etc. — e não têm nenhum
+     * motivo para pagar o tempo de um pedido ao servidor do Supabase em
+     * cada clique. Isto é o que estava a tornar o site inteiro lento,
+     * não só o login.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/admin/:path*",
+    "/perfil/:path*",
   ],
 };
