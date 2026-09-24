@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Trophy, Clock, History, Compass } from "lucide-react";
+import { Trophy, Clock, History, Compass, Star } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GameBreadcrumb } from "@/components/game/GameBreadcrumb";
@@ -22,12 +22,14 @@ import { VideoEmbed } from "@/components/game/VideoEmbed";
 import { GameEngagementBar } from "@/components/game/GameEngagementBar";
 import { GameContentTabs, type GameContentTabPanel } from "@/components/game/GameContentTabs";
 import { HourWithArticleBody } from "@/components/game/HourWithArticleBody";
+import { ReviewArticleBody } from "@/components/game/ReviewArticleBody";
 import { RetroArticleBody } from "@/components/game/RetroArticleBody";
 import { DiscoveryArticleBody } from "@/components/game/DiscoveryArticleBody";
 import { getAllGameSlugs, getGameBySlug, getGamesByIds } from "@/lib/data/games";
 import { getGameDetail } from "@/lib/data/game-details";
 import { getTeamMembers } from "@/lib/data/team";
 import { getHourWithArticles } from "@/lib/data/hour-with";
+import { getReviews } from "@/lib/data/reviews";
 import { getRetroArticles } from "@/lib/data/retro";
 import { getDiscoveryArticles } from "@/lib/data/discovery";
 import { normalizeTitle } from "@/lib/utils";
@@ -99,11 +101,16 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
   // campo "Jogo" do editor (game_id), com o antigo método de comparar
   // títulos como recurso, para artigos mais antigos ainda sem essa
   // ligação.
-  const [hourWithArticles, retroArticles, discoveryArticles] = await Promise.all([
+  const [reviewArticles, hourWithArticles, retroArticles, discoveryArticles] = await Promise.all([
+    getReviews(),
     getHourWithArticles(),
     getRetroArticles(),
     getDiscoveryArticles(),
   ]);
+  const matchingReview =
+    reviewArticles.find((a) => a.gameId === game.id) ??
+    reviewArticles.find((a) => normalizeTitle(a.title) === normalizeTitle(game.title)) ??
+    null;
   const matchingHourWith =
     hourWithArticles.find((a) => a.gameId === game.id) ??
     hourWithArticles.find((a) => normalizeTitle(a.title) === normalizeTitle(game.title)) ??
@@ -118,7 +125,7 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
     null;
 
   // Nada para mostrar de todo — nem review, nem nenhum outro pilar.
-  if (!hasReview && !matchingHourWith && !matchingRetro && !matchingDiscovery) {
+  if (!hasReview && !matchingReview && !matchingHourWith && !matchingRetro && !matchingDiscovery) {
     notFound();
   }
 
@@ -198,6 +205,15 @@ export default async function GuiaPage({ params }: GuiaPageProps) {
           <SimilarGamesRow games={similarGames} />
         </>
       ),
+    });
+  }
+
+  if (matchingReview) {
+    panels.push({
+      id: "review",
+      label: "Review",
+      icon: <Star width={15} height={15} />,
+      content: <ReviewArticleBody article={matchingReview} showHeading={false} />,
     });
   }
 
