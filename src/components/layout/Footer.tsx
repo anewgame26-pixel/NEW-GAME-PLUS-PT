@@ -68,7 +68,7 @@ export function Footer() {
             </h3>
             <div className="mt-4 flex items-center gap-2.5">
               <a
-                href="https://www.youtube.com/@NGPLUSPT"
+                href="https://www.youtube.com/@NGMAISPT"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
@@ -77,7 +77,7 @@ export function Footer() {
                 <Youtube width={16} height={16} />
               </a>
               <a
-                href="https://www.instagram.com/anewgameplus"
+                href="https://www.instagram.com/newgameplusportugal"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -86,7 +86,7 @@ export function Footer() {
                 <Instagram width={16} height={16} />
               </a>
               <a
-                href="https://www.tiktok.com/@ngmaispt"
+                href="https://www.tiktok.com/@newgameplusportugal"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok"

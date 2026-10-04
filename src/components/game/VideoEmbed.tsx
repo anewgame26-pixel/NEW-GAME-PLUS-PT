@@ -35,7 +35,7 @@ export function VideoEmbed({ videoId, title }: VideoEmbedProps) {
                 O vídeo &quot;Antes da Platina&quot; de {title} ainda está a caminho.
               </p>
               <a
-                href="https://www.youtube.com/@NGPLUSPT"
+                href="https://www.youtube.com/@NGMAISPT"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-medium text-primary hover:text-primary-light"

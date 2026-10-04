@@ -22,10 +22,12 @@ export default async function ImprensaPage() {
   const [stats, team] = await Promise.all([getPlatformStats(), getTeamMembers()]);
 
   const audienceStats = [
-    { label: "Visualizações TikTok", value: "25K+" },
-    { label: "Seguidores TikTok", value: "760" },
-    { label: "Visualizações YouTube", value: "7.3K+" },
-    { label: "Subscritores YouTube", value: "30" },
+    { label: "Visualizações TikTok (60 dias)", value: "42K" },
+    { label: "Seguidores TikTok", value: "805" },
+    { label: "Visualizações YouTube (total)", value: "12.6K" },
+    { label: "Subscritores YouTube", value: "406" },
+    { label: "Visualizações Instagram (30 dias)", value: "15K" },
+    { label: "Seguidores Instagram", value: "101" },
   ];
 
   return (
@@ -82,7 +84,7 @@ export default async function ImprensaPage() {
             <h2 className="mb-3 font-display text-lg font-bold uppercase tracking-wide text-ink">
               Audiência
             </h2>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {audienceStats.map((stat) => (
                 <Card key={stat.label} className="p-4 text-center">
                   <p className="font-display text-2xl font-bold text-primary">{stat.value}</p>
@@ -91,24 +93,33 @@ export default async function ImprensaPage() {
               ))}
             </div>
             <p className="mt-3 text-xs text-ink-dim">
-              Números de agosto de 2026, em crescimento contínuo em todas as
+              Números de setembro de 2026, em crescimento contínuo em todas as
               plataformas. Presença em{" "}
               <a
-                href="https://www.youtube.com/@NGPLUSPT"
+                href="https://www.youtube.com/@NGMAISPT"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline"
               >
                 YouTube
-              </a>{" "}
-              e{" "}
+              </a>
+              ,{" "}
               <a
-                href="https://www.tiktok.com/@ngmaispt"
+                href="https://www.tiktok.com/@newgameplusportugal"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary underline"
               >
                 TikTok
+              </a>{" "}
+              e{" "}
+              <a
+                href="https://www.instagram.com/newgameplusportugal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline"
+              >
+                Instagram
               </a>
               .
             </p>

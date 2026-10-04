@@ -88,14 +88,14 @@ export function Header() {
             <SocialIcon
               icon={<Youtube width={15} height={15} />}
               label="YouTube"
-              href="https://www.youtube.com/@NGPLUSPT"
+              href="https://www.youtube.com/@NGMAISPT"
             />
             <SocialIcon
               icon={<Instagram width={15} height={15} />}
               label="Instagram"
-              href="https://www.instagram.com/anewgameplus"
+              href="https://www.instagram.com/newgameplusportugal"
             />
-            <SocialIcon icon={<TikTokIcon />} label="TikTok" href="https://www.tiktok.com/@ngmaispt" />
+            <SocialIcon icon={<TikTokIcon />} label="TikTok" href="https://www.tiktok.com/@newgameplusportugal" />
           </div>
           {authChecked && (
             <Link

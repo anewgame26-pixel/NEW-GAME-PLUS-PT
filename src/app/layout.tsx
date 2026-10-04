@@ -56,9 +56,9 @@ const organizationSchema = {
   description:
     "Plataforma portuguesa de reviews, guias e roadmaps de troféus para videojogos.",
   sameAs: [
-    "https://www.youtube.com/@NGPLUSPT",
-    "https://www.instagram.com/anewgameplus",
-    "https://www.tiktok.com/@ngmaispt",
+    "https://www.youtube.com/@NGMAISPT",
+    "https://www.instagram.com/newgameplusportugal",
+    "https://www.tiktok.com/@newgameplusportugal",
   ],
 };
 
