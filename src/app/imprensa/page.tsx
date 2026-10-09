@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { getPlatformStats } from "@/lib/data/stats";
 import { getTeamMembers } from "@/lib/data/team";
+import { getAudienceStats, formatCount, formatMonthYear } from "@/lib/data/audience-stats";
 
 export const metadata: Metadata = {
   title: "Imprensa | NewGame+",
@@ -19,15 +20,25 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ImprensaPage() {
-  const [stats, team] = await Promise.all([getPlatformStats(), getTeamMembers()]);
+  const [stats, team, audience] = await Promise.all([
+    getPlatformStats(),
+    getTeamMembers(),
+    getAudienceStats(),
+  ]);
 
   const audienceStats = [
-    { label: "Visualizações TikTok (60 dias)", value: "42K" },
-    { label: "Seguidores TikTok", value: "805" },
-    { label: "Visualizações YouTube (total)", value: "12.6K" },
-    { label: "Subscritores YouTube", value: "406" },
-    { label: "Visualizações Instagram (30 dias)", value: "15K" },
-    { label: "Seguidores Instagram", value: "101" },
+    {
+      label: `Visualizações TikTok (${audience.tiktokViewsDays} dias)`,
+      value: formatCount(audience.tiktokViews),
+    },
+    { label: "Seguidores TikTok", value: formatCount(audience.tiktokFollowers) },
+    { label: "Visualizações YouTube (total)", value: formatCount(audience.youtubeViews) },
+    { label: "Subscritores YouTube", value: formatCount(audience.youtubeSubscribers) },
+    {
+      label: `Visualizações Instagram (${audience.instagramViewsDays} dias)`,
+      value: formatCount(audience.instagramViews),
+    },
+    { label: "Seguidores Instagram", value: formatCount(audience.instagramFollowers) },
   ];
 
   return (
@@ -93,7 +104,7 @@ export default async function ImprensaPage() {
               ))}
             </div>
             <p className="mt-3 text-xs text-ink-dim">
-              Números de setembro de 2026, em crescimento contínuo em todas as
+              Números de {formatMonthYear(audience.updatedAt)}, em crescimento contínuo em todas as
               plataformas. Presença em{" "}
               <a
                 href="https://www.youtube.com/@NGMAISPT"

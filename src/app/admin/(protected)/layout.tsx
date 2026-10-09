@@ -68,6 +68,7 @@ export default async function AdminProtectedLayout({
           <AdminNavLink href="/admin/votacao">Votação</AdminNavLink>
           <AdminNavLink href="/admin/reports">Reports</AdminNavLink>
           <AdminNavLink href="/admin/contactos">Contactos</AdminNavLink>
+          <AdminNavLink href="/admin/estatisticas">Estatísticas</AdminNavLink>
         </nav>
       </div>
       <main className="mx-auto max-w-[1440px] px-4 py-8 lg:px-8">{children}</main>
