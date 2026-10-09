@@ -165,7 +165,7 @@ export function AudienceStatsForm() {
 
       <p className="mb-6 text-sm text-ink-muted">
         Estes números aparecem na página de Imprensa. A data mostrada no site
-        ({formatMonthYear(updatedAt)}) é a do último "Guardar".
+        ({formatMonthYear(updatedAt)}) é a do último &quot;Guardar&quot;.
       </p>
 
       {error && <p className="mb-4 text-sm text-primary">{error}</p>}
