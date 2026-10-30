@@ -8,6 +8,8 @@ export interface TeamMember {
   photoUrl: string | null;
   bio: string;
   favoriteGame: string;
+  /** Autor convidado (não faz parte da equipa fixa). */
+  isGuest: boolean;
 }
 
 /**
@@ -17,7 +19,7 @@ export interface TeamMember {
 export async function getTeamMembers(): Promise<TeamMember[]> {
   const { data, error } = await supabase
     .from("team_members")
-    .select("id, name, role, avatar_initials, photo_url, bio, favorite_game")
+    .select("*")
     .order("sort_order", { ascending: true });
 
   if (error) {
@@ -32,6 +34,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
     avatarInitials: m.avatar_initials,
     photoUrl: m.photo_url ?? null,
     bio: m.bio,
-    favoriteGame: m.favorite_game,
+    favoriteGame: m.favorite_game ?? "",
+    isGuest: m.is_guest === true,
   }));
 }

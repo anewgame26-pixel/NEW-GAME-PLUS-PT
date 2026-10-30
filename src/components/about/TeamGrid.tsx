@@ -29,10 +29,12 @@ export function TeamGrid({ members }: TeamGridProps) {
             <p className="text-xs uppercase tracking-wide text-ink-dim">{member.role}</p>
           </div>
           <p className="text-sm text-ink-muted">{member.bio}</p>
-          <div className="mt-auto flex items-center gap-1.5 border-t border-border pt-3 text-xs text-ink-muted">
-            <Trophy width={12} height={12} className="text-gold" />
-            Platina favorita: <span className="text-ink">{member.favoriteGame}</span>
-          </div>
+          {member.favoriteGame && (
+            <div className="mt-auto flex items-center gap-1.5 border-t border-border pt-3 text-xs text-ink-muted">
+              <Trophy width={12} height={12} className="text-gold" />
+              Platina favorita: <span className="text-ink">{member.favoriteGame}</span>
+            </div>
+          )}
         </Card>
         </Link>
       ))}

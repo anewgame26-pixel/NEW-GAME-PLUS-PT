@@ -43,6 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/antes-da-platina/episodios`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/vale-a-pena`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/review`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/escrever`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/retro`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/descobertas`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/radar`, changeFrequency: "daily", priority: 0.6 },

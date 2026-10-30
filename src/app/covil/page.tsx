@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Compass, Target, ShieldCheck, MessageCircle, Star } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -132,9 +133,28 @@ export default async function CovilPage() {
                 A equipa por detrás de cada review, roadmap e vídeo Antes da Platina.
               </p>
             </div>
-            <TeamGrid members={teamMembers} />
+            <TeamGrid members={teamMembers.filter((m) => !m.isGuest)} />
           </div>
         </section>
+
+        {teamMembers.some((m) => m.isGuest) && (
+          <section className="border-t border-border py-12">
+            <div className="mx-auto max-w-[1440px] px-4 lg:px-8">
+              <div className="mb-6 text-center">
+                <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
+                  Autores convidados
+                </h2>
+                <p className="mt-1 text-sm text-ink-muted">
+                  Pessoas de fora da equipa que escrevem connosco.{" "}
+                  <Link href="/escrever" className="text-primary underline">
+                    Queres escrever também?
+                  </Link>
+                </p>
+              </div>
+              <TeamGrid members={teamMembers.filter((m) => m.isGuest)} />
+            </div>
+          </section>
+        )}
 
         <section className="border-t border-border py-12">
           <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-4 px-4 text-center lg:px-8">

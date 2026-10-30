@@ -15,6 +15,7 @@ interface TeamRow {
   bio: string;
   favorite_game: string;
   sort_order: number;
+  is_guest: boolean;
 }
 
 const emptyForm = {
@@ -25,6 +26,7 @@ const emptyForm = {
   bio: "",
   favorite_game: "",
   sort_order: 0,
+  is_guest: false,
 };
 
 export default function AdminEquipaPage() {
@@ -44,7 +46,7 @@ export default function AdminEquipaPage() {
     setError(null);
     const { data, error } = await supabase
       .from("team_members")
-      .select("id, name, role, avatar_initials, photo_url, bio, favorite_game, sort_order")
+      .select("*")
       .order("sort_order", { ascending: true });
 
     if (error) {
@@ -71,6 +73,7 @@ export default function AdminEquipaPage() {
       bio: row.bio,
       favorite_game: row.favorite_game,
       sort_order: row.sort_order,
+      is_guest: row.is_guest === true,
     });
   }
 
@@ -100,6 +103,7 @@ export default function AdminEquipaPage() {
       bio: form.bio.trim(),
       favorite_game: form.favorite_game.trim(),
       sort_order: form.sort_order,
+      is_guest: form.is_guest,
     };
 
     const result = editingId
@@ -229,6 +233,21 @@ export default function AdminEquipaPage() {
               </label>
             </div>
 
+            <label className="flex items-center gap-3 rounded-sm border border-border bg-bg-surface2 px-4 py-3">
+              <input
+                type="checkbox"
+                checked={form.is_guest}
+                onChange={(e) => setForm((f) => ({ ...f, is_guest: e.target.checked }))}
+                className="h-5 w-5 accent-primary"
+              />
+              <span className="text-sm text-ink">
+                Autor convidado
+                <span className="block text-xs text-ink-dim">
+                  Aparece na secção &quot;Autores convidados&quot; de Sobre Nós, em vez da equipa.
+                </span>
+              </span>
+            </label>
+
             <ImageUploader
               label="Foto (opcional — sem foto, mostra as iniciais)"
               value={form.photo_url}
@@ -311,7 +330,14 @@ export default function AdminEquipaPage() {
                   </span>
                 )}
                 <div className="min-w-0">
-                  <p className="font-display text-sm font-bold text-ink">{row.name}</p>
+                  <p className="font-display text-sm font-bold text-ink">
+                    {row.name}
+                    {row.is_guest && (
+                      <span className="ml-2 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-dim">
+                        Convidado
+                      </span>
+                    )}
+                  </p>
                   <p className="text-xs uppercase tracking-wide text-ink-dim">{row.role}</p>
                   <p className="mt-1 text-sm text-ink-muted">{row.bio}</p>
                 </div>
