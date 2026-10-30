@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { PenLine } from "lucide-react";
-import { formatDateLong } from "@/lib/utils";
+import { formatDateLong, slugify } from "@/lib/utils";
 
 export interface ArticleAuthor {
   name: string;
@@ -27,7 +28,10 @@ export function ArticleAuthorBadge({ author, date, className = "" }: ArticleAuth
   if (!author) return null;
 
   return (
-    <div className={`flex items-center gap-2.5 ${className}`}>
+    <Link
+      href={`/autores/${slugify(author.name)}`}
+      className={`group flex items-center gap-2.5 ${className}`}
+    >
       {author.photoUrl ? (
         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
           <Image src={author.photoUrl} alt={author.name} fill className="object-cover" />
@@ -42,11 +46,11 @@ export function ArticleAuthorBadge({ author, date, className = "" }: ArticleAuth
           <PenLine width={10} height={10} />
           Escrito por
         </p>
-        <p className="truncate text-sm font-semibold text-ink">
+        <p className="truncate text-sm font-semibold text-ink group-hover:text-primary-light">
           {author.name} <span className="font-normal text-ink-dim">— {author.role}</span>
           {date && <span className="font-normal text-ink-dim"> · {formatDateLong(date)}</span>}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

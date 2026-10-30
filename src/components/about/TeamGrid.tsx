@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { TeamMember } from "@/lib/data/team";
 import { Card } from "@/components/ui/Card";
 import { Trophy } from "lucide-react";
+import { authorPath } from "@/lib/data/authors";
 
 interface TeamGridProps {
   members: TeamMember[];
@@ -11,7 +13,8 @@ export function TeamGrid({ members }: TeamGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {members.map((member) => (
-        <Card key={member.id} hover className="flex flex-col gap-3 p-5">
+        <Link key={member.id} href={authorPath(member.name)} className="flex">
+        <Card hover className="flex w-full flex-col gap-3 p-5">
           {member.photoUrl ? (
             <div className="relative h-14 w-14 overflow-hidden rounded-sm">
               <Image src={member.photoUrl} alt={member.name} fill className="object-cover" />
@@ -31,6 +34,7 @@ export function TeamGrid({ members }: TeamGridProps) {
             Platina favorita: <span className="text-ink">{member.favoriteGame}</span>
           </div>
         </Card>
+        </Link>
       ))}
     </div>
   );

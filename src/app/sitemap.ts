@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllGameSlugs } from "@/lib/data/games";
+import { getTeamMembers } from "@/lib/data/team";
+import { authorPath } from "@/lib/data/authors";
 import { getAllReviewSlugs } from "@/lib/data/reviews";
 import { getAllHourWithSlugs } from "@/lib/data/hour-with";
 import { getAllRetroSlugs } from "@/lib/data/retro";
@@ -24,6 +26,7 @@ const SITE_URL = "https://newgameplus.pt";
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const gameSlugs = await getAllGameSlugs();
+  const teamMembers = await getTeamMembers();
   const reviewSlugs = await getAllReviewSlugs();
   const hourWithSlugs = await getAllHourWithSlugs();
   const retroSlugs = await getAllRetroSlugs();
@@ -68,6 +71,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const authorPages: MetadataRoute.Sitemap = teamMembers.map((m) => ({
+    url: `${SITE_URL}${authorPath(m.name)}`,
+    changeFrequency: "monthly",
+    priority: 0.4,
+  }));
+
   const reviewPages: MetadataRoute.Sitemap = reviewSlugs.map((slug) => ({
     url: `${SITE_URL}/review/${slug}`,
     changeFrequency: "monthly",
@@ -108,6 +117,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...gamePages,
     ...reviewPages,
+    ...authorPages,
     ...rankingPages,
     ...hourWithPages,
     ...retroPages,
